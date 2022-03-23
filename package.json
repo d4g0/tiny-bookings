@@ -1,0 +1,12 @@
+{
+  "name": "tiny-bookings",
+  "version": "0.0.0",
+  "description": "A tiny booking system for hotels reservations",
+  "main": "index.js",
+  "repository": "https://github.com/d4g0/tiny-bookings",
+  "author": "d4g0",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
