@@ -116,6 +116,24 @@ CREATE TABLE IF NOT EXISTS public.room_pictures
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.lock
+(
+    id serial,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    reason text NOT NULL,
+    created_at timestamp without time zone DEFAULT now(),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.locks_rooms
+(
+    id serial,
+    lock_id integer,
+    room_id integer,
+    PRIMARY KEY (id)
+);
+
 ALTER TABLE IF EXISTS public.admins
     ADD CONSTRAINT user_role FOREIGN KEY (user_role)
     REFERENCES public.user_roles (id) MATCH SIMPLE
@@ -181,6 +199,22 @@ ALTER TABLE IF EXISTS public.rooms_bookings
 
 
 ALTER TABLE IF EXISTS public.room_pictures
+    ADD CONSTRAINT room_id FOREIGN KEY (room_id)
+    REFERENCES public.room (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.locks_rooms
+    ADD CONSTRAINT lock_id FOREIGN KEY (lock_id)
+    REFERENCES public.lock (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.locks_rooms
     ADD CONSTRAINT room_id FOREIGN KEY (room_id)
     REFERENCES public.room (id) MATCH SIMPLE
     ON UPDATE NO ACTION
