@@ -6,3 +6,6 @@
 -   set up express basic + apollo graphql
 -   users crud
 -   autentication + authorization on users models
+
+## set up db
+-   define enum and properties naming conventions

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model admin_user {
+  id            Int       @id @default(autoincrement())
+  user_role     user_role
+  user_name     String    @db.VarChar(60)
+  email         String?   @unique @db.VarChar(60)
+  hash_password String
+  reset_token   String?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model amenitiy {
+  id             Int              @id @default(autoincrement())
+  amenitiy_name  String?          @db.VarChar(60)
+  room_amenities room_amenities[]
+}
+
+model booking {
+  id             Int              @id @default(autoincrement())
+  total_bill     Decimal?         @db.Decimal
+  check_in_date  DateTime?        @db.Timestamp(6)
+  check_out_date DateTime?        @db.Timestamp(6)
+  client_id      Int?
+  capacity       Int?
+  payment_type   payment_type?
+  booking_state  booking_state?
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  client_user    client_user?     @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rooms_bookings rooms_bookings[]
+}
+
+model client_user {
+  id            Int        @id @default(autoincrement())
+  user_name     String     @db.VarChar(60)
+  email         String?    @unique @db.VarChar(60)
+  hash_password String?
+  reset_token   String?
+  user_role     user_role?
+  created_at    DateTime?  @default(now()) @db.Timestamp(6)
+  booking       booking[]
+}
+
+model hotel {
+  id                          Int       @id @default(autoincrement())
+  hote_name                   String?
+  maximun_free_calendar_days  Int?
+  check_in_hour_time          DateTime? @db.Timestamp(6)
+  check_out_hour_time         DateTime? @db.Timestamp(6)
+  minimal_prev_days_to_cancel Int?
+  created_at                  DateTime? @default(now()) @db.Timestamp(6)
+  room                        room[]
+}
+
+model room {
+  id             Int              @id @default(autoincrement())
+  hotel_id       Int?
+  room_name      String?          @db.VarChar(60)
+  price          Decimal?         @db.Decimal
+  capacity       Int?
+  created_at     DateTime?        @default(now()) @db.Timestamp(6)
+  hotel          hotel?           @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  room_amenities room_amenities[]
+  room_pictures  room_pictures[]
+  rooms_bookings rooms_bookings[]
+}
+
+model room_amenities {
+  room_id     Int?
+  amenitiy_id Int?
+  id          Int       @id @default(autoincrement())
+  amenitiy    amenitiy? @relation(fields: [amenitiy_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  room        room?     @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model room_pictures {
+  id       Int     @id @default(autoincrement())
+  room_id  Int?
+  filename String?
+  room     room?   @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model rooms_bookings {
+  id         Int      @id @default(autoincrement())
+  booking_id Int?
+  room_id    Int?
+  booking    booking? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  room       room?    @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum booking_state {
+  payment_pending
+  payed
+  canceled
+}
+
+enum payment_type {
+  in_site_electronic
+  cash
+}
+
+enum user_role {
+  full_admin @map("full-admin")
+  admin
+  client
+}
