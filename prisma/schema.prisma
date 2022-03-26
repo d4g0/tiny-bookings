@@ -9,129 +9,140 @@ datasource db {
 
 model booking {
   id               Int              @id @default(autoincrement())
-  client_id        Int
-  state            Int
-  created_at       DateTime?        @default(now()) @db.Timestamp(6)
-  bill             Int
+  client_id        Int?
+  booking_state    Int?
+  payment_type     Int?
+  currency         Int?
+  total_price      Decimal          @db.Decimal
   check_in_date    DateTime         @db.Timestamp(6)
   check_out_date   DateTime         @db.Timestamp(6)
   number_of_guests Int
-  paymet_type      Int
-  clients          clients          @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_owner")
-  payment_type     payment_type     @relation(fields: [paymet_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type")
+  created_at       DateTime?        @default(now()) @db.Timestamp(6)
+  booking_states   booking_states?  @relation(fields: [booking_state], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_state_link")
+  clients          clients?         @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_link")
+  currencies       currencies?      @relation(fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_link")
+  payment_types    payment_types?   @relation(fields: [payment_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type_link")
   rooms_bookings   rooms_bookings[]
 }
 
 model hotel {
   id                          Int      @id @default(autoincrement())
-  name                        String
-  maximun_free_calendar_days  Int
+  hotel_name                  String   @unique @db.VarChar(100)
+  maximun_free_calendar_days  Int      @default(30)
   check_in_hour_time          DateTime @db.Timestamp(6)
   check_out_hour_time         DateTime @db.Timestamp(6)
-  minimal_prev_days_to_cancel Int?
+  minimal_prev_days_to_cancel Int      @default(5)
   room                        room[]
 }
 
 model room {
-  id              Int               @id @default(autoincrement())
-  hotel_id        Int
-  name            String            @db.VarChar(40)
-  night_price     Decimal           @db.Decimal
-  capacity        Int
-  created_at      DateTime?         @default(now()) @db.Timestamp(6)
-  beds            Int
-  hotel           hotel             @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "hotel-link")
-  locks_rooms     locks_rooms[]
-  room_pictures   room_pictures[]
-  rooms_amenities rooms_amenities[]
-  rooms_bookings  rooms_bookings[]
+  id               Int                @id @default(autoincrement())
+  hotel_id         Int
+  room_name        String             @unique @db.VarChar(20)
+  night_price      Decimal            @db.Decimal
+  capacity         Int
+  number_of_beds   Int
+  room_type        Int?
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  hotel            hotel              @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "hotel_id")
+  room_types       room_types?        @relation(fields: [room_type], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  room_lock_period room_lock_period[]
+  room_pictures    room_pictures[]
+  rooms_amenities  rooms_amenities[]
+  rooms_bookings   rooms_bookings[]
 }
 
 model room_pictures {
   id       Int    @id @default(autoincrement())
+  room_id  Int
   filename String
-  room_id  Int?
-  room     room?  @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
+  room     room   @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
 }
 
 model rooms_bookings {
   id         Int      @id @default(autoincrement())
-  booking_id Int?
   room_id    Int?
-  booking    booking? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id")
-  room       room?    @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
+  booking_id Int?
+  booking    booking? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_link")
+  room       room?    @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
 }
 
 model admins {
-  id            Int        @id @default(autoincrement())
-  user_role     Int
-  name          String     @db.VarChar(40)
-  description   String?    @db.VarChar(150)
-  hash_password String
-  reset_token   String?
-  created_at    DateTime?  @default(now()) @db.Timestamp(6)
-  user_roles    user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
-}
-
-model booking_state {
-  id    Int    @id @default(autoincrement())
-  state String @db.VarChar(60)
+  id                Int        @id @default(autoincrement())
+  user_role         Int
+  admin_name        String     @unique @db.VarChar(100)
+  admin_description String?    @db.VarChar(150)
+  hash_password     String
+  reset_token       String?
+  created_at        DateTime?  @default(now()) @db.Timestamp(6)
+  user_roles        user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model clients {
-  user_role     Int?
-  name          String      @db.VarChar(60)
-  last_name     String      @db.VarChar(60)
-  hash_password String?
-  reset_token   String?
-  created_at    DateTime?   @default(now()) @db.Timestamp(6)
-  email         String?     @db.VarChar(100)
-  id            Int         @id @default(autoincrement())
-  user_roles    user_roles? @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
-  booking       booking[]
-}
-
-model lock {
-  id          Int           @id @default(autoincrement())
-  start_date  DateTime      @db.Timestamp(6)
-  end_date    DateTime      @db.Timestamp(6)
-  reason      String
-  created_at  DateTime?     @default(now()) @db.Timestamp(6)
-  locks_rooms locks_rooms[]
-}
-
-model locks_rooms {
-  id      Int   @id @default(autoincrement())
-  lock_id Int?
-  room_id Int?
-  lock    lock? @relation(fields: [lock_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "lock_id")
-  room    room? @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
-}
-
-model payment_type {
-  id      Int       @id @default(autoincrement())
-  type    String    @db.VarChar(60)
-  booking booking[]
+  id               Int        @id @default(autoincrement())
+  user_role        Int
+  client_name      String     @db.VarChar(60)
+  client_last_name String     @db.VarChar(60)
+  hash_password    String?
+  email            String?    @unique @db.VarChar(120)
+  reset_token      String?
+  created_at       DateTime?  @default(now()) @db.Timestamp(6)
+  user_roles       user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
+  booking          booking[]
 }
 
 model room_amenity {
   id              Int               @id @default(autoincrement())
-  name            String
+  amenity         String            @unique @db.VarChar(100)
   rooms_amenities rooms_amenities[]
 }
 
 model rooms_amenities {
-  id           Int          @id @default(autoincrement())
-  amenity_id   Int
-  room_id      Int
-  room_amenity room_amenity @relation(fields: [amenity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "amenity_link")
-  room         room         @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
+  id           Int           @id @default(autoincrement())
+  room_id      Int?
+  amenity_id   Int?
+  room_amenity room_amenity? @relation(fields: [amenity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "amenity_id_link")
+  room         room?         @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id_link")
 }
 
 model user_roles {
-  id      Int       @id @default(autoincrement())
-  role    String    @db.VarChar(10)
-  admins  admins[]
-  clients clients[]
+  id        Int       @id @default(autoincrement())
+  user_role String    @unique @db.VarChar(40)
+  admins    admins[]
+  clients   clients[]
+}
+
+model booking_states {
+  id            Int       @id @default(autoincrement())
+  booking_state String    @unique @db.VarChar(40)
+  booking       booking[]
+}
+
+model currencies {
+  id       Int       @id @default(autoincrement())
+  currency String    @unique @db.VarChar(10)
+  booking  booking[]
+}
+
+model payment_types {
+  id           Int       @id @default(autoincrement())
+  payment_type String    @unique @db.VarChar(60)
+  booking      booking[]
+}
+
+model room_lock_period {
+  id         Int       @id @default(autoincrement())
+  room_id    Int?
+  start_date DateTime  @db.Timestamp(6)
+  end_date   DateTime  @db.Timestamp(6)
+  reason     String    @db.VarChar(300)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  room       room?     @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
+}
+
+model room_types {
+  id        Int    @id @default(autoincrement())
+  room_type String @unique @db.VarChar(30)
+  room      room[]
 }
