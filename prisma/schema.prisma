@@ -7,107 +7,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model admin_user {
-  id            Int       @id @default(autoincrement())
-  user_role     user_role
-  user_name     String    @db.VarChar(60)
-  email         String?   @unique @db.VarChar(60)
-  hash_password String
-  reset_token   String?
-  created_at    DateTime? @default(now()) @db.Timestamp(6)
-}
-
-model amenitiy {
-  id             Int              @id @default(autoincrement())
-  amenitiy_name  String?          @db.VarChar(60)
-  room_amenities room_amenities[]
-}
-
 model booking {
-  id             Int              @id @default(autoincrement())
-  total_bill     Decimal?         @db.Decimal
-  check_in_date  DateTime?        @db.Timestamp(6)
-  check_out_date DateTime?        @db.Timestamp(6)
-  client_id      Int?
-  capacity       Int?
-  payment_type   payment_type?
-  booking_state  booking_state?
-  created_at     DateTime?        @default(now()) @db.Timestamp(6)
-  client_user    client_user?     @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  rooms_bookings rooms_bookings[]
-}
-
-model client_user {
-  id            Int        @id @default(autoincrement())
-  user_name     String     @db.VarChar(60)
-  email         String?    @unique @db.VarChar(60)
-  hash_password String?
-  reset_token   String?
-  user_role     user_role?
-  created_at    DateTime?  @default(now()) @db.Timestamp(6)
-  booking       booking[]
+  id               Int              @id @default(autoincrement())
+  client_id        Int
+  state            Int
+  created_at       DateTime?        @default(now()) @db.Timestamp(6)
+  bill             Int
+  check_in_date    DateTime         @db.Timestamp(6)
+  check_out_date   DateTime         @db.Timestamp(6)
+  number_of_guests Int
+  paymet_type      Int
+  clients          clients          @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_owner")
+  payment_type     payment_type     @relation(fields: [paymet_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type")
+  rooms_bookings   rooms_bookings[]
 }
 
 model hotel {
-  id                          Int       @id @default(autoincrement())
-  hote_name                   String?
-  maximun_free_calendar_days  Int?
-  check_in_hour_time          DateTime? @db.Timestamp(6)
-  check_out_hour_time         DateTime? @db.Timestamp(6)
+  id                          Int      @id @default(autoincrement())
+  name                        String
+  maximun_free_calendar_days  Int
+  check_in_hour_time          DateTime @db.Timestamp(6)
+  check_out_hour_time         DateTime @db.Timestamp(6)
   minimal_prev_days_to_cancel Int?
-  created_at                  DateTime? @default(now()) @db.Timestamp(6)
   room                        room[]
 }
 
 model room {
-  id             Int              @id @default(autoincrement())
-  hotel_id       Int?
-  room_name      String?          @db.VarChar(60)
-  price          Decimal?         @db.Decimal
-  capacity       Int?
-  created_at     DateTime?        @default(now()) @db.Timestamp(6)
-  hotel          hotel?           @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  room_amenities room_amenities[]
-  room_pictures  room_pictures[]
-  rooms_bookings rooms_bookings[]
-}
-
-model room_amenities {
-  room_id     Int?
-  amenitiy_id Int?
-  id          Int       @id @default(autoincrement())
-  amenitiy    amenitiy? @relation(fields: [amenitiy_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  room        room?     @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id              Int               @id @default(autoincrement())
+  hotel_id        Int
+  name            String            @db.VarChar(40)
+  night_price     Decimal           @db.Decimal
+  capacity        Int
+  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+  beds            Int
+  hotel           hotel             @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "hotel-link")
+  locks_rooms     locks_rooms[]
+  room_pictures   room_pictures[]
+  rooms_amenities rooms_amenities[]
+  rooms_bookings  rooms_bookings[]
 }
 
 model room_pictures {
-  id       Int     @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
+  filename String
   room_id  Int?
-  filename String?
-  room     room?   @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  room     room?  @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
 }
 
 model rooms_bookings {
   id         Int      @id @default(autoincrement())
   booking_id Int?
   room_id    Int?
-  booking    booking? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  room       room?    @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  booking    booking? @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id")
+  room       room?    @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
 }
 
-enum booking_state {
-  payment_pending
-  payed
-  canceled
+model admins {
+  id            Int        @id @default(autoincrement())
+  user_role     Int
+  name          String     @db.VarChar(40)
+  description   String?    @db.VarChar(150)
+  hash_password String
+  reset_token   String?
+  created_at    DateTime?  @default(now()) @db.Timestamp(6)
+  user_roles    user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
 }
 
-enum payment_type {
-  in_site_electronic
-  cash
+model booking_state {
+  id    Int    @id @default(autoincrement())
+  state String @db.VarChar(60)
 }
 
-enum user_role {
-  full_admin @map("full-admin")
-  admin
-  client
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model clients {
+  user_role     Int?
+  name          String      @db.VarChar(60)
+  last_name     String      @db.VarChar(60)
+  hash_password String?
+  reset_token   String?
+  created_at    DateTime?   @default(now()) @db.Timestamp(6)
+  email         String?     @db.VarChar(100)
+  id            Int         @id @default(autoincrement())
+  user_roles    user_roles? @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
+  booking       booking[]
+}
+
+model lock {
+  id          Int           @id @default(autoincrement())
+  start_date  DateTime      @db.Timestamp(6)
+  end_date    DateTime      @db.Timestamp(6)
+  reason      String
+  created_at  DateTime?     @default(now()) @db.Timestamp(6)
+  locks_rooms locks_rooms[]
+}
+
+model locks_rooms {
+  id      Int   @id @default(autoincrement())
+  lock_id Int?
+  room_id Int?
+  lock    lock? @relation(fields: [lock_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "lock_id")
+  room    room? @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_id")
+}
+
+model payment_type {
+  id      Int       @id @default(autoincrement())
+  type    String    @db.VarChar(60)
+  booking booking[]
+}
+
+model room_amenity {
+  id              Int               @id @default(autoincrement())
+  name            String
+  rooms_amenities rooms_amenities[]
+}
+
+model rooms_amenities {
+  id           Int          @id @default(autoincrement())
+  amenity_id   Int
+  room_id      Int
+  room_amenity room_amenity @relation(fields: [amenity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "amenity_link")
+  room         room         @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
+}
+
+model user_roles {
+  id      Int       @id @default(autoincrement())
+  role    String    @db.VarChar(10)
+  admins  admins[]
+  clients clients[]
 }

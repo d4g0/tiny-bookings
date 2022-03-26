@@ -7,6 +7,7 @@
     - [From client](#from-client)
     - [From admin](#from-admin)
       - [Operations Roles](#operations-roles)
+        - [full-admin](#full-admin)
 
 ## Requirement Map
 
@@ -71,6 +72,15 @@
 -   role: full-admin
     -	[basic-admin]*
     -	create basic admin users
+    -	create full admin users
     -	list admins users
 
+
+##### full-admin
+-   create basic admin users
+    -   check if admin with `id` exists
+    -   check if has the role `full-admin`
+    -   then
+        -   create new `basic-admin` with
+            -   name
 
