@@ -3,10 +3,25 @@ import { isValidString } from 'utils'
 import { mapCreateFullAdminResToAdminUser, mapGetAdminByNameResToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
 
+
+
+
+/**
+ * User Dao Errors
+ */
+export const USER_DAO_ERRORS = {
+    NOT_FOUND: 'Not Found',
+}
 /**
  * Retrives an admin user  from db 
  * based in is user name since it's a 
  * `UNIQUE` constrained field
+ * 
+ * Throws dbErrors:
+ * 
+ * If admin does not exists throws an
+ * `USER_DAO_ERRORS.NOT_FOUND` error
+ * 
  * 
  * @param {String} username 
  */
@@ -17,14 +32,23 @@ export async function getAdminByName(adminName) {
     }
 
     // query for user with user_role
-    var data = await prisma.admins.findFirst({
+    var data = await prisma.admins.findUnique({
         where: {
             admin_name: adminName
         },
         include: {
             user_roles: true
-        }
+        },
     })
+
+
+    // handle not found case
+    if (!data) {
+        throw new Error(USER_DAO_ERRORS.NOT_FOUND);
+    }
+
+    // handle found case
+
     /**
     Query response data like
        {
@@ -61,6 +85,13 @@ export async function getAdminByName(adminName) {
  * 
  * Creates a Full-Admin in the db
  * Throws db errors or bad args errors
+ * Atemp to create an admin with a name allready present
+ * throws an error containing 
+ * ```js
+ * {
+ *  code: 'P2002',
+ * }
+ * ```
  * @param {Object} admin_data
  */
 export async function createFullAdmin({
@@ -111,7 +142,6 @@ export async function createFullAdmin({
      * }
      * 
      */
-
     var admin = mapCreateFullAdminResToAdminUser({
         id: res.id,
         admin_name: res.admin_name,
@@ -120,6 +150,7 @@ export async function createFullAdmin({
         reset_token: res.reset_token,
         created_at: res.created_at
     })
+
 
     return admin;
 }

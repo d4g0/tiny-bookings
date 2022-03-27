@@ -1,5 +1,5 @@
 import { prisma } from '~/dao/PrismaClient'
-import { createFullAdmin, getAdminByName, deleteAdminByName } from '~/dao/UserDao.js'
+import { USER_DAO_ERRORS, createFullAdmin, getAdminByName, deleteAdminByName } from '~/dao/UserDao.js'
 import { USER_ROLES } from "~/dao/DBConstans";
 
 
@@ -16,8 +16,27 @@ describe(
             reset_token: 'supper reset token for test admin',
         }
 
+        // [admins] Retrieve an admin by name that doesn't exists
+        test(
+            "Check error of retrieve an admin that doesen't exist",
+            async function () {
+                var dbError = null;
+
+                try {
+                    await getAdminByName('this-admin-name-should-not-exists');
+                } catch (error) {
+                    console.log(error);
+                    dbError = error
+                }
+
+                expect(dbError).toBeTruthy();
+                expect(dbError.message).toBe(USER_DAO_ERRORS.NOT_FOUND)
+
+            }
+        )
 
 
+        // [admins] Create, retrieve, and delete (happy path)
         test(
             "Create, Retrieve and Delete a full-admin",
             async function () {
@@ -46,13 +65,13 @@ describe(
                     // delete
                     deletedAdmin = await deleteAdminByName(adminData.admin_name);
 
-                    console.log(deletedAdmin);
+                    // console.log(deletedAdmin);
 
                     if (createdAdmin.id == retrivedAdmin.id && retrivedAdmin.id == deletedAdmin.id) {
                         idMatch = true;
                     }
 
-                    // console.log(createdAdmin)
+                    console.log(createdAdmin)
 
                 } catch (error) {
                     console.log(error)
@@ -66,6 +85,50 @@ describe(
 
             }
         )
+
+        // [admins] Create 2 admins with same name error check
+        test(
+            "Check create 2 admins with same name error",
+            async function () {
+
+                var dbError = null, admin1 = null, createAdminError = null;
+
+
+                try {
+                    // create first admin
+                    admin1 = await createFullAdmin({
+                        admin_name: adminData.admin_name,
+                        admin_description: adminData.admin_description,
+                        hash_password: adminData.hash_password,
+                        reset_token: adminData.reset_token
+                    });
+
+                    // atemp to create another with same name, 
+                    // expect to rise a dbError
+                    await createFullAdmin({
+                        admin_name: adminData.admin_name,
+                        admin_description: adminData.admin_description,
+                        hash_password: adminData.hash_password,
+                        reset_token: adminData.reset_token
+                    });
+
+
+
+                } catch (error) {
+                    console.log(error);
+                    dbError = error;
+                    // clean db
+                    await deleteAdminByName(adminData.admin_name);
+                }
+
+                expect(dbError).toBeTruthy();
+                expect(dbError.code).toBe('P2002')
+            }
+
+        )
+
+
+
 
 
 
