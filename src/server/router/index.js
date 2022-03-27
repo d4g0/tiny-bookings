@@ -6,6 +6,14 @@ const router = Express.Router()
 
 router.route('/').get(foo);
 
+
+
+
+
+
+
+
+
 /** @type RequestHandler */
 function foo(req, res, next) {
     res.end('up and running');

@@ -10,7 +10,6 @@
     "build": "babel ./src/ -d dist",
     "dev": "nodemon -r dotenv/config   index.js",
     "start": "NODE_ENV=production  node -r dotenv/config  dist/index.js",
-    "start:dev": "NODE_ENV=development node -r dotenv/config dist/index.js",
     "test": "jest --silent=true",
     "test:logs": "jest"
   },

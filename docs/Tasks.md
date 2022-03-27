@@ -44,3 +44,5 @@
 
 ## set up express basic + apollo graphql
 start 27-march-6:17
+basic express done by 7:30 then brake
+restart working 9:30
