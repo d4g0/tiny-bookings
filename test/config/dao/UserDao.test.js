@@ -1,6 +1,4 @@
-import { prisma } from '~/dao/PrismaClient'
 import { USER_DAO_ERRORS, createFullAdmin, getAdminByName, deleteAdminByName } from '~/dao/UserDao.js'
-import { USER_ROLES } from "~/dao/DBConstans";
 
 
 describe(
@@ -8,7 +6,6 @@ describe(
 
     function userDaoTest() {
 
-        // user_role: USER_ROLES.FULL_ADMIN.id,
         var adminData = {
             admin_name: 'test-admin',
             admin_description: 'test admin for development',
