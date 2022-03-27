@@ -7,7 +7,7 @@
     - [From client](#from-client)
     - [From admin](#from-admin)
       - [Operations Roles](#operations-roles)
-        - [full-admin](#full-admin)
+        - [`full-admin`](#full-admin)
 
 ## Requirement Map
 
@@ -56,7 +56,7 @@
     -   create a booking
     -   lis their bookings
 
--   role: basic-admin
+-   role: `basic-admin`
     -	create a hotel
     -	edit hotel data
     -	create rooms
@@ -69,14 +69,14 @@
     -	list clients
 
 
--   role: full-admin
+-   role: `full-admin`
     -	[basic-admin]*
     -	create basic admin users
     -	create full admin users
     -	list admins users
 
 
-##### full-admin
+##### `full-admin`
 -   create basic admin users
     -   check if admin with `id` exists
     -   check if has the role `full-admin`

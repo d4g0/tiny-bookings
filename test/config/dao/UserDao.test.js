@@ -11,15 +11,15 @@ describe(
 
         }
 
-        prisma.admins.create({
-            data:{
-                user_role,
-                admin_name,
-                hash_password,
-                admin_description,
-                
-            }
-        })
+        // prisma.admins.create({
+        //     data:{
+        //         user_role,
+        //         admin_name,
+        //         hash_password,
+        //         admin_description,
+
+        //     }
+        // })
 
         test(
             "create and retrieve a full-admin",
