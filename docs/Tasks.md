@@ -20,11 +20,27 @@
     - create connect and disconnect functions to manage in the app flow 
     - (24/19:32)
   - create user dao (work-pause start again at 23:18)
-    - create user
-      - full admin
-      - basic admin
-      - client with email
-      - client with name
-    - retrive user
+    - full admin
+      - create user
+      - retrive user 
+      - delete admin 
+        completed (27-march-05:27) then toke a pause
+      
+    - basic admin
+      - pending
+    - client with email
+      - pending
+    - client with name
+      - pending
+    - 
+  - setup basic express and graphql
+  -  start ()
+  - define login
+    - enabled for full admins
+    - enabled for full basic-admins
+    - enabled for full clients
+
+    
 
 ## set up express basic + apollo graphql
+start 27-march-6:17
