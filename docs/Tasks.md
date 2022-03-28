@@ -34,7 +34,8 @@
       - pending
     - 
   - setup basic express and graphql
-  -  start ()
+  - define create admin api
+  - 
   - define login
     - enabled for full admins
     - enabled for full basic-admins
@@ -46,3 +47,13 @@
 start 27-march-6:17
 basic express done by 7:30 then brake
 restart working 9:30
+basic graphql setup by 11:25 brake
+start 28-march-01:10
+basic done at some point before 5:30
+
+## define create admin api 
+start 6:00
+refactor createFullAdmin into createAdmin dao.fn by 7:00 (test refactor included) brake
+start 7:34
+createAdminService
+validation 8:43

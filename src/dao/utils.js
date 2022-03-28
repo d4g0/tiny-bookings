@@ -1,5 +1,6 @@
 import { isValidString } from "utils";
 import { USER_ROLES } from "~/dao/DBConstans";
+import Joi from 'joi';
 
 /**
  * Maps a find admin query response data 
@@ -43,17 +44,45 @@ export function mapAdminResponseDataToAdminUser({ // rename
     }
 }
 
-export function isInAdminRoles(user_role){
+export function isInAdminRoles(user_role) {
     var isInAdminRoles = false;
     if (!isValidString(user_role)) {
-        return  isInAdminRoles
+        return isInAdminRoles
     }
     const admin_roles_list = [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role];
     const user_role_index = admin_roles_list.indexOf(user_role);
     if (user_role_index == -1) {
-        return  isInAdminRoles
+        return isInAdminRoles
     }
     isInAdminRoles = true;
     return isInAdminRoles;
-    
+
+}
+
+export function isValidEmail(email) {
+    const emailSchema = Joi.string().email();
+    const { error, value } = emailSchema.validate(email);
+    return !error;
+}
+
+export function isValidUserName(user_name) {
+    const userNameSchema = Joi.string().min(4).max(60);
+    const { error, value } = userNameSchema.validate(user_name);
+    return !error;
+}
+
+export function isValidAdminDescription(admin_description) {
+    const adminDescriptionSchema = Joi.string().min(4).max(150);
+    const { error, value } = adminDescriptionSchema.validate(admin_description);
+    return !error;
+}
+
+
+
+export function isValidPassword(password) {
+    // a password should have to be at least 8 chars long
+    // maximun 18 charactes
+    const passwordSchema = Joi.string().min(8).max(18);
+    const { error, value } = passwordSchema.validate(password);
+    return !error;
 }

@@ -1,5 +1,5 @@
 import { USER_ROLES } from '~/dao/DBConstans'
-import { createFullAdmin, getAdminByEmail, deleteAdminByEmail, createAdmin } from '~/dao/UserDao.js'
+import { getAdminByEmail, deleteAdminByEmail, createAdmin } from '~/dao/UserDao.js'
 
 
 describe(
