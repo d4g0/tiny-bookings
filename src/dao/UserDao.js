@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
-import { mapCreateFullAdminResToAdminUser, mapGetAdminByNameResToAdminUser } from '~/dao/utils'
+import { mapCreateFullAdminResToAdminUser, mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
 
 
@@ -25,16 +25,16 @@ export const USER_DAO_ERRORS = {
  * 
  * @param {String} username 
  */
-export async function getAdminByName(adminName) {
+export async function getAdminByEmail(adminEmail) {
     // validate
-    if (!isValidString(adminName)) {
+    if (!isValidString(adminEmail)) {
         throw new Error(`Non valid string provided: ${adminName}`)
     }
 
     // query for user with user_role
     var data = await prisma.admins.findUnique({
         where: {
-            admin_name: adminName
+            email: adminEmail
         },
         include: {
             user_roles: true
@@ -67,9 +67,10 @@ export async function getAdminByName(adminName) {
     // --------------------
     // MAP to a admin user 
     // --------------------
-    var admin = mapGetAdminByNameResToAdminUser({
+    var admin = mapAdminResponseDataToAdminUser({
         id: data.id,
         user_roles: data.user_roles,
+        email: data.email,
         admin_name: data.admin_name,
         admin_description: data.admin_description,
         hash_password: data.hash_password,
@@ -95,6 +96,7 @@ export async function getAdminByName(adminName) {
  * @param {Object} admin_data
  */
 export async function createFullAdmin({
+    email,
     admin_name,
     admin_description,
     hash_password,
@@ -106,6 +108,10 @@ export async function createFullAdmin({
     }
     if (!isValidString(admin_description)) {
         throw new Error(`Non Valid String admin_description arg value: ${admin_description}`)
+    }
+    // Investigate if `isValidString` is adecuate validation mecanism for bcrypt hashes
+    if (!isValidString(email)) {
+        throw new Error(`Non Valid String admin_description arg value: ${hash_password}`)
     }
     // Investigate if `isValidString` is adecuate validation mecanism for bcrypt hashes
     if (!isValidString(hash_password)) {
@@ -122,6 +128,7 @@ export async function createFullAdmin({
     var res = await prisma.admins.create({
         data: {
             user_role: full_admin_role_id,
+            email,
             admin_name,
             admin_description,
             hash_password,
@@ -144,13 +151,13 @@ export async function createFullAdmin({
      */
     var admin = mapCreateFullAdminResToAdminUser({
         id: res.id,
+        email:res.email,
         admin_name: res.admin_name,
         admin_description: res.admin_description,
         hash_password: res.hash_password,
         reset_token: res.reset_token,
         created_at: res.created_at
     })
-
 
     return admin;
 }
@@ -161,17 +168,33 @@ export async function createFullAdmin({
  * filtered by his name
  * @param {String} adminName 
  */
-export async function deleteAdminByName(adminName) {
+export async function deleteAdminByEmail(adminEmail) {
     // validate
-    if (!isValidString(adminName)) {
-        throw new Error(`Non valid string provided: ${adminName}`)
+    if (!isValidString(adminEmail)) {
+        throw new Error(`Non valid string provided: ${adminEmail}`)
     }
 
-    var deletedUser = await prisma.admins.delete({
+    var delRes = await prisma.admins.delete({
         where: {
-            admin_name: adminName
+            email: adminEmail
+        },
+        include:{
+            user_roles:true
         }
     })
+
+    var deletedUser = mapAdminResponseDataToAdminUser({
+        id: delRes.id,
+        email:delRes.email,
+        admin_name: delRes.admin_name,
+        admin_description: delRes.admin_description,
+        hash_password: delRes.hash_password,
+        reset_token: delRes.reset_token,
+        created_at: delRes.created_at,
+        user_roles:delRes.user_roles
+    })
+
+
 
     return deletedUser;
 }

@@ -4,15 +4,15 @@
 export const USER_ROLES = {
     'FULL_ADMIN': {
         id: 1,
-        user_role: 'full-admin'
+        user_role: 'FULL_ADMIN'
     },
     'BASIC_ADMIN': {
         id: 2,
-        user_role: 'basic-admin'
+        user_role: 'BASIC_ADMIN'
     },
     'CLIENT': {
         id: 3,
-        user_role: 'client'
+        user_role: 'CLIENT'
     }
 }
 

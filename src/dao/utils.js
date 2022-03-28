@@ -19,8 +19,9 @@ import { USER_ROLES } from "~/dao/DBConstans";
  * ```
  * 
 */
-export function mapGetAdminByNameResToAdminUser({
+export function mapAdminResponseDataToAdminUser({ // rename
     id, //  integer
+    email, // string
     admin_name, // string
     admin_description, // string
     hash_password, // string
@@ -32,11 +33,12 @@ export function mapGetAdminByNameResToAdminUser({
         id: id,
         // map user_role `id` to user_role `string` in the join `user_roles` table
         user_role: user_roles.user_role,
-        admin_name: admin_name,
-        admin_description: admin_description,
-        hash_password: hash_password,
-        reset_token: reset_token,
-        created_at: created_at
+        email, // string
+        admin_name,
+        admin_description,
+        hash_password,
+        reset_token,
+        created_at
     }
 }
 
@@ -55,6 +57,7 @@ export function mapGetAdminByNameResToAdminUser({
 */
 export function mapCreateFullAdminResToAdminUser({
     id, // integer
+    email, // string
     admin_name, // string,
     admin_description, //  string
     hash_password, //  string,
@@ -66,6 +69,7 @@ export function mapCreateFullAdminResToAdminUser({
     return {
         id,
         user_role: USER_ROLES.FULL_ADMIN.user_role,
+        email,
         admin_name,
         admin_description,
         hash_password,

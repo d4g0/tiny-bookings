@@ -1,4 +1,4 @@
-import { USER_DAO_ERRORS, createFullAdmin, getAdminByName, deleteAdminByName } from '~/dao/UserDao.js'
+import { USER_DAO_ERRORS, createFullAdmin, getAdminByEmail, deleteAdminByEmail } from '~/dao/UserDao.js'
 
 
 describe(
@@ -7,6 +7,7 @@ describe(
     function userDaoTest() {
 
         var adminData = {
+            email: 'test@email.com',
             admin_name: 'test-admin',
             admin_description: 'test admin for development',
             hash_password: 'supper foo hash password ',
@@ -20,7 +21,7 @@ describe(
                 var dbError = null;
 
                 try {
-                    await getAdminByName('this-admin-name-should-not-exists');
+                    await getAdminByEmail('this-admin-email@should.not.exist');
                 } catch (error) {
                     console.log(error);
                     dbError = error
@@ -50,6 +51,7 @@ describe(
 
                     // create
                     createdAdmin = await createFullAdmin({
+                        email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
                         hash_password: adminData.hash_password,
@@ -57,12 +59,12 @@ describe(
                     })
 
                     // read
-                    retrivedAdmin = await getAdminByName(adminData.admin_name);
+                    retrivedAdmin = await getAdminByEmail(adminData.email);
 
                     // delete
-                    deletedAdmin = await deleteAdminByName(adminData.admin_name);
+                    deletedAdmin = await deleteAdminByEmail(adminData.email);
 
-                    // console.log(deletedAdmin);
+                    console.log(deletedAdmin);
 
                     if (createdAdmin.id == retrivedAdmin.id && retrivedAdmin.id == deletedAdmin.id) {
                         idMatch = true;
@@ -74,11 +76,11 @@ describe(
                     console.log(error)
                     dbError = error;
                 }
-                expect(createdAdmin.admin_name).toBe(adminData.admin_name);
-                expect(retrivedAdmin.admin_name).toBe(adminData.admin_name);
-                expect(deletedAdmin.admin_name).toBe(adminData.admin_name);
+               
                 expect(idMatch).toBe(true);
                 expect(dbError).toBeNull();
+                expect(createdAdmin).toMatchObject(retrivedAdmin);
+                expect(retrivedAdmin).toMatchObject(deletedAdmin);
 
             }
         )
@@ -94,6 +96,7 @@ describe(
                 try {
                     // create first admin
                     admin1 = await createFullAdmin({
+                        email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
                         hash_password: adminData.hash_password,
@@ -103,6 +106,7 @@ describe(
                     // atemp to create another with same name, 
                     // expect to rise a dbError
                     await createFullAdmin({
+                        email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
                         hash_password: adminData.hash_password,
@@ -115,7 +119,7 @@ describe(
                     console.log(error);
                     dbError = error;
                     // clean db
-                    await deleteAdminByName(adminData.admin_name);
+                    await deleteAdminByEmail(adminData.email);
                 }
 
                 expect(dbError).toBeTruthy();
@@ -123,6 +127,7 @@ describe(
             }
 
         )
+
 
 
 
