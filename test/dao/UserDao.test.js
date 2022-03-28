@@ -1,5 +1,5 @@
 import { USER_ROLES } from '~/dao/DBConstans'
-import { getAdminByEmail, deleteAdminByEmail, createAdmin } from '~/dao/UserDao.js'
+import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById } from '~/dao/UserDao.js'
 
 
 describe(
@@ -71,7 +71,7 @@ describe(
                     // create
                     createdAdmin = await createAdmin({
                         // next comming
-                        user_role:USER_ROLES.FULL_ADMIN.user_role,
+                        user_role: USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -102,7 +102,7 @@ describe(
                 expect(dbError).toBeNull();
                 expect(createdAdmin).toMatchObject(retrivedAdmin);
                 expect(retrivedAdmin).toMatchObject(deletedAdmin)
-                
+
 
             }
         )
@@ -118,7 +118,7 @@ describe(
                 try {
                     // create first admin
                     admin1 = await createAdmin({
-                        user_role:USER_ROLES.FULL_ADMIN.user_role,
+                        user_role: USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -129,7 +129,7 @@ describe(
                     // atemp to create another with same name, 
                     // expect to rise a dbError
                     await createAdmin({
-                        user_role:USER_ROLES.FULL_ADMIN.user_role,
+                        user_role: USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -181,7 +181,7 @@ describe(
                         hash_password: fullAdmin.hash_password,
                         reset_token: fullAdmin.reset_token,
                     }
-                    
+
                     // happy path clean
                     await deleteAdminByEmail(basicAdmin.email);
                     await deleteAdminByEmail(fullAdmin.email);
@@ -198,7 +198,36 @@ describe(
             }
         )
 
+        // [admins] Retrieve an admin by id
+        test(
+            "Retrive an admin by ID",
+            async function () {
+                var dbError = null, admin1 = null, retrievedAdmin = null;
 
+                try {
+                    admin1 = await createAdmin({
+                        user_role: USER_ROLES.FULL_ADMIN.user_role,
+                        email: adminData.email,
+                        admin_name: adminData.admin_name,
+                        admin_description: adminData.admin_description,
+                        hash_password: adminData.hash_password,
+                        reset_token: adminData.reset_token
+                    });
+
+                    retrievedAdmin = await getAdminById(admin1.id);
+
+                    await deleteAdminByEmail(admin1.email);
+
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBe(null);
+                expect(admin1).toMatchObject(retrievedAdmin);
+            }
+        )
 
 
 

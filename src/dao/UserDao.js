@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
-import { isInAdminRoles, mapAdminResponseDataToAdminUser } from '~/dao/utils'
+import { isInAdminRoles, isValidId, mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
 
 
@@ -72,6 +72,58 @@ export async function getAdminByEmail(adminEmail) {
     // --------------------
     // MAP to a admin user 
     // --------------------
+    var admin = mapAdminResponseDataToAdminUser({
+        id: data.id,
+        user_roles: data.user_roles,
+        email: data.email,
+        admin_name: data.admin_name,
+        admin_description: data.admin_description,
+        hash_password: data.hash_password,
+        reset_token: data.reset_token,
+        created_at: data.created_at
+    })
+
+
+    return admin;
+}
+
+/**
+ * Retrives an admin user  from db 
+ * based in is user id since it's a 
+ * `UNIQUE` constrained field (PK)
+ * 
+ * Throws dbErrors:
+ * 
+ * If admin does not exists returns `null`
+ * 
+ * 
+ * 
+ * @param {String} adminId 
+ */
+ export async function getAdminById(adminId) {
+    // validate
+    if (!isValidId(adminId)) {
+        throw new Error(`Non valid $adminId provided: ${adminId}`)
+    }
+
+    // query for user with user_role
+    var data = await prisma.admins.findUnique({
+        where: {
+            id: adminId
+        },
+        include: {
+            user_roles: true
+        },
+    })
+
+
+    // handle not found case
+    if (!data) {
+        return null;
+    }
+
+    // handle found case
+    // map to a admin user 
     var admin = mapAdminResponseDataToAdminUser({
         id: data.id,
         user_roles: data.user_roles,
