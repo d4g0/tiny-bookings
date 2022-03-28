@@ -1,3 +1,4 @@
+import { isValidString } from "utils";
 import { USER_ROLES } from "~/dao/DBConstans";
 
 /**
@@ -42,38 +43,17 @@ export function mapAdminResponseDataToAdminUser({ // rename
     }
 }
 
-/**
-* Maps a `createFullAdminRes` to a Admin User Obj
-* {
-*  id: 7,
-*  user_role: 1,
-*  admin_name: 'test-full-admin',
-*  admin_description: 'test admin for development',
-*  hash_password: 'supper foo hash password ',
-*  reset_token: 'supper reset token for test admin',
-*  created_at: 2022-03-27T07:32:13.296Z
-* }
-* 
-*/
-export function mapCreateFullAdminResToAdminUser({
-    id, // integer
-    email, // string
-    admin_name, // string,
-    admin_description, //  string
-    hash_password, //  string,
-    reset_token, // string || null,
-    created_at, // string
-}) {
-
-
-    return {
-        id,
-        user_role: USER_ROLES.FULL_ADMIN.user_role,
-        email,
-        admin_name,
-        admin_description,
-        hash_password,
-        reset_token,
-        created_at
+export function isInAdminRoles(user_role){
+    var isInAdminRoles = false;
+    if (!isValidString(user_role)) {
+        return  isInAdminRoles
     }
+    const admin_roles_list = [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role];
+    const user_role_index = admin_roles_list.indexOf(user_role);
+    if (user_role_index == -1) {
+        return  isInAdminRoles
+    }
+    isInAdminRoles = true;
+    return isInAdminRoles;
+    
 }

@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
-import { mapAdminResponseDataToAdminUser } from '~/dao/utils'
+import { isInAdminRoles, mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
 
 
@@ -127,9 +127,7 @@ export async function createAdmin({
     }
 
     // validate user_role is an actual valid user_role
-    const admin_roles_list = [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role];
-    const user_role_index = admin_roles_list.indexOf(user_role);
-    if (user_role_index == -1) {
+    if (!isInAdminRoles(user_role)) {
         throw new Error(`user_role argument dosen't match with the real records : user_role: ${user_role}`);
     }
 
