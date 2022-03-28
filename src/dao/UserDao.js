@@ -10,8 +10,12 @@ import { USER_ROLES } from './DBConstans'
  * User Dao Errors
  */
 export const USER_DAO_ERRORS = {
-    NOT_FOUND: 'Not Found',
+    // used for a not-found custom error
+    // that was refactored
+    // but im goin to leave the object here
+    // in case that later can be needed ok
 }
+
 /**
  * Retrives an admin user  from db 
  * based in is user name since it's a 
@@ -19,8 +23,8 @@ export const USER_DAO_ERRORS = {
  * 
  * Throws dbErrors:
  * 
- * If admin does not exists throws an
- * `USER_DAO_ERRORS.NOT_FOUND` error
+ * If admin does not exists returns `null`
+ * 
  * 
  * 
  * @param {String} username 
@@ -44,7 +48,8 @@ export async function getAdminByEmail(adminEmail) {
 
     // handle not found case
     if (!data) {
-        throw new Error(USER_DAO_ERRORS.NOT_FOUND);
+        
+        return null;
     }
 
     // handle found case

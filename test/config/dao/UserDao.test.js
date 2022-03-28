@@ -1,4 +1,4 @@
-import { USER_DAO_ERRORS, createFullAdmin, getAdminByEmail, deleteAdminByEmail } from '~/dao/UserDao.js'
+import {  createFullAdmin, getAdminByEmail, deleteAdminByEmail } from '~/dao/UserDao.js'
 
 
 describe(
@@ -18,17 +18,17 @@ describe(
         test(
             "Check error of retrieve an admin that doesen't exist",
             async function () {
-                var dbError = null;
+                var dbError = null, shouldBeNullRes = 'null-placeholder' ; 
 
                 try {
-                    await getAdminByEmail('this-admin-email@should.not.exist');
+                    shouldBeNullRes = await getAdminByEmail('this-admin-email@should.not.exist');
                 } catch (error) {
                     console.log(error);
                     dbError = error
                 }
 
-                expect(dbError).toBeTruthy();
-                expect(dbError.message).toBe(USER_DAO_ERRORS.NOT_FOUND)
+                expect(dbError).toBe(null);
+                expect(shouldBeNullRes).toBe(null)
 
             }
         )
