@@ -1,40 +1,43 @@
-const typeDefinitions = `
-  type Post {
-    id: Int
-    text: String
-    user: User
+// type admin {
+//   id: ID!
+//   admin_name: String!
+// }
+
+//   admin(name:String){
+//     id
+//     admin_name
+//   }
+
+
+
+
+
+
+export const typeDefinitions = `
+
+  type Admin {
+    id: ID!
+    user_role:          String!
+    admin_name:         String!
+    admin_description:  String
+    hash_password:      String!
+    reset_token:        String
+    created_at:         String! 
+
   }
 
+  type Query {
 
-  type User {
-    avatar: String
-    username: String
-  }
+    info: String!
 
-  type RootQuery {
-    posts: [Post]
-  }
+    login(name: String!): Admin
 
-  input PostInput {
-    text: String!
-  }
-
-  input UserInput {
-    username: String!
-    avatar: String!
-  }
-
-  type RootMutation {
-    addPost (
-      post: PostInput!
-      user: UserInput!
-    ): Post
+   
   }
 
   schema {
-    query: RootQuery
-    mutation: RootMutation
+    query: Query,
   }
+
 `;
 
-export default [typeDefinitions];
