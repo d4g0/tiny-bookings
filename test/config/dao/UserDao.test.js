@@ -1,4 +1,5 @@
-import {  createFullAdmin, getAdminByEmail, deleteAdminByEmail } from '~/dao/UserDao.js'
+import { USER_ROLES } from '~/dao/DBConstans'
+import { createFullAdmin, getAdminByEmail, deleteAdminByEmail, createAdmin } from '~/dao/UserDao.js'
 
 
 describe(
@@ -14,11 +15,29 @@ describe(
             reset_token: 'supper reset token for test admin',
         }
 
+        var basicAdminData = {
+            user_role: USER_ROLES.BASIC_ADMIN.user_role,
+            email: 'test-basic@email.com',
+            admin_name: 'test-basic-admin',
+            admin_description: 'test admin for development',
+            hash_password: 'supper foo hash password ',
+            reset_token: 'supper reset token for test admin',
+        }
+
+        var fullAdminData = {
+            user_role: USER_ROLES.FULL_ADMIN.user_role,
+            email: 'test-full@email.com',
+            admin_name: 'test-full-admin',
+            admin_description: 'test admin for development',
+            hash_password: 'supper foo hash password ',
+            reset_token: 'supper reset token for test admin',
+        }
+
         // [admins] Retrieve an admin by name that doesn't exists
         test(
             "Check error of retrieve an admin that doesen't exist",
             async function () {
-                var dbError = null, shouldBeNullRes = 'null-placeholder' ; 
+                var dbError = null, shouldBeNullRes = 'null-placeholder';
 
                 try {
                     shouldBeNullRes = await getAdminByEmail('this-admin-email@should.not.exist');
@@ -50,7 +69,9 @@ describe(
 
 
                     // create
-                    createdAdmin = await createFullAdmin({
+                    createdAdmin = await createAdmin({
+                        // next comming
+                        user_role:USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -76,16 +97,17 @@ describe(
                     console.log(error)
                     dbError = error;
                 }
-               
+
                 expect(idMatch).toBe(true);
                 expect(dbError).toBeNull();
                 expect(createdAdmin).toMatchObject(retrivedAdmin);
-                expect(retrivedAdmin).toMatchObject(deletedAdmin);
+                expect(retrivedAdmin).toMatchObject(deletedAdmin)
+                
 
             }
         )
 
-        // [admins] Create 2 admins with same name error check
+        // // [admins] Create 2 admins with same name error check
         test(
             "Check create 2 admins with same name error",
             async function () {
@@ -95,7 +117,8 @@ describe(
 
                 try {
                     // create first admin
-                    admin1 = await createFullAdmin({
+                    admin1 = await createAdmin({
+                        user_role:USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -105,7 +128,8 @@ describe(
 
                     // atemp to create another with same name, 
                     // expect to rise a dbError
-                    await createFullAdmin({
+                    await createAdmin({
+                        user_role:USER_ROLES.FULL_ADMIN.user_role,
                         email: adminData.email,
                         admin_name: adminData.admin_name,
                         admin_description: adminData.admin_description,
@@ -126,6 +150,52 @@ describe(
                 expect(dbError.code).toBe('P2002')
             }
 
+        )
+
+        // [admins] Create a full and a basic admin
+        test(
+            "Create a Full and a Basic admin",
+            async function () {
+                var dbError = null,
+                    basicAdmin = null,
+                    basicAdminExtract = null,
+                    fullAdmin = null,
+                    fullAdminExtract = null;
+
+                try {
+                    basicAdmin = await createAdmin(basicAdminData);
+                    basicAdminExtract = {
+                        user_role: basicAdmin.user_role,
+                        email: basicAdmin.email,
+                        admin_name: basicAdmin.admin_name,
+                        admin_description: basicAdmin.admin_description,
+                        hash_password: basicAdmin.hash_password,
+                        reset_token: basicAdmin.reset_token,
+                    }
+                    fullAdmin = await createAdmin(fullAdminData);
+                    fullAdminExtract = {
+                        user_role: fullAdmin.user_role,
+                        email: fullAdmin.email,
+                        admin_name: fullAdmin.admin_name,
+                        admin_description: fullAdmin.admin_description,
+                        hash_password: fullAdmin.hash_password,
+                        reset_token: fullAdmin.reset_token,
+                    }
+                    
+                    // happy path clean
+                    await deleteAdminByEmail(basicAdmin.email);
+                    await deleteAdminByEmail(fullAdmin.email);
+
+
+                } catch (error) {
+                    console.log(error);
+                    dbError = error;
+                }
+
+                expect(dbError).toBe(null);
+                expect(basicAdminData).toMatchObject(basicAdminExtract);
+                expect(fullAdminData).toMatchObject(fullAdminExtract);
+            }
         )
 
 

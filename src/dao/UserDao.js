@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
-import { mapCreateFullAdminResToAdminUser, mapAdminResponseDataToAdminUser } from '~/dao/utils'
+import { mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
 
 
@@ -48,7 +48,7 @@ export async function getAdminByEmail(adminEmail) {
 
     // handle not found case
     if (!data) {
-        
+
         return null;
     }
 
@@ -89,7 +89,7 @@ export async function getAdminByEmail(adminEmail) {
 
 /**
  * 
- * Creates a Full-Admin in the db
+ * Creates a Admin in the db
  * Throws db errors or bad args errors
  * Atemp to create an admin with a name allready present
  * throws an error containing 
@@ -100,7 +100,8 @@ export async function getAdminByEmail(adminEmail) {
  * ```
  * @param {Object} admin_data
  */
-export async function createFullAdmin({
+export async function createAdmin({
+    user_role,
     email,
     admin_name,
     admin_description,
@@ -116,15 +117,25 @@ export async function createFullAdmin({
     }
     // Investigate if `isValidString` is adecuate validation mecanism for bcrypt hashes
     if (!isValidString(email)) {
-        throw new Error(`Non Valid String admin_description arg value: ${hash_password}`)
+        throw new Error(`Non Valid String email arg value: ${email}`)
     }
-    // Investigate if `isValidString` is adecuate validation mecanism for bcrypt hashes
     if (!isValidString(hash_password)) {
-        throw new Error(`Non Valid String admin_description arg value: ${hash_password}`)
+        throw new Error(`Non Valid String hash_password arg value: ${hash_password}`)
+    }
+    if (!isValidString(user_role)) {
+        throw new Error(`Non Valid String user_role arg value: ${user_role}`)
     }
 
+    // validate user_role is an actual valid user_role
+    const admin_roles_list = [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role];
+    const user_role_index = admin_roles_list.indexOf(user_role);
+    if (user_role_index == -1) {
+        throw new Error(`user_role argument dosen't match with the real records : user_role: ${user_role}`);
+    }
+
+
     // map correct user role id (based in the db constants as is db dependent)
-    var full_admin_role_id = USER_ROLES.FULL_ADMIN.id;
+    var admin_role_id = USER_ROLES[user_role].id;
     // validate reset_token or set null default since it's optional
     var computed_rest_token = isValidString(reset_token) ? reset_token : null;
 
@@ -132,12 +143,15 @@ export async function createFullAdmin({
     // query the admin creation
     var res = await prisma.admins.create({
         data: {
-            user_role: full_admin_role_id,
+            user_role: admin_role_id,
             email,
             admin_name,
             admin_description,
             hash_password,
             reset_token: computed_rest_token,
+        },
+        include: {
+            user_roles: true
         }
     })
 
@@ -150,22 +164,29 @@ export async function createFullAdmin({
      *  admin_description: 'test admin for development',
      *  hash_password: 'supper foo hash password ',
      *  reset_token: 'supper reset token for test admin',
-     *  created_at: 2022-03-27T07:32:13.296Z
+     *  created_at: 2022-03-27T07:32:13.296Z,
+     *  user_roles: {id:0, user_role:'role'}
      * }
      * 
      */
-    var admin = mapCreateFullAdminResToAdminUser({
+    var admin = mapAdminResponseDataToAdminUser({
         id: res.id,
-        email:res.email,
+        email: res.email,
         admin_name: res.admin_name,
         admin_description: res.admin_description,
         hash_password: res.hash_password,
         reset_token: res.reset_token,
-        created_at: res.created_at
+        created_at: res.created_at,
+        user_roles: res.user_roles
     })
 
     return admin;
 }
+
+
+
+
+
 
 
 /**
@@ -183,20 +204,20 @@ export async function deleteAdminByEmail(adminEmail) {
         where: {
             email: adminEmail
         },
-        include:{
-            user_roles:true
+        include: {
+            user_roles: true
         }
     })
 
     var deletedUser = mapAdminResponseDataToAdminUser({
         id: delRes.id,
-        email:delRes.email,
+        email: delRes.email,
         admin_name: delRes.admin_name,
         admin_description: delRes.admin_description,
         hash_password: delRes.hash_password,
         reset_token: delRes.reset_token,
         created_at: delRes.created_at,
-        user_roles:delRes.user_roles
+        user_roles: delRes.user_roles
     })
 
 
