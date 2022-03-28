@@ -1,4 +1,4 @@
-import { prisma, connect, disconnect } from 'dao/PrismaClient.js'
+import { connect, disconnect } from 'dao/PrismaClient.js'
 import { spinUpServer } from '~/server'
 async function main() {
 
