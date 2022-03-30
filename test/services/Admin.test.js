@@ -97,7 +97,7 @@ describe(
                 expect(fooAdmin.admin_name).toBeDefined();
                 expect(fooAdmin.admin_description).toBeDefined();
                 expect(fooAdmin.hash_password).toBeDefined();
-
+                expect(fooAdmin.created_at).toBeDefined();
             }
         )
     }
