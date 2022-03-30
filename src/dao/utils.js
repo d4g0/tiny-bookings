@@ -78,11 +78,22 @@ export function isValidAdminDescription(admin_description) {
 }
 
 
-
+/**
+ * A valid password is a string
+ * From 8 characters to 24
+ * @param {string} password 
+ * @returns 
+ */
 export function isValidPassword(password) {
     // a password should have to be at least 8 chars long
     // maximun 18 charactes
-    const passwordSchema = Joi.string().min(8).max(18);
+    const passwordSchema = Joi.string().min(8).max(24);
     const { error, value } = passwordSchema.validate(password);
+    return !error;
+}
+
+export function isValidId(creator_admin_id) {
+    const idSchema = Joi.number().integer();
+    const { error, value } = idSchema.validate(creator_admin_id);
     return !error;
 }
