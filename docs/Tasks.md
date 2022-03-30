@@ -40,6 +40,7 @@
     - enabled for full admins
     - enabled for full basic-admins
     - enabled for full clients
+- Define croos API Errors in Spec
 
     
 
@@ -59,3 +60,7 @@ createAdminService
 validation 8:43
 brake at 8:53
 start march 30 - 2:00
+done 4:31 break
+
+## define loging
+start 12:48

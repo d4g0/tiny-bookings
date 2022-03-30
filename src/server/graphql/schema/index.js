@@ -15,12 +15,20 @@
 
 export const typeDefinitions = `
 
+  ##
+  # Generals
+  ##
   enum USER_ROLE {
     FULL_ADMIN
     BASIC_ADMIN
     CLIENT
   }
 
+
+
+  ##
+  # ADMIN
+  ##
   type Admin {
     id: ID!
     user_role:          String!
@@ -41,19 +49,52 @@ export const typeDefinitions = `
     password: String!
   }
 
-  
 
+
+  ##
+  # Client
+  ##
+  type Client {
+    id: ID!
+    name: String!
+  }
+
+
+  ##
+  # Login
+  ##
+
+  input loginInput {
+    email: String!
+    password: String!
+  }
+
+
+  union LoginResult = Admin | Client
+
+
+
+  ##
+  # Query
+  ##
   type Query {
 
     info: String!
 
-    login(name: String!): Admin!
+    login(loginInput: loginInput!): LoginResult
   }
 
+  ##
+  # Mutation
+  ##
   type Mutation {
-    createAdmin(caInp: createAdminInput!) : Admin!
+    createAdmin(createAdminInput: createAdminInput!) : Admin!
   }
 
+
+  ##
+  # Schema Root
+  ##
   schema {
     query: Query,
     mutation: Mutation,

@@ -1,22 +1,39 @@
-import { createAdminService } from "services/users/admin";
+import { USER_ROLES } from "dao/DBConstans";
+import { createAdminService, getUserByEmailPassword } from "services/users/admin";
 import xss from "xss";
 
 export const resolvers = {
+    LoginResult: {
+        __resolveType(obj, ctx, info) {
+            if (obj.user_role) {
+                if (
+                    obj.user_role == USER_ROLES.FULL_ADMIN.user_role
+                    || obj.user_role == USER_ROLES.BASIC_ADMIN.user_role
+                ) {
+                    return 'Admin'
+                } else {
+                    return 'Client'
+                }
+            }
+            return null
+        }
+    },
     Query: {
         info: () => `Info here`,
-        login: (root, args, ctx) => {
-            console.log({
-                root,
-                args,
-                ctx
-            });
 
-            return {
-                id: 1,
-                admin_name: 'dago'
+        // ---------------
+        // Login 
+        // ---------------
+        async login(root, args, ctx) {
+
+            var { email, password } = args.loginInput;
+            var user = await getUserByEmailPassword(email, password);
+
+            if (user) {
+                return user;
             }
+            return null;
         },
-
 
     },
     Mutation: {
@@ -29,7 +46,7 @@ export const resolvers = {
                 admin_name,
                 admin_description,
                 password,
-            } = args.caInp;
+            } = args.createAdminInput;
 
 
             // sanitation non covered values will be

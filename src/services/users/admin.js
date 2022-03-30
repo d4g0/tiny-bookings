@@ -110,20 +110,48 @@ export async function getAdminByEmailService(adminEmail) {
     return getAdminByEmail(adminEmail)
 }
 
-// WORKING ON THIS
-export async function getAdminByEmailPasswordService(email, password) {
-    try {
-        // get admin if any
-        var admin = await getAdminByEmailService(email);
 
-        // validate password
-        // password validation
-        if (!isValidPassword(password)) {
-            throw new Error(`$password arg is not a valid password: ${'not-loged for privacy'}`);
+
+// WORKING ON THIS
+export async function getUserByEmailPassword(email, password) {
+    try {
+
+        // validaion
+        if (!isValidEmail(email)) {
+            var error = new Error('Non Valid Email Arg');
+            // error.code = 544;
+            throw error;
         }
 
+        if (!isValidPassword(password)) {
+            throw new Error(`$password arg is not a valid password`);
+        }
+
+
+        // user oulet
+        var user;
+        // get admin if any
+        var user = await getAdminByEmailService(email);
+
+        // get client if not admin found
+        // implement
+        if(!user){
+            throw new Error('User does not exists');
+        }
+
+        
+
         // check if match
-        const passwordsMatch = await bcrypt.compare(password, admin.hash_password);
+        const passwordsMatch = await bcrypt.compare(password, user.hash_password);
+        if (passwordsMatch) {
+            return user;
+        }
+        if (!user) {
+            var error = new Error('User does not exist');
+            error.code = 404;
+            throw error
+        }
+
     } catch (error) {
         throw error
     }
