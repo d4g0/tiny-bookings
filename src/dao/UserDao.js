@@ -247,7 +247,7 @@ export async function createAdmin({
 export async function deleteAdminByEmail(adminEmail) {
     // validate
     if (!isValidString(adminEmail)) {
-        throw new Error(`Non valid string provided: ${adminEmail}`)
+        throw new Error(`Non valid $adminEmail provided: ${adminEmail}`)
     }
 
     var delRes = await prisma.admins.delete({
