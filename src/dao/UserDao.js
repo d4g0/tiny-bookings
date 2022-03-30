@@ -18,7 +18,7 @@ export const USER_DAO_ERRORS = {
 
 /**
  * Retrives an admin user  from db 
- * based in is user name since it's a 
+ * based in is email since it's a 
  * `UNIQUE` constrained field
  * 
  * Throws dbErrors:

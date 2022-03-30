@@ -1,5 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { createAdminService } from "services/users/admin";
+import { createAdminService, getAdminByEmailService } from "services/users/admin";
 import { createAdmin, deleteAdminByEmail } from '~/dao/UserDao'
 
 describe(
@@ -65,13 +65,13 @@ describe(
 
 
                     basicFooAdmin = await createAdminService({
-                        creator_admin_id:admin1.id,
-                        user_role:basicAdminData.user_role,
-                        email:basicAdminData.email,
-                        admin_name:basicAdminData.admin_name,
-                        admin_description:basicAdminData.admin_description,
-                        password:basicAdminData.password,
-                        reset_token:'supper foo reset token'
+                        creator_admin_id: admin1.id,
+                        user_role: basicAdminData.user_role,
+                        email: basicAdminData.email,
+                        admin_name: basicAdminData.admin_name,
+                        admin_description: basicAdminData.admin_description,
+                        password: basicAdminData.password,
+                        reset_token: 'supper foo reset token'
                     })
 
                     console.log({
@@ -99,6 +99,58 @@ describe(
                 expect(fooAdmin.hash_password).toBeDefined();
                 expect(fooAdmin.created_at).toBeDefined();
             }
-        )
+        ),
+
+            // get an admin user happy path
+            test(
+                "Gets an admin user by it's email",
+                async function () {
+
+                    var dbError = null, retrievedAdmin = null, toCreateAdmin = null, fullAdmin = null;
+
+                    try {
+
+                        fullAdmin = await createAdmin({
+                            user_role: USER_ROLES.FULL_ADMIN.user_role,
+                            email: adminData.email,
+                            admin_name: adminData.admin_name,
+                            admin_description: adminData.admin_description,
+                            hash_password: adminData.hash_password,
+                            reset_token: adminData.reset_token
+                        });
+                        toCreateAdmin = await createAdminService({
+                            creator_admin_id: fullAdmin.id,
+                            user_role: toCreateAdminData.user_role,
+                            email: toCreateAdminData.email,
+                            admin_name: toCreateAdminData.admin_name,
+                            admin_description: toCreateAdminData.admin_description,
+                            password: toCreateAdminData.password
+
+                        })
+
+                        retrievedAdmin = await getAdminByEmailService(toCreateAdmin.email);
+
+                        // clean
+                        await deleteAdminByEmail(retrievedAdmin.email);
+                        await deleteAdminByEmail(adminData.email);
+
+                        console.log({
+                            retrievedAdmin
+                        })
+                    } catch (error) {
+                        console.log(error);
+                        dbError = error;
+                    }
+
+                    expect(dbError).toBe(null);
+                    expect(retrievedAdmin.id).toBeGreaterThanOrEqual(0);
+                    expect(retrievedAdmin.user_role).toBeDefined();
+                    expect(retrievedAdmin.email).toBeDefined();
+                    expect(retrievedAdmin.admin_name).toBeDefined();
+                    expect(retrievedAdmin.admin_description).toBeDefined();
+                    expect(retrievedAdmin.hash_password).toBeDefined();
+                    expect(retrievedAdmin.created_at).toBeDefined();
+                }
+            )
     }
 )

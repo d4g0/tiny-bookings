@@ -1,5 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { getAdminById } from "dao/UserDao";
+import { getAdminById, getAdminByEmail } from "dao/UserDao";
 import {
     isInAdminRoles,
     isValidEmail,
@@ -103,4 +103,9 @@ export async function createAdminService({
         throw error
     }
 
+}
+
+
+export async function getAdminByEmailService(adminEmail) {
+    return getAdminByEmail(adminEmail)
 }
