@@ -35,7 +35,7 @@
     - 
   - setup basic express and graphql
   - define create admin api
-  - 
+    - set up basic graphql models and resolvers
   - define login
     - enabled for full admins
     - enabled for full basic-admins
@@ -58,3 +58,4 @@ start 7:34
 createAdminService
 validation 8:43
 brake at 8:53
+start march 30 - 2:00

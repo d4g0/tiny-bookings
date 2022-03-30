@@ -40,7 +40,7 @@ export function mapAdminResponseDataToAdminUser({ // rename
         admin_description,
         hash_password,
         reset_token,
-        created_at
+        created_at: new Date(created_at).toISOString()
     }
 }
 

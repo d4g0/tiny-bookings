@@ -109,3 +109,22 @@ export async function createAdminService({
 export async function getAdminByEmailService(adminEmail) {
     return getAdminByEmail(adminEmail)
 }
+
+// WORKING ON THIS
+export async function getAdminByEmailPasswordService(email, password) {
+    try {
+        // get admin if any
+        var admin = await getAdminByEmailService(email);
+
+        // validate password
+        // password validation
+        if (!isValidPassword(password)) {
+            throw new Error(`$password arg is not a valid password: ${'not-loged for privacy'}`);
+        }
+
+        // check if match
+        const passwordsMatch = await bcrypt.compare(password, admin.hash_password);
+    } catch (error) {
+        throw error
+    }
+}

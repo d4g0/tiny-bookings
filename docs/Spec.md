@@ -18,6 +18,21 @@
     hash_password:      String,
     reset_token:        String || null,
     created_at:         String (Date)
-
 }
 ```
+
+### Creation
+```js
+    {
+        creator_admin_id,
+        user_role,
+        email,
+        admin_name,
+        admin_description,
+        password,
+    }
+```
+Creational constrains:
+Admin:
+-   `password` String min(8) max(24)
+-   Creator Admin `id` integer, it has to be a `FULL_ADMIN` role in db
