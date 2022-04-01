@@ -1,6 +1,7 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { createAdminService, getAdminsService, getUserByEmailPassword } from "services/users/admin";
 import xss from "xss";
+import jwt from 'jsonwebtoken';
 
 export const resolvers = {
     /// ---------------
@@ -8,14 +9,14 @@ export const resolvers = {
     // ---------------
     LoginResult: {
         __resolveType(obj, ctx, info) {
-            if (obj.user_role) {
+            if (obj.userData) {
                 if (
-                    obj.user_role == USER_ROLES.FULL_ADMIN.user_role
-                    || obj.user_role == USER_ROLES.BASIC_ADMIN.user_role
+                    obj.userData.user_role == USER_ROLES.FULL_ADMIN.user_role
+                    || obj.userData.user_role == USER_ROLES.BASIC_ADMIN.user_role
                 ) {
-                    return 'Admin'
+                    return 'AdminAuth'
                 } else {
-                    return 'Client'
+                    return 'ClientAuth'
                 }
             }
             return null
@@ -36,7 +37,19 @@ export const resolvers = {
             var user = await getUserByEmailPassword(email, password);
 
             if (user) {
-                return user;
+                var AdminAuth = {
+                    userData: user,
+                    token: null
+                }
+
+                var token = await jwt.sign(user, process.env.API_SECRET_KEY, {
+                    algorithm: 'HS256',
+                    expiresIn: '2h',
+                    subject: `${user.user_id}`
+                })
+                AdminAuth.token = token;
+
+                return AdminAuth;
             }
             return null;
         },

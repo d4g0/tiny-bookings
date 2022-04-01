@@ -69,8 +69,20 @@ export const typeDefinitions = `
     password: String!
   }
 
+  type AdminAuth {
+    userData: Admin!
+    token: String!
+  }
 
-  union LoginResult = Admin | Client
+  type ClientAuth {
+    userData: Client!
+    token: String!
+  }
+
+
+  union LoginResult = AdminAuth | ClientAuth
+
+  
 
 
 
