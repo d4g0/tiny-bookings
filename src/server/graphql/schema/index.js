@@ -82,6 +82,8 @@ export const typeDefinitions = `
     info: String!
 
     login(loginInput: loginInput!): LoginResult
+
+    admins: [Admin]!
   }
 
   ##

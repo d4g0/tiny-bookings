@@ -1,5 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { getAdminById, getAdminByEmail } from "dao/UserDao";
+import { getAdminById, getAdminByEmail, getAdmins } from "dao/UserDao";
 import {
     isInAdminRoles,
     isValidEmail,
@@ -112,7 +112,7 @@ export async function getAdminByEmailService(adminEmail) {
 
 
 
-// WORKING ON THIS
+// Returns a user if found a match
 export async function getUserByEmailPassword(email, password) {
     try {
 
@@ -128,26 +128,26 @@ export async function getUserByEmailPassword(email, password) {
         }
 
 
-        // user oulet
-        var user;
+        // admin oulet
+        var admin;
         // get admin if any
-        var user = await getAdminByEmailService(email);
+        var admin = await getAdminByEmailService(email);
 
         // get client if not admin found
         // implement
-        if(!user){
-            throw new Error('User does not exists');
+        if (!admin) {
+            throw new Error('admin does not exists');
         }
 
-        
+
 
         // check if match
-        const passwordsMatch = await bcrypt.compare(password, user.hash_password);
+        const passwordsMatch = await bcrypt.compare(password, admin.hash_password);
         if (passwordsMatch) {
-            return user;
+            return admin;
         }
-        if (!user) {
-            var error = new Error('User does not exist');
+        if (!admin) {
+            var error = new Error('admin does not exist');
             error.code = 404;
             throw error
         }
@@ -155,4 +155,9 @@ export async function getUserByEmailPassword(email, password) {
     } catch (error) {
         throw error
     }
+}
+
+
+export async function getAdminsService() {
+    return getAdmins();
 }

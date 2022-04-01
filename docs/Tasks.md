@@ -40,7 +40,10 @@
     - enabled for full admins
     - enabled for full basic-admins
     - enabled for full clients
-- Define croos API Errors in Spec
+  - Define cross API Errors in Spec (tray to keep errors in services, and propagate from there)
+  - Api Logs 
+    - Study pino https://www.twilio.com/blog/guide-node-js-logging
+  - Learn about POSTGRES_Indexes
 
     
 
@@ -64,3 +67,7 @@ done 4:31 break
 
 ## define loging
 start 12:48
+union types and query handling on those
+basic get admin by email n password | break 14:02
+start 15:36
+Auth

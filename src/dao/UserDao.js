@@ -100,7 +100,7 @@ export async function getAdminByEmail(adminEmail) {
  * 
  * @param {String} adminId 
  */
- export async function getAdminById(adminId) {
+export async function getAdminById(adminId) {
     // validate
     if (!isValidId(adminId)) {
         throw new Error(`Non valid $adminId provided: ${adminId}`)
@@ -273,4 +273,22 @@ export async function deleteAdminByEmail(adminEmail) {
 
 
     return deletedUser;
+}
+
+
+export async function getAdmins() {
+    var admins = await prisma.admins.findMany({
+        include: {
+            user_roles: true
+        }
+    })
+
+    if (admins) {
+        console.log({ loc: 'dao', admins })
+        var mapedAdmins = admins.map(function mapToAdmin(adminData) {
+            return mapAdminResponseDataToAdminUser(adminData)
+        })
+
+        return mapedAdmins
+    }
 }

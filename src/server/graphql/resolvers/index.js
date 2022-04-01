@@ -1,8 +1,11 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { createAdminService, getUserByEmailPassword } from "services/users/admin";
+import { createAdminService, getAdminsService, getUserByEmailPassword } from "services/users/admin";
 import xss from "xss";
 
 export const resolvers = {
+    /// ---------------
+    // Unions 
+    // ---------------
     LoginResult: {
         __resolveType(obj, ctx, info) {
             if (obj.user_role) {
@@ -18,6 +21,9 @@ export const resolvers = {
             return null
         }
     },
+    // ---------------
+    // Query 
+    // ---------------
     Query: {
         info: () => `Info here`,
 
@@ -35,10 +41,23 @@ export const resolvers = {
             return null;
         },
 
+        async admins() {
+
+            var admins = await getAdminsService()
+
+            if (admins) {
+                return admins
+            }
+            return null
+
+        }
+
     },
+    // ---------------
+    // Mutation 
+    // ---------------
     Mutation: {
         async createAdmin(root, args, ctx) {
-            console.log({ args })
             const {
                 creator_admin_id,
                 user_role,
@@ -48,11 +67,11 @@ export const resolvers = {
                 password,
             } = args.createAdminInput;
 
-
+            ''.toLocaleLowerCase().trim()
             // sanitation non covered values will be
             // extrictly validated in down procesing layers
             var s_email = xss(email);
-            var s_admin_name = xss(admin_name);
+            var s_admin_name = xss(admin_name.toLocaleLowerCase().trim());
             var s_admin_description = xss(admin_description);
 
             var createdAdmin;
