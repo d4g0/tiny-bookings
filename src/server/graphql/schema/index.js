@@ -41,7 +41,6 @@ export const typeDefinitions = `
   }
 
   input createAdminInput {
-    creator_admin_id: Int!
     user_role: USER_ROLE!
     email: String!
     admin_name: String!

@@ -36,3 +36,26 @@ Creational constrains:
 Admin:
 -   `password` String min(8) max(24)
 -   Creator Admin `id` integer, it has to be a `FULL_ADMIN` role in db
+
+
+## Auth Middleware
+
+```js
+auth: {
+    isAuth: true,
+    userData: {
+      id: 1,
+      user_role: 'FULL_ADMIN',
+      email: 'tocarralero@gmail.com',
+      admin_name: 'dago',
+      admin_description: 'system creator',
+      hash_password: '$2a$10$2nZp/EGj.aQY/PyyqGAMze2.a1C4H1knpdNSAO.TX/92katjMo75C',
+      reset_token: null,
+      created_at: '2022-03-28T04:03:46.415Z',
+      iat: 1648832543,
+      exp: 1648839743,
+      sub: '1'
+    }
+  }
+
+```

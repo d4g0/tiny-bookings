@@ -284,7 +284,7 @@ export async function getAdmins() {
     })
 
     if (admins) {
-        console.log({ loc: 'dao', admins })
+        // console.log({ loc: 'dao', admins })
         var mapedAdmins = admins.map(function mapToAdmin(adminData) {
             return mapAdminResponseDataToAdminUser(adminData)
         })

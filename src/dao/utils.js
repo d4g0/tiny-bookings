@@ -59,6 +59,16 @@ export function isInAdminRoles(user_role) {
 
 }
 
+export function isFullAdmin(user_role) {
+    var isFullAdmin = false;
+    if (!isValidString(user_role)) {
+        return isInAdminRoles
+    }
+    isFullAdmin = user_role == USER_ROLES.FULL_ADMIN.user_role;
+    return isFullAdmin;
+
+}
+
 export function isValidEmail(email) {
     const emailSchema = Joi.string().email();
     const { error, value } = emailSchema.validate(email);

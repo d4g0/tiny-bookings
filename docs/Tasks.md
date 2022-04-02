@@ -41,6 +41,8 @@
     - enabled for full basic-admins
     - enabled for full clients
   - Define cross API Errors in Spec (tray to keep errors in services, and propagate from there)
+  - Define graphql errors
+  - Define Graphql directives 
   - Api Logs 
     - Study pino https://www.twilio.com/blog/guide-node-js-logging
   - Learn about POSTGRES_Indexes
@@ -60,6 +62,7 @@ start 6:00
 refactor createFullAdmin into createAdmin dao.fn by 7:00 (test refactor included) brake
 start 7:34
 createAdminService
+  refactor to not check admin in db, trust in params instead, since it should be protected by `auth`
 validation 8:43
 brake at 8:53
 start march 30 - 2:00
@@ -70,4 +73,9 @@ start 12:48
 union types and query handling on those
 basic get admin by email n password | break 14:02
 start 15:36
-Auth
+pending clients
+
+## Define cross API Errors
+Start 
+2/april - 11:00
+brake to watch fm graphql course
