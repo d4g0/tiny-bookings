@@ -2,7 +2,7 @@ const API_PORT = process.env.API_PORT || 3010;
 import Express from 'express';
 const app = Express();
 import router from '~/server/router';
-import { apiRateLimiter, auth } from '~/server/middleware/index.js';
+import { apiRateLimiter } from '~/server/middleware/index.js';
 import helmet from 'helmet';
 import graphqlServer from '~/server/graphql'
 import expressPlayground from 'graphql-playground-middleware-express';
@@ -14,7 +14,7 @@ app.set('trust proxy', 1);
 if (process.env.NODE_ENV == 'production') {
     app.use(apiRateLimiter, helmet());
 }
-app.use(Express.json(), auth);
+app.use(Express.json());
 // api routes
 app.use('/api/', router);
 

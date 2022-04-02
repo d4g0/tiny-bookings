@@ -79,3 +79,13 @@ pending clients
 Start 
 2/april - 11:00
 brake to watch fm graphql course
+
+## Refactor graphql to separation of concerns patters
+start
+2/april - 14:53
+- login
+### Auths to inside context
+- authentication
+- authorization
+### Data Validation and sanitation
+- props validation for resolvers

@@ -1,11 +1,11 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { createAdminService, getAdminsService, getUserByEmailPassword } from "services/users/admin";
 import xss from "xss";
-import jwt from 'jsonwebtoken';
 import {
     isInAdminRoles,
     isFullAdmin
 } from "dao/utils";
+import { authenticated, authorized } from "./auth";
 
 export const resolvers = {
     /// ---------------
@@ -39,6 +39,7 @@ export const resolvers = {
 
             var { email, password } = args.loginInput;
             var user = await getUserByEmailPassword(email, password);
+
             console.group('Login')
             console.log({ user })
             console.groupEnd()
@@ -49,11 +50,14 @@ export const resolvers = {
                     token: null
                 }
 
-                var token = await jwt.sign(user, process.env.API_SECRET_KEY, {
-                    algorithm: 'HS256',
-                    expiresIn: '2h',
-                    subject: `${user.id}`
-                })
+                var token = ctx.createAdminToken({
+                    id: user.id,
+                    user_role: user.user_role,
+                    email: user.email,
+                    admin_name: user.admin_name,
+                    created_at: user.created_at,
+                });
+
                 AdminAuth.token = token;
 
                 return AdminAuth;
@@ -61,16 +65,18 @@ export const resolvers = {
             return null;
         },
 
-        async admins() {
-
-            var admins = await getAdminsService()
-
-            if (admins) {
-                return admins
-            }
-            return null
-
-        }
+        admins: authenticated(
+            // authorized(
+            //     USER_ROLES.FULL_ADMIN,
+                async () => {
+                    var admins = await getAdminsService();
+                    if (admins) {
+                        return admins
+                    }
+                    return null
+                }
+            // )
+        )
 
     },
     // ---------------

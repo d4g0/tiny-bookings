@@ -1,19 +1,6 @@
-// type admin {
-//   id: ID!
-//   admin_name: String!
-// }
+import gql from 'graphql-tag';
 
-//   admin(name:String){
-//     id
-//     admin_name
-//   }
-
-
-
-
-
-
-export const typeDefinitions = `
+export const typeDefinitions = gql`
 
   ##
   # Generals

@@ -20,6 +20,16 @@
     created_at:         String (Date)
 }
 ```
+Token for admin auth
+```js
+  jwt_payload : {
+    id,
+    user_role,
+    email,
+    admin_name,
+    created_at,
+  }
+```
 
 ### Creation
 ```js
