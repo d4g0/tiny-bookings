@@ -43,6 +43,10 @@ export const typeDefinitions = gql`
   type Client {
     id: ID!
     name: String!
+    user_role:          String!
+    hash_password:      String
+    reset_token:        String
+    created_at:         String!
   }
 
 
@@ -55,21 +59,13 @@ export const typeDefinitions = gql`
     password: String!
   }
 
-  type AdminAuth {
-    userData: Admin!
+  union User = Admin | Client
+
+  type Auth {
+    user: User!
     token: String!
+    token_created_at: String!
   }
-
-  type ClientAuth {
-    userData: Client!
-    token: String!
-  }
-
-
-  union LoginResult = AdminAuth | ClientAuth
-
-  
-
 
 
   ##
@@ -77,11 +73,11 @@ export const typeDefinitions = gql`
   ##
   type Query {
 
-    info: String!
-
-    login(loginInput: loginInput!): LoginResult
+    login(input: loginInput!): Auth!
 
     admins: [Admin]!
+
+
   }
 
   ##

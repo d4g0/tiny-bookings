@@ -87,5 +87,6 @@ start
 ### Auths to inside context
 - authentication
 - authorization
+  - Done 2-april-17:00
 ### Data Validation and sanitation
 - props validation for resolvers

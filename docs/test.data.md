@@ -6,4 +6,4 @@ supper-foo-pass
 
 [susy][basic-admin]
 susy@gmail.com
-supper-susy-1234
+supper-foo-pass

@@ -1,6 +1,16 @@
+/**
+ * This file abstracts: 
+ * authentication: the art of know if you `are` the one you say you are
+ * authorization:  the art of know if you `can` do the thing you want to do
+ * 
+ * In an intention to decouple that logic from graphql resolvers.
+ * It has been influenced by the Advance GraphQL FrontEnd Masters Course on 
+ * the subjetc by Scott Moss.
+ * 
+ */
 import jwt from 'jsonwebtoken';
 const SECRET = process.env.API_SECRET_KEY || 'foo-key';
-const { AuthenticationError } = require('apollo-server-core');
+const { AuthenticationError, ForbiddenError } = require('apollo-server-core');
 
 export function getTokenFromReq(req) {
     // validate and verify
@@ -66,9 +76,7 @@ export function getUserFromToken(token) {
 
 
 export const authenticated = next => (root, args, context, info) => {
-    // console.log({
-    //     context
-    // })
+
     if (!context.user) {
         throw new AuthenticationError('must authenticate')
     }
@@ -78,22 +86,25 @@ export const authenticated = next => (root, args, context, info) => {
 
 
 export const authorized = (role_s, next) => (root, args, context, info) => {
-    console.log({
-        role_s,
-        user_role: context.user.user_role
-    })
+
+    // if not valid role to check stop chain
+    if (!(typeof role_s == 'string' || Array.isArray(role_s))) {
+        throw new Error('Dont mess around with non covered roles dude');
+    }
     // case a simple role to check
     if (typeof role_s == 'string') {
-        if (context.user.user_role !== role) {
-            throw new AuthenticationError(`Not Authroizaced`);
+        if (context.user.user_role !== role_s) {
+            throw new ForbiddenError(`Forbidden`);
         }
     }
     // case is a set of roles to check (array)
     if (Array.isArray(role_s)) {
         if (!role_s.includes(context.user.user_role)) {
-            throw new AuthenticationError(`Not Authroizaced`);
+            throw new ForbiddenError(`Forbidden`);
         }
     }
+
+
 
     return next(root, args, context, info)
 }

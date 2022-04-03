@@ -20,7 +20,6 @@ const server = new ApolloServer({
     const token = getTokenFromReq(req);
     const user = getUserFromToken(token);
     return { user, createAdminToken }
-
   }
 });
 
