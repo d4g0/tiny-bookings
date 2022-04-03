@@ -26,7 +26,7 @@ export const resolvers = {
             
             var user = await getUserByEmailPassword(email, password);
             // getUserByEmailPassword throws if not found, so
-            // if we are here we have an user
+            // if we are here we have a user
             if (user) {
 
                 Auth.user = user;
