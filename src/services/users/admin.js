@@ -9,7 +9,7 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { createAdmin } from '~/dao/UserDao'
+import { createAdmin, deleteAdminById as delAdminByIdDao} from '~/dao/UserDao'
 
 
 /**
@@ -161,4 +161,8 @@ export async function getUserByEmailPassword(email, password) {
 
 export async function getAdminsService() {
     return getAdmins();
+}
+
+export async function deleteAdminById(id){
+    return delAdminByIdDao(id);
 }

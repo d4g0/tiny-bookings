@@ -85,6 +85,7 @@ export const typeDefinitions = gql`
   ##
   type Mutation {
     createAdmin(input: createAdminInput!) : Admin!
+    deleteAdmin(id: Int!): Admin!
   }
 
 

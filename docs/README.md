@@ -17,7 +17,8 @@
 
 ### For all users types (admins, and clients)
 -   Reset their password
--   Recover their password by email (forgot my password flow)
+    -   Clients only
+        -   Recover their password by email (forgot my password flow)
 
 ### From client
 -   Check for rooms availability by `date interval of travel` and `number of companions`
@@ -71,16 +72,33 @@
 
 -   role: `full-admin`
     -	[basic-admin]*
-    -	create basic admin users
-    -	create full admin users
+    -	create basic admin users    
+    -	create full admin users 
     -	list admins users
+    -   delete other admin users
 
 
 ##### `full-admin`
--   create basic admin users
+
+[✅]
+-   create admin users
     -   check if admin with `id` exists
     -   check if has the role `full-admin`
     -   then
+        -   basic
         -   create new `basic-admin` with
             -   name
+            -   email
+            -   password
+        -   full
+        -   create new `full-admin` with
+            -   name
+            -   email
+            -   password
+[✅]
+-   list admins
+
+[✅]
+-   
+
 

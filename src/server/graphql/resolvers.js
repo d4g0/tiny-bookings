@@ -1,5 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { createAdminService, getAdminsService, getUserByEmailPassword } from "services/users/admin";
+import { createAdminService, getAdminsService, getUserByEmailPassword, deleteAdminById } from "services/users/admin";
 import xss from "xss";
 import { authenticated, authorized } from "./auth";
 
@@ -55,12 +55,12 @@ export const resolvers = {
                     USER_ROLES.FULL_ADMIN.user_role,
                     USER_ROLES.BASIC_ADMIN.user_role
                 ],
-                async (root, args, context, info) => {
+                async (root, args, ctx, info) => {
                     var admins = await getAdminsService();
                     if (admins) {
 
                         // filter current admin from results
-                        var adminsMinusCurrentAdmin = admins.filter(admin => admin.id != context.user.id);
+                        var adminsMinusCurrentAdmin = admins.filter(admin => admin.id != ctx.user.id);
                         return adminsMinusCurrentAdmin;
                     }
                     return null
@@ -109,6 +109,17 @@ export const resolvers = {
 
 
                     return createdAdmin;
+                }
+            )
+        ),
+
+        deleteAdmin: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var id = args.id;
+                    var deletedAdmin = await deleteAdminById(id);
+                    return deletedAdmin;
                 }
             )
         )

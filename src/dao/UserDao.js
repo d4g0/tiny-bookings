@@ -2,7 +2,7 @@ import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
 import { isInAdminRoles, isValidId, mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
-import { DB_UNIQUE_CONSTRAINT_ERROR } from './Errors'
+import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
 
 
 
@@ -287,6 +287,52 @@ export async function deleteAdminByEmail(adminEmail) {
 
 
     return deletedUser;
+}
+
+/**
+ * Deletes a admin user from db
+ * filtered by his name
+ * @param {number} id 
+ */
+export async function deleteAdminById(id) {
+    // validate
+    if (!isValidId(id)) {
+        throw new Error(`Non valid $id provided: ${id}`)
+    }
+
+    try {
+
+        var delRes = await prisma.admins.delete({
+            where: {
+                id: id
+            },
+            include: {
+                user_roles: true
+            }
+        })
+
+        var deletedUser = mapAdminResponseDataToAdminUser({
+            id: delRes.id,
+            email: delRes.email,
+            admin_name: delRes.admin_name,
+            admin_description: delRes.admin_description,
+            hash_password: delRes.hash_password,
+            reset_token: delRes.reset_token,
+            created_at: delRes.created_at,
+            user_roles: delRes.user_roles
+        })
+
+        return deletedUser;
+
+    } catch (error) {
+        // case prisma record not found
+        if (error.code == 'P2025') {
+            var customError = new NOT_FOUND_RECORD_ERROR('Admin not found');
+            throw customError;
+        }
+        throw error;
+    }
+
 }
 
 
