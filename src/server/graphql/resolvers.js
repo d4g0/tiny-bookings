@@ -4,7 +4,7 @@ import xss from "xss";
 import { authenticated, authorized } from "./auth";
 
 export const resolvers = {
-    
+
     // ---------------
     // Query 
     // ---------------
@@ -58,7 +58,10 @@ export const resolvers = {
                 async (root, args, context, info) => {
                     var admins = await getAdminsService();
                     if (admins) {
-                        return admins
+
+                        // filter current admin from results
+                        var adminsMinusCurrentAdmin = admins.filter(admin => admin.id != context.user.id);
+                        return adminsMinusCurrentAdmin;
                     }
                     return null
                 }
