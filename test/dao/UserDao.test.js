@@ -1,3 +1,4 @@
+import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from 'dao/Errors'
 import { USER_ROLES } from '~/dao/DBConstans'
 import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById } from '~/dao/UserDao.js'
 
@@ -145,9 +146,8 @@ describe(
                     // clean db
                     await deleteAdminByEmail(adminData.email);
                 }
-
                 expect(dbError).toBeTruthy();
-                expect(dbError.code).toBe('P2002')
+                expect(dbError.code).toBe(DB_UNIQUE_CONSTRAINT_ERROR_KEY);
             }
 
         )

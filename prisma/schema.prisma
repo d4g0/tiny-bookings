@@ -29,8 +29,8 @@ model hotel {
   id                          Int      @id @default(autoincrement())
   hotel_name                  String   @unique @db.VarChar(100)
   maximun_free_calendar_days  Int      @default(30)
-  check_in_hour_time          DateTime @db.Timestamp(6)
-  check_out_hour_time         DateTime @db.Timestamp(6)
+  check_in_hour_time          DateTime @db.Time(6)
+  check_out_hour_time         DateTime @db.Time(6)
   minimal_prev_days_to_cancel Int      @default(5)
   room                        room[]
 }

@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS public.hotel
     id serial,
     hotel_name character varying(100) NOT NULL UNIQUE,
     maximun_free_calendar_days integer NOT NULL DEFAULT 30,
-    check_in_hour_time timestamp without time zone NOT NULL,
-    check_out_hour_time timestamp without time zone NOT NULL,
+    check_in_hour_time time without time zone NOT NULL,
+    check_out_hour_time time without time zone NOT NULL,
     minimal_prev_days_to_cancel integer NOT NULL DEFAULT 5,
     PRIMARY KEY (id)
 );
