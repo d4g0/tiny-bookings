@@ -9,7 +9,8 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { createAdmin, deleteAdminById as delAdminByIdDao} from '~/dao/UserDao'
+import { createAdmin, deleteAdminById as delAdminByIdDao } from '~/dao/UserDao'
+import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 
 
 /**
@@ -135,9 +136,11 @@ export async function getUserByEmailPassword(email, password) {
         var admin = await getAdminByEmailService(email);
 
         // get client if not admin found
-        // implement
         if (!admin) {
-            throw new Error('admin does not exists');
+
+            // check now for Clients TODO
+            // for now lets finish the function with a not found error
+            throw new NOT_FOUND_RECORD_ERROR('User Not Found');
         }
 
 
@@ -163,6 +166,6 @@ export async function getAdminsService() {
     return getAdmins();
 }
 
-export async function deleteAdminById(id){
+export async function deleteAdminById(id) {
     return delAdminByIdDao(id);
 }

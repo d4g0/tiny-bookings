@@ -23,12 +23,10 @@ export const resolvers = {
 
 
             var { email, password } = args.input;
+            
             var user = await getUserByEmailPassword(email, password);
-
-            // console.group('Login')
-            // console.log({ user })
-            // console.groupEnd()
-
+            // getUserByEmailPassword throws if not found, so
+            // if we are here we have an user
             if (user) {
 
                 Auth.user = user;
@@ -46,7 +44,6 @@ export const resolvers = {
 
                 return Auth;
             }
-            return Auth;
         },
 
         admins: authenticated(
