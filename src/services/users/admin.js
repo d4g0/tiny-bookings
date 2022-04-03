@@ -100,6 +100,7 @@ export async function createAdminService({
         return createdAdmin;
 
     } catch (error) {
+        // check for know errors
         throw error
     }
 

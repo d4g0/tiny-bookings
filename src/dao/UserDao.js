@@ -2,6 +2,7 @@ import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
 import { isInAdminRoles, isValidId, mapAdminResponseDataToAdminUser } from '~/dao/utils'
 import { USER_ROLES } from './DBConstans'
+import { DB_UNIQUE_CONSTRAINT_ERROR } from './Errors'
 
 
 
@@ -189,48 +190,61 @@ export async function createAdmin({
     // validate reset_token or set null default since it's optional
     var computed_rest_token = isValidString(reset_token) ? reset_token : null;
 
+    try {
 
-    // query the admin creation
-    var res = await prisma.admins.create({
-        data: {
-            user_role: admin_role_id,
-            email,
-            admin_name,
-            admin_description,
-            hash_password,
-            reset_token: computed_rest_token,
-        },
-        include: {
-            user_roles: true
+
+        // query the admin creation
+        var res = await prisma.admins.create({
+            data: {
+                user_role: admin_role_id,
+                email,
+                admin_name,
+                admin_description,
+                hash_password,
+                reset_token: computed_rest_token,
+            },
+            include: {
+                user_roles: true
+            }
+        })
+
+        /**
+         * Response expected to be like
+         * {
+         *  id: 7,
+         *  user_role: 1,
+         *  admin_name: 'test-full-admin',
+         *  admin_description: 'test admin for development',
+         *  hash_password: 'supper foo hash password ',
+         *  reset_token: 'supper reset token for test admin',
+         *  created_at: 2022-03-27T07:32:13.296Z,
+         *  user_roles: {id:0, user_role:'role'}
+         * }
+         * 
+         */
+        var admin = mapAdminResponseDataToAdminUser({
+            id: res.id,
+            email: res.email,
+            admin_name: res.admin_name,
+            admin_description: res.admin_description,
+            hash_password: res.hash_password,
+            reset_token: res.reset_token,
+            created_at: res.created_at,
+            user_roles: res.user_roles
+        })
+
+        return admin;
+    } catch (error) {
+        // handle know errors
+        // unique constraint
+        if (error?.code == 'P2002') {
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unable to create as unique constrain fails')
         }
-    })
 
-    /**
-     * Response expected to be like
-     * {
-     *  id: 7,
-     *  user_role: 1,
-     *  admin_name: 'test-full-admin',
-     *  admin_description: 'test admin for development',
-     *  hash_password: 'supper foo hash password ',
-     *  reset_token: 'supper reset token for test admin',
-     *  created_at: 2022-03-27T07:32:13.296Z,
-     *  user_roles: {id:0, user_role:'role'}
-     * }
-     * 
-     */
-    var admin = mapAdminResponseDataToAdminUser({
-        id: res.id,
-        email: res.email,
-        admin_name: res.admin_name,
-        admin_description: res.admin_description,
-        hash_password: res.hash_password,
-        reset_token: res.reset_token,
-        created_at: res.created_at,
-        user_roles: res.user_roles
-    })
+        // default hanlding
+        throw error;
 
-    return admin;
+    }
 }
 
 

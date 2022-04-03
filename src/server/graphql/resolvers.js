@@ -80,7 +80,7 @@ export const resolvers = {
                         admin_name,
                         admin_description,
                         password,
-                    } = args.createAdminInput;
+                    } = args.input;
 
                     // sanitation non covered values will be
                     // extrictly validated in down procesing layers
