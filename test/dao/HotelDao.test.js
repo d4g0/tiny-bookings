@@ -6,13 +6,16 @@ const {
     updateHotelCheckOutTime,
     updateHotelFreeCalendarDays,
     updateHotelDaysToCancel,
-    getHotelById
+    getHotelById,
+    updateHotel
 } = require("dao/HotelDao");
 import { createHotel as createHotelS } from "~/services/hotel"
 const { createAdmin, deleteAdminById } = require("dao/UserDao");
 const { mapTimeToDateTime } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
 import { NOT_FOUND_RECORD_ERROR_KEY } from "dao/Errors";
+import { v4 as uuid } from 'uuid';
+
 describe(
     'Hotel Dao',
 
@@ -26,10 +29,18 @@ describe(
             minimal_prev_days_to_cancel: 5,
         }
 
+        var updateHotelInput = {
+            hotel_name: 'Test Hotel Update',
+            maximun_free_calendar_days: 15,
+            check_in_hour_time: mapTimeToDateTime({ hours: 5, mins: 30 }),
+            check_out_hour_time: mapTimeToDateTime({ hours: 10, mins: 0 }),
+            minimal_prev_days_to_cancel: 10,
+        }
+
         var fullAdminData = {
             user_role: USER_ROLES.FULL_ADMIN.user_role,
             email: 'test-full@email.com',
-            admin_name: 'test-full-admin',
+            admin_name: 'admin:' + uuid(),
             admin_description: 'test admin for development',
             hash_password: 'supper foo hash password ',
             reset_token: 'supper reset token for test admin',
@@ -112,7 +123,6 @@ describe(
             }
         )
 
-
         test(
             "Crate Hotel Service",
             async function () {
@@ -123,7 +133,7 @@ describe(
                     fooAdmin = await createAdmin(fullAdminData);
                     hotel = await createHotelS({
                         admin_id: fooAdmin.id,
-                        ...hotelData
+                        ...hotelData,
                     })
 
                     console.log({ hotel })
@@ -132,12 +142,20 @@ describe(
                     await deleteHotelById(hotel.id);
 
                 } catch (error) {
+                    console.log(error)
                     dbError = error
                 }
 
                 expect(dbError).toBeNull();
+                expect(hotel.id).toBeDefined();
+                expect(hotel.hotel_name).toBe(hotelData.hotel_name)
+                expect(hotel.check_in_hour_time).toBe(hotelData.check_in_hour_time.toUTCString())
+                expect(hotel.check_out_hour_time).toBe(hotelData.check_out_hour_time.toUTCString())
+                expect(hotel.maximun_free_calendar_days).toBe(hotelData.maximun_free_calendar_days)
+                expect(hotel.minimal_prev_days_to_cancel).toBe(hotelData.minimal_prev_days_to_cancel)
             }
         )
+
 
         test(
             "Get Hotel By Id",
@@ -162,6 +180,51 @@ describe(
             }
 
         )
+
+        test(
+            "Update a hotel (btach update)",
+            async function () {
+
+                var dbError = null, fooHotel = null, updatedFooHotel = null;
+
+                try {
+
+
+                    fooHotel = await createHotel(hotelData);
+
+                    updatedFooHotel = await updateHotel(
+                        fooHotel.id,
+                        updateHotelInput.hotel_name,
+                        updateHotelInput.check_in_hour_time,
+                        updateHotelInput.check_out_hour_time,
+                        updateHotelInput.maximun_free_calendar_days,
+                        updateHotelInput.minimal_prev_days_to_cancel,
+                    )
+
+                    console.log({ updatedFooHotel });
+
+                    // clean
+                    await deleteHotelById(fooHotel.id);
+                    console.log({ updatedFooHotel })
+                } catch (error) {
+                    console.log(error)
+                    dbError = error
+                }
+
+                expect(updatedFooHotel.id).toBeDefined();
+                expect(dbError).toBe(null);
+                expect(updatedFooHotel.hotel_name).toBe(updateHotelInput.hotel_name)
+                expect(updatedFooHotel.check_in_hour_time).toBe(updateHotelInput.check_in_hour_time.toUTCString())
+                expect(updatedFooHotel.check_out_hour_time).toBe(updateHotelInput.check_out_hour_time.toUTCString())
+                expect(updatedFooHotel.maximun_free_calendar_days).toBe(updateHotelInput.maximun_free_calendar_days)
+                expect(updatedFooHotel.minimal_prev_days_to_cancel).toBe(updateHotelInput.minimal_prev_days_to_cancel)
+            }
+        )
+
+
+
+
+
     }
 
 )

@@ -234,7 +234,7 @@ export async function createAdmin({
         // handle know errors
         // unique constraint
         if (error?.code == 'P2002') {
-            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unable to create as unique constrain fails')
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unable to create [admin] as unique constrain fails')
         }
 
         // default hanlding
