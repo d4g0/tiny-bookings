@@ -80,23 +80,20 @@ export const resolvers = {
         // ---------------
         // Hotel 
         // ---------------
-        hotel: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx, info) => {
-                    // hotel
-                    var { id } = args.input;
+        hotel: async (root, args, ctx, info) => {
+            // hotel
+            var { id } = args.input;
 
-                    try {
-                        var hotel = await getHotelById(id);
-                        return hotel;
-                    } catch (error) {
-                        // console.log(error)
-                        throw error
-                    }
-                }
-            )
-        )
+            try {
+                var hotel = await getHotelById(id);
+                return hotel;
+            } catch (error) {
+                // console.log(error)
+                throw error
+            }
+        },
+
+        
 
 
 
