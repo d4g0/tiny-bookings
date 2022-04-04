@@ -1,4 +1,4 @@
-import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from 'dao/Errors'
+import { DB_UNIQUE_CONSTRAINT_ERROR_KEY, NOT_FOUND_RECORD_ERROR_KEY } from 'dao/Errors'
 import { USER_ROLES } from '~/dao/DBConstans'
 import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById } from '~/dao/UserDao.js'
 
@@ -38,18 +38,16 @@ describe(
         test(
             "Check error of retrieve an admin that doesen't exist",
             async function () {
-                var dbError = null, shouldBeNullRes = 'null-placeholder';
+                var dbError = null;
 
                 try {
-                    shouldBeNullRes = await getAdminByEmail('this-admin-email@should.not.exist');
+                    await getAdminByEmail('this-admin-email@should.not.exist');
                 } catch (error) {
                     console.log(error);
                     dbError = error
                 }
-
-                expect(dbError).toBe(null);
-                expect(shouldBeNullRes).toBe(null)
-
+                expect(dbError).toBeDefined();
+                expect(dbError.code).toBe(NOT_FOUND_RECORD_ERROR_KEY);
             }
         )
 
