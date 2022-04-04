@@ -70,20 +70,29 @@ export function isFullAdmin(user_role) {
 }
 
 export function isValidEmail(email) {
-    const emailSchema = Joi.string().email();
-    const { error, value } = emailSchema.validate(email);
+    const emailSchema = Joi.string().email().required();
+    const { error, value } = emailSchema.validate(
+        email,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
 export function isValidUserName(user_name) {
-    const userNameSchema = Joi.string().min(4).max(60);
-    const { error, value } = userNameSchema.validate(user_name);
+    const userNameSchema = Joi.string().min(4).max(60).required();
+    const { error, value } = userNameSchema.validate(
+        user_name,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
 export function isValidAdminDescription(admin_description) {
-    const adminDescriptionSchema = Joi.string().min(4).max(150);
-    const { error, value } = adminDescriptionSchema.validate(admin_description);
+    const adminDescriptionSchema = Joi.string().min(4).max(150).required();
+    const { error, value } = adminDescriptionSchema.validate(
+        admin_description,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
@@ -97,20 +106,29 @@ export function isValidAdminDescription(admin_description) {
 export function isValidPassword(password) {
     // a password should have to be at least 8 chars long
     // maximun 18 charactes
-    const passwordSchema = Joi.string().min(8).max(24);
-    const { error, value } = passwordSchema.validate(password);
+    const passwordSchema = Joi.string().min(8).max(24).required();
+    const { error, value } = passwordSchema.validate(
+        password,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
-export function isValidId(creator_admin_id) {
-    const idSchema = Joi.number().integer();
-    const { error, value } = idSchema.validate(creator_admin_id);
+export function isValidId(id) {
+    const idSchema = Joi.number().integer().min(0).required();
+    const { error, value } = idSchema.validate(
+        id,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
 export function isValidInteger(number) {
-    const intSchema = Joi.number().integer();
-    const { error, value } = intSchema.validate(number);
+    const intSchema = Joi.number().integer().required();
+    const { error, value } = intSchema.validate(
+        number,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
@@ -123,19 +141,28 @@ export function isValidInteger(number) {
 export function isValidHotelName(hotelName) {
     // a password should have to be at least 8 chars long
     // maximun 18 charactes
-    const hotelNameSchema = Joi.string().trim().min(4).max(60);
-    const { error, value } = hotelNameSchema.validate(hotelName);
+    const hotelNameSchema = Joi.string().trim().min(4).max(60).required();
+    const { error, value } = hotelNameSchema.validate(
+        hotelName,
+        { presence: 'required', convert: false }
+    );
     return !error;
 }
 
 export function isValidHourTime({ hours = 0, mins = 0 }) {
     // hours from 0 to 23 and min from 0 to 59
     // to avoid date recalculations
-    const hourSchema = Joi.number().integer().min(0).max(23);
-    const minSchema = Joi.number().integer().min(0).max(59);
+    const hourSchema = Joi.number().integer().min(0).max(23).required();
+    const minSchema = Joi.number().integer().min(0).max(59).required();
 
-    const { h_error, h_value } = hourSchema.validate(hours);
-    const { m_error, m_value } = minSchema.validate(mins);
+    const { h_error, h_value } = hourSchema.validate(
+        hours,
+        { presence: 'required', convert: false }
+    );
+    const { m_error, m_value } = minSchema.validate(
+        mins,
+        { presence: 'required', convert: false }
+    );
 
 
     return !h_error && !m_error;
