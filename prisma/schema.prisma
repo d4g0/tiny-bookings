@@ -32,6 +32,7 @@ model hotel {
   check_in_hour_time          DateTime @db.Time(6)
   check_out_hour_time         DateTime @db.Time(6)
   minimal_prev_days_to_cancel Int      @default(5)
+  iana_time_zone              String   @db.VarChar(60)
   room                        room[]
 }
 

@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS public.hotel
     check_in_hour_time time without time zone NOT NULL,
     check_out_hour_time time without time zone NOT NULL,
     minimal_prev_days_to_cancel integer NOT NULL DEFAULT 5,
+    iana_time_zone character varying(60) NOT NULL,
     PRIMARY KEY (id)
 );
 

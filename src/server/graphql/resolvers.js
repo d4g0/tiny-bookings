@@ -15,7 +15,8 @@ import {
     updateHotelFreeCalendarDays,
     updateHotelDaysToCancel,
     updateHotelCheckInTime,
-    updateHotelCheckOutTime
+    updateHotelCheckOutTime,
+    updateHotelTimeZone
 } from "services/hotel";
 
 export const resolvers = {
@@ -169,6 +170,7 @@ export const resolvers = {
                         check_in_hour_time,
                         check_out_hour_time,
                         minimal_prev_days_to_cancel,
+                        iana_time_zone
                     } = args.input;
 
                     // sanitation
@@ -181,6 +183,7 @@ export const resolvers = {
                             check_in_hour_time: mapTimeToDateTime(check_in_hour_time),
                             check_out_hour_time: mapTimeToDateTime(check_out_hour_time),
                             minimal_prev_days_to_cancel,
+                            iana_time_zone
                         }
 
                         var hotel = await createHotel({
@@ -290,6 +293,26 @@ export const resolvers = {
                     try {
                         check_out_hour_time = mapTimeToDateTime(check_out_hour_time);
                         var hotel = await updateHotelCheckOutTime(hotel_id, check_out_hour_time);
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateHotelTimeZone: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        iana_time_zone,
+                    } = args.input;
+                    try {
+
+                        var hotel = await updateHotelTimeZone(hotel_id, iana_time_zone);
                         return hotel;
                     } catch (error) {
                         throw error;

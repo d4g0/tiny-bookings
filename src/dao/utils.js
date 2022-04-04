@@ -69,6 +69,11 @@ export function isFullAdmin(user_role) {
 
 }
 
+// ---------------
+// VAlidators 
+// ---------------
+
+
 export function isValidEmail(email) {
     const emailSchema = Joi.string().email().required();
     const { error, value } = emailSchema.validate(
@@ -168,6 +173,20 @@ export function isValidHourTime({ hours = 0, mins = 0 }) {
     return !h_error && !m_error;
 }
 
+export function isValidTimeZone(iana_time_zone) {
+    var tzSchema = Joi.string().trim().required();
+    const { error, value } = tzSchema.validate(
+        iana_time_zone,
+        { presence: 'required', convert: false }
+    );
+
+    return !error;
+}
+
+
+// ---------------
+// Mapers 
+// ---------------
 /**
  * 
  * Maps a `time` obj to a Default Date with the `hour-time`
@@ -188,6 +207,7 @@ export function mapHotelResToHotel({
     minimal_prev_days_to_cancel,
     check_in_hour_time,
     check_out_hour_time,
+    iana_time_zone,
 }) {
     return {
         id,
@@ -195,6 +215,7 @@ export function mapHotelResToHotel({
         maximun_free_calendar_days,
         minimal_prev_days_to_cancel,
         check_in_hour_time: check_in_hour_time.toUTCString(),
-        check_out_hour_time: check_out_hour_time.toUTCString()
+        check_out_hour_time: check_out_hour_time.toUTCString(),
+        iana_time_zone
     }
 }

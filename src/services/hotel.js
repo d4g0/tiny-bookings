@@ -7,7 +7,8 @@ import {
     updateHotelCheckOutTime as updateHotelCheckOutTimeDao,
     updateHotelFreeCalendarDays as updateHotelFreeCalendarDaysDao,
     updateHotelDaysToCancel as updateHotelDaysToCancelDao,
-    getHotelById as getHotelByIdDao
+    getHotelById as getHotelByIdDao,
+    updateHotelTimeZone as updateHotelTimeZoneDao
 } from "dao/HotelDao";
 import { getAdminById } from "dao/UserDao";
 import { isFullAdmin } from "dao/utils";
@@ -18,7 +19,8 @@ export async function createHotel({
     maximun_free_calendar_days,
     check_in_hour_time,
     check_out_hour_time,
-    minimal_prev_days_to_cancel
+    minimal_prev_days_to_cancel,
+    iana_time_zone
 }) {
 
     // check for current userExecuting has autorization to 
@@ -39,7 +41,8 @@ export async function createHotel({
             maximun_free_calendar_days,
             check_in_hour_time,
             check_out_hour_time,
-            minimal_prev_days_to_cancel
+            minimal_prev_days_to_cancel,
+            iana_time_zone
         })
 
         return hotel
@@ -72,6 +75,12 @@ export async function updateHotelFreeCalendarDays(hotelId, maximun_free_calendar
 export async function updateHotelDaysToCancel(hotelId, minimal_prev_days_to_cancel) {
     return updateHotelDaysToCancelDao(hotelId, minimal_prev_days_to_cancel)
 }
+
+// 
+export async function updateHotelTimeZone(hotelId, iana_time_zone) {
+    return updateHotelTimeZoneDao(hotelId, iana_time_zone)
+}
+
 
 export async function getHotelById(hotelId) {
     return getHotelByIdDao(hotelId)

@@ -2,7 +2,7 @@ import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
-import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, mapHotelResToHotel } from './utils'
+import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, isValidTimeZone, mapHotelResToHotel } from './utils'
 
 
 
@@ -21,6 +21,7 @@ export async function createHotel({
     check_in_hour_time, // hour_time { hour: 0 - 24 , min: 0 - 59 }
     check_out_hour_time,
     minimal_prev_days_to_cancel,
+    iana_time_zone
 }) {
     // validate
     if (!isValidHotelName(hotel_name)) {
@@ -42,6 +43,10 @@ export async function createHotel({
         throw new Error(`Non valid minimal_prev_days_to_cancel integer provided: ${minimal_prev_days_to_cancel}`)
     }
 
+    if (!isValidTimeZone(iana_time_zone)) {
+        throw new Error('Non Valid Time Zone provided')
+    }
+
 
 
     try {
@@ -53,6 +58,7 @@ export async function createHotel({
                 minimal_prev_days_to_cancel,
                 check_in_hour_time,
                 check_out_hour_time,
+                iana_time_zone
             }
         })
 
@@ -240,6 +246,32 @@ export async function updateHotelDaysToCancel(hotelId, minimal_prev_days_to_canc
             },
             data: {
                 minimal_prev_days_to_cancel
+            }
+        })
+
+        return mapHotelResToHotel(updatedRes);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updateHotelTimeZone(hotelId, iana_time_zone) {
+
+    // validate
+    if (!isValidId(hotelId)) {
+        throw new Error('Non Valid Hotel Id');
+    }
+    if (!isValidTimeZone(iana_time_zone)) {
+        throw new Error('Non Valid Time Zone provided')
+    }
+
+    try {
+        var updatedRes = await prisma.hotel.update({
+            where: {
+                id: hotelId
+            },
+            data: {
+                iana_time_zone
             }
         })
 

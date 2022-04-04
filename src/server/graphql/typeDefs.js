@@ -80,6 +80,7 @@ export const typeDefinitions = gql`
     check_in_hour_time:           String!
     check_out_hour_time:          String!
     minimal_prev_days_to_cancel:  Int!
+    iana_time_zone:               String!
   }
 
   input HourTime {
@@ -93,6 +94,7 @@ export const typeDefinitions = gql`
     minimal_prev_days_to_cancel:  Int!
     check_in_hour_time:           HourTime!
     check_out_hour_time:          HourTime!
+    iana_time_zone:               String!
   }
 
   input getHotelInput {
@@ -125,6 +127,10 @@ export const typeDefinitions = gql`
     check_out_hour_time:           HourTime!
   }
 
+  input UpdateHotelTimeZone {
+    hotel_id:                     Int!
+    iana_time_zone:               String!
+  }
 
 
   ##
@@ -148,7 +154,7 @@ export const typeDefinitions = gql`
     updateHotelDaysToCancel(input: UpdateHotelDaysToCancel!): Hotel!
     updateHotelCheckIn(input: UpdateHotelCheckIn!): Hotel!
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
-    
+    updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
   }
 
 

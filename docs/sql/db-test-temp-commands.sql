@@ -24,12 +24,13 @@ insert into hotel (
 	maximun_free_calendar_days,
 	minimal_prev_days_to_cancel,
 	check_in_hour_time,
-	check_out_hour_time
-	
+	check_out_hour_time,
+	iana_time_zone
 ) values (
-	'LoloSama Hotel',
+	'Pg Hotel',
 	30,
 	5,
 	'13:30',
-	'12:00'
+	'12:00',
+	'America/Lima'
 )

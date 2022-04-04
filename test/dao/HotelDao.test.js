@@ -8,7 +8,7 @@ import {
     updateHotelDaysToCancel,
     getHotelById,
 } from "dao/HotelDao";
-import { createHotel as createHotelS } from "~/services/hotel"
+import { createHotel as createHotelS, updateHotelTimeZone } from "~/services/hotel"
 const { createAdmin, deleteAdminById } = require("dao/UserDao");
 const { mapTimeToDateTime } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
@@ -26,6 +26,7 @@ describe(
             check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
             check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
             minimal_prev_days_to_cancel: 5,
+            iana_time_zone:'America/Lima'
         }
 
         var updateHotelInput = {
@@ -34,6 +35,7 @@ describe(
             check_in_hour_time: mapTimeToDateTime({ hours: 5, mins: 30 }),
             check_out_hour_time: mapTimeToDateTime({ hours: 10, mins: 0 }),
             minimal_prev_days_to_cancel: 10,
+            iana_time_zone:'America/Lima'
         }
 
         var fullAdminData = {
@@ -69,6 +71,7 @@ describe(
                 expect(fooHotel.check_in_hour_time).toBeDefined();
                 expect(fooHotel.check_out_hour_time).toBeDefined();
                 expect(fooHotel.minimal_prev_days_to_cancel).toBeDefined();
+                expect(fooHotel.iana_time_zone).toBeDefined();
                 expect(dbError).toBe(null);
             }
         );
@@ -108,6 +111,9 @@ describe(
                     updatedFooHotel = await updateHotelFreeCalendarDays(fooHotel.id, 90);
                     // minimal_prev_days_to_cancel
                     updatedFooHotel = await updateHotelDaysToCancel(fooHotel.id, 10);
+                    // iana_time_zone
+                    updatedFooHotel = await updateHotelTimeZone(fooHotel.id, 'America/Havana');
+
 
                     // clean
                     await deleteHotelById(fooHotel.id);
@@ -152,6 +158,7 @@ describe(
                 expect(hotel.check_out_hour_time).toBe(hotelData.check_out_hour_time.toUTCString())
                 expect(hotel.maximun_free_calendar_days).toBe(hotelData.maximun_free_calendar_days)
                 expect(hotel.minimal_prev_days_to_cancel).toBe(hotelData.minimal_prev_days_to_cancel)
+                expect(hotel.iana_time_zone).toBe(hotelData.iana_time_zone)
             }
         )
 
