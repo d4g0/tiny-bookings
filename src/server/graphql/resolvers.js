@@ -1,6 +1,11 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { mapTimeToDateTime } from "dao/utils";
-import { getHotelById, createHotel } from "services/hotel";
+import {
+    getHotelById,
+    createHotel,
+    updateHotelName,
+    updateHotelFreeCalendarDays
+} from "services/hotel";
 import {
     createAdminService,
     getAdminsService,
@@ -181,6 +186,49 @@ export const resolvers = {
                         });
                         // console.log({ admin_id: ctx.user.id, hotelData, hotel })
 
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateHotelName: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        hotel_name,
+                    } = args.input;
+                    console.log({ args })
+                    try {
+                        // sanitation
+                        var s_hotel_name = xss(hotel_name);
+                        var hotel = await updateHotelName(hotel_id, s_hotel_name);
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateHotelFreeCalendarDays: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        maximun_free_calendar_days,
+                    } = args.input;
+                    console.log({ args })
+                    try {
+                        // sanitation
+                        var hotel = await updateHotelFreeCalendarDays(hotel_id, maximun_free_calendar_days);
                         return hotel;
                     } catch (error) {
                         throw error;

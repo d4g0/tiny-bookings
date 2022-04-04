@@ -99,6 +99,32 @@ export const typeDefinitions = gql`
     id: Int!
   }
 
+  
+  input UpdateHotelName {
+    hotel_id:                     Int!
+    hotel_name:                   String!
+  }
+
+  input UpdateHotelFreeCalendarDays {
+    hotel_id:                     Int!
+    maximun_free_calendar_days:   Int!
+  }
+
+  input UpdateHotelDaysToCancel {
+    hotel_id:                     Int!
+    minimal_prev_days_to_cancel:   Int!
+  }
+
+  input UpdateHotelCheckIn {
+    hotel_id:                     Int!
+    check_in_hour_time:           HourTime!
+  }
+
+  input UpdateHotelCheckOut {
+    hotel_id:                     Int!
+    check_out_hour_time:           HourTime!
+  }
+
 
 
   ##
@@ -117,6 +143,8 @@ export const typeDefinitions = gql`
     createAdmin(input: createAdminInput!) : Admin!
     deleteAdmin(id: Int!): Admin!
     createHotel(input: HotelInput!): Hotel!
+    updateHotelName(input: UpdateHotelName!): Hotel!
+    updateHotelFreeCalendarDays(input: UpdateHotelFreeCalendarDays!): Hotel!
   }
 
 

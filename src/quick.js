@@ -1,3 +1,4 @@
+'use strict'
 require('dotenv').config()
 const Joi = require('joi');
 var param = process.argv[2] || 'foo@bar.baz';
@@ -108,9 +109,14 @@ function testDate() {
 
 
 
-    var time = mapTimeToDateTime({ hours: 23, mins: 00 });
-    var time2 = mapTimeToDateTime({ hours: 24, mins: 00 });
+    var time = mapTimeToDateTime({ hours: 23, mins: 0 });
+    var time2 = mapTimeToDateTime({ hours: 24, mins: 0 });
     console.log({ time, time2 });
+
+    function extracTime(date) {
+        new Date().getUTCHours();
+        new Date().getUTCMinutes();
+    }
 
 
 }
@@ -122,4 +128,27 @@ function mapTimeToDateTime({ hours, mins, secs = 0 }) {
 }
 
 
-testDate();
+// testDate();
+
+
+function testFnObjParams() {
+    function foo(data = {
+        bar,
+        baz
+    }) {
+
+        var {
+            bar,
+            baz
+        } = data || 'barzybaz';
+
+        try {
+            console.log({ bar, baz });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    foo();
+}
+
+testFnObjParams();

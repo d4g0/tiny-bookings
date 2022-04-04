@@ -58,7 +58,6 @@
     -   lis their bookings
 
 -   role: `basic-admin`
-    -	create and edit a hotel
     -	create rooms
     -	edit roooms availability (locking rooms for a time)
     -	edit rooms data
@@ -71,6 +70,7 @@
 
 -   role: `full-admin`
     -	[basic-admin]*
+    -	create and edit a hotel
     -	create basic admin users    
     -	create full admin users 
     -	list admins users
