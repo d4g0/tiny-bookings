@@ -85,7 +85,7 @@ export const resolvers = {
                 USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx, info) => {
                     // hotel
-                    var { id } = args;
+                    var { id } = args.input;
 
                     try {
                         var hotel = await getHotelById(id);

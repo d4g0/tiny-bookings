@@ -91,7 +91,9 @@ export const typeDefinitions = gql`
     minimal_prev_days_to_cancel:  Int!
   }
 
-
+  input getHotelInput {
+    id: Int!
+  }
 
 
 
@@ -101,7 +103,7 @@ export const typeDefinitions = gql`
   type Query {
     login(input: loginInput!): Auth!
     admins: [Admin]!
-    hotel(id: Int!): Hotel!
+    hotel(input: getHotelInput!): Hotel!
   }
 
   ##
