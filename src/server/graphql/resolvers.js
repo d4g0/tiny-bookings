@@ -93,7 +93,7 @@ export const resolvers = {
             }
         },
 
-        
+        // createHotel
 
 
 
