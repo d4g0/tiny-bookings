@@ -148,7 +148,7 @@ export function isValidHourTime({ hours = 0, mins = 0 }) {
  * @returns 
  */
 export function mapTimeToDateTime({ hours, mins }) {
-    var now = new Date(Date.UTC(2020, 0, 1, 0, 0, 0));
+    var now = new Date(Date.UTC(1970, 0, 1, 0, 0, 0));
     now.setUTCHours(hours, mins, 0);
     return now;
 }
