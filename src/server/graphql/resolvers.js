@@ -1,13 +1,6 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { mapTimeToDateTime } from "dao/utils";
 import {
-    getHotelById,
-    createHotel,
-    updateHotelName,
-    updateHotelFreeCalendarDays,
-    updateHotelDaysToCancel
-} from "services/hotel";
-import {
     createAdminService,
     getAdminsService,
     getUserByEmailPassword,
@@ -15,6 +8,14 @@ import {
 } from "services/users/admin";
 import xss from "xss";
 import { authenticated, authorized } from "./auth";
+import {
+    getHotelById,
+    createHotel,
+    updateHotelName,
+    updateHotelFreeCalendarDays,
+    updateHotelDaysToCancel,
+    updateHotelCheckInTime
+} from "services/hotel";
 
 export const resolvers = {
 
@@ -237,7 +238,7 @@ export const resolvers = {
                 }
             )
         ),
-        
+
         updateHotelDaysToCancel: authenticated(
             authorized(
                 USER_ROLES.FULL_ADMIN.user_role,
@@ -256,7 +257,27 @@ export const resolvers = {
                 }
             )
         ),
-        
+
+        updateHotelCheckIn: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        check_in_hour_time,
+                    } = args.input;
+                    try {
+                        check_in_hour_time = mapTimeToDateTime(check_in_hour_time);
+                        var hotel = await updateHotelCheckInTime(hotel_id, check_in_hour_time);
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
 
 
 
