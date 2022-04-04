@@ -1,5 +1,6 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { getHotelById } from "services/hotel";
+import { mapTimeToDateTime } from "dao/utils";
+import { getHotelById, createHotel } from "services/hotel";
 import {
     createAdminService,
     getAdminsService,
@@ -93,9 +94,6 @@ export const resolvers = {
             }
         },
 
-        // createHotel
-
-
 
     },
     // ---------------
@@ -151,7 +149,49 @@ export const resolvers = {
                     return deletedAdmin;
                 }
             )
-        )
+        ),
+
+        createHotel: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_name,
+                        maximun_free_calendar_days,
+                        check_in_hour_time,
+                        check_out_hour_time,
+                        minimal_prev_days_to_cancel,
+                    } = args.input;
+
+                    // sanitation
+                    var s_hotel_name = xss(hotel_name);
+
+                    try {
+                        var hotelData = {
+                            hotel_name: s_hotel_name,
+                            maximun_free_calendar_days,
+                            check_in_hour_time: mapTimeToDateTime(check_in_hour_time),
+                            check_out_hour_time: mapTimeToDateTime(check_out_hour_time),
+                            minimal_prev_days_to_cancel,
+                        }
+
+                        var hotel = await createHotel({
+                            admin_id: ctx.user.id,
+                            ...hotelData
+                        });
+                        // console.log({ admin_id: ctx.user.id, hotelData, hotel })
+
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+
+
     },
     // Root Types
     /// ---------------

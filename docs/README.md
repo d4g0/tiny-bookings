@@ -109,3 +109,7 @@
         -   Service
             -   done at 4 april 00:14
         -   GraphQL
+            -   create
+            -   read
+                -   done both at 1:40
+            -   update

@@ -82,13 +82,17 @@ export const typeDefinitions = gql`
     minimal_prev_days_to_cancel:  Int!
   }
 
+  input HourTime {
+    hours:                        Int!
+    mins:                         Int!
+  }
 
   input HotelInput {
     hotel_name:                   String!
     maximun_free_calendar_days:   Int!
-    check_in_hour_time:           String!
-    check_out_hour_time:          String!
     minimal_prev_days_to_cancel:  Int!
+    check_in_hour_time:           HourTime!
+    check_out_hour_time:          HourTime!
   }
 
   input getHotelInput {
