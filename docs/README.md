@@ -103,6 +103,7 @@
 []
 -	create and edit a hotel 
     -   start (3-april-11:38)
-    -   create done at 22:34
-    -   edit done at 23:19
-
+        -   Dao
+            -   create done at 22:34
+            -   edit done at 23:19
+        -   Service

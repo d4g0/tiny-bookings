@@ -1,6 +1,16 @@
-const { createHotel, deleteHotelById, updateHotelName, updateHotelCheckInTime, updateHotelCheckOutTime, updateHotelFreeCalendarDays, updateHotelDaysToCancel } = require("dao/HotelDao");
+const {
+    createHotel,
+    deleteHotelById,
+    updateHotelName,
+    updateHotelCheckInTime,
+    updateHotelCheckOutTime,
+    updateHotelFreeCalendarDays,
+    updateHotelDaysToCancel
+} = require("dao/HotelDao");
+import { createHotel as createHotelS } from "~/services/hotel"
+const { createAdmin, deleteAdminById } = require("dao/UserDao");
 const { mapTimeToDateTime } = require("dao/utils");
-
+import { USER_ROLES } from '~/dao/DBConstans'
 describe(
     'Hotel Dao',
 
@@ -12,6 +22,15 @@ describe(
             check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
             check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
             minimal_prev_days_to_cancel: 5,
+        }
+
+        var fullAdminData = {
+            user_role: USER_ROLES.FULL_ADMIN.user_role,
+            email: 'test-full@email.com',
+            admin_name: 'test-full-admin',
+            admin_description: 'test admin for development',
+            hash_password: 'supper foo hash password ',
+            reset_token: 'supper reset token for test admin',
         }
 
         test(
@@ -87,6 +106,33 @@ describe(
 
                 expect(updatedFooHotel.id).toBeDefined();
                 expect(dbError).toBe(null);
+            }
+        )
+
+
+        test(
+            "Crate Hotel Service",
+            async function () {
+                var dbError = null, fooAdmin = null, hotel = null;
+
+
+                try {
+                    fooAdmin = await createAdmin(fullAdminData);
+                    hotel = await createHotelS({
+                        admin_id: fooAdmin.id,
+                        ...hotelData
+                    })
+
+                    console.log({ hotel })
+                    // clean 
+                    await deleteAdminById(fooAdmin.id);
+                    await deleteHotelById(hotel.id);
+
+                } catch (error) {
+                    dbError = error
+                }
+
+                expect(dbError).toBeNull();
             }
         )
     }
