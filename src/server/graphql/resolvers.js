@@ -1,4 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
+import { getHotelById } from "services/hotel";
 import { createAdminService, getAdminsService, getUserByEmailPassword, deleteAdminById } from "services/users/admin";
 import xss from "xss";
 import { authenticated, authorized } from "./auth";
@@ -23,7 +24,7 @@ export const resolvers = {
 
 
             var { email, password } = args.input;
-            
+
             var user = await getUserByEmailPassword(email, password);
             // getUserByEmailPassword throws if not found, so
             // if we are here we have a user
@@ -46,6 +47,9 @@ export const resolvers = {
             }
         },
 
+        // ---------------
+        // Admin 
+        // ---------------
         admins: authenticated(
             authorized(
                 [
@@ -63,7 +67,30 @@ export const resolvers = {
                     return null
                 }
             )
+        ),
+
+        // ---------------
+        // Hotel 
+        // ---------------
+        hotel: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx, info) => {
+                    // hotel
+                    var { id } = args;
+
+                    try {
+                        var hotel = await getHotelById(id);
+                        return hotel;
+                    } catch (error) {
+                        console.log(error)
+                        throw error
+                    }
+                }
+            )
         )
+
+
 
     },
     // ---------------

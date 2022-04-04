@@ -28,11 +28,11 @@ export const typeDefinitions = gql`
   }
 
   input createAdminInput {
-    user_role: USER_ROLE!
-    email: String!
-    admin_name: String!
-    admin_description: String
-    password: String!
+    user_role:          USER_ROLE!
+    email:              String!
+    admin_name:         String!
+    admin_description:  String
+    password:           String!
   }
 
 
@@ -55,29 +55,53 @@ export const typeDefinitions = gql`
   ##
 
   input loginInput {
-    email: String!
-    password: String!
+    email:              String!
+    password:           String!
   }
 
   union User = Admin | Client
 
   type Auth {
-    user: User!
-    token: String!
-    token_created_at: String!
+    user:               User!
+    token:              String!
+    token_created_at:   String!
   }
+
+
+
+  ##
+  # Hotel
+  ##
+
+  type Hotel {
+    id:                           ID!
+    hotel_name:                   String!
+    maximun_free_calendar_days:   Int!
+    check_in_hour_time:           String!
+    check_out_hour_time:          String!
+    minimal_prev_days_to_cancel:  Int!
+  }
+
+
+  input HotelInput {
+    hotel_name:                   String!
+    maximun_free_calendar_days:   Int!
+    check_in_hour_time:           String!
+    check_out_hour_time:          String!
+    minimal_prev_days_to_cancel:  Int!
+  }
+
+
+
 
 
   ##
   # Query
   ##
   type Query {
-
     login(input: loginInput!): Auth!
-
     admins: [Admin]!
-
-
+    hotel(id: Int!): Hotel!
   }
 
   ##
@@ -86,6 +110,7 @@ export const typeDefinitions = gql`
   type Mutation {
     createAdmin(input: createAdminInput!) : Admin!
     deleteAdmin(id: Int!): Admin!
+    createHotel(input: HotelInput!): Hotel!
   }
 
 

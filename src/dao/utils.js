@@ -152,3 +152,22 @@ export function mapTimeToDateTime({ hours, mins }) {
     now.setUTCHours(hours, mins, 0);
     return now;
 }
+
+
+export function mapHotelResToHotel({
+    id,
+    hotel_name,
+    maximun_free_calendar_days,
+    minimal_prev_days_to_cancel,
+    check_in_hour_time,
+    check_out_hour_time,
+}) {
+    return {
+        id,
+        hotel_name,
+        maximun_free_calendar_days,
+        minimal_prev_days_to_cancel,
+        check_in_hour_time: check_in_hour_time.toUTCString(),
+        check_out_hour_time: check_out_hour_time.toUTCString()
+    }
+}

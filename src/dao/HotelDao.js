@@ -2,7 +2,7 @@ import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
-import { isValidHotelName, isValidHourTime, isValidId, isValidInteger } from './utils'
+import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, mapHotelResToHotel } from './utils'
 
 
 
@@ -46,7 +46,7 @@ export async function createHotel({
 
     try {
         // create
-        var hotelRes = await prisma.hotel.create({
+        var hotel = await prisma.hotel.create({
             data: {
                 hotel_name,
                 maximun_free_calendar_days,
@@ -56,7 +56,7 @@ export async function createHotel({
             }
         })
 
-        return hotelRes;
+        return mapHotelResToHotel(hotel);
 
     } catch (error) {
         // handle know errors
@@ -79,9 +79,12 @@ export async function getHotelById(hotelId) {
         var hotel = await prisma.hotel.findFirst({
             where: {
                 id: hotelId
-            }
+            },
         })
-        return hotel;
+        if (!hotel) {
+            throw new NOT_FOUND_RECORD_ERROR('No Hotel Found')
+        }
+        return mapHotelResToHotel(hotel);
     } catch (error) {
         throw error
     }
@@ -93,12 +96,12 @@ export async function deleteHotelById(hotelId) {
     }
 
     try {
-        var delRes = await prisma.hotel.delete({
+        var delHotel = await prisma.hotel.delete({
             where: {
                 id: hotelId
             }
         })
-        return delRes;
+        return mapHotelResToHotel(delHotel);
     } catch (error) {
         if (error?.code == 'P2025') {
             error = new NOT_FOUND_RECORD_ERROR('Not Found')
@@ -108,7 +111,9 @@ export async function deleteHotelById(hotelId) {
 }
 
 export async function getHotels() {
-    return prisma.hotel.findMany();
+    var hotelsRaw = await prisma.hotel.findMany();
+    var hotels = hotelsRaw.map(hotel => mapHotelResToHotel(hotel));
+    return hotels;
 }
 
 
@@ -132,7 +137,7 @@ export async function updateHotelName(hotelId, hotelName) {
             }
         })
 
-        return updatedRes;
+        return mapHotelResToHotel(updatedRes);
     } catch (error) {
         throw error;
     }
@@ -158,7 +163,7 @@ export async function updateHotelCheckInTime(hotelId, check_in_hour_time) {
             }
         })
 
-        return updatedRes;
+        return mapHotelResToHotel(updatedRes);
     } catch (error) {
         throw error;
     }
@@ -184,7 +189,7 @@ export async function updateHotelCheckOutTime(hotelId, check_out_hour_time) {
             }
         })
 
-        return updatedRes;
+        return mapHotelResToHotel(updatedRes);
     } catch (error) {
         throw error;
     }
@@ -211,7 +216,7 @@ export async function updateHotelFreeCalendarDays(hotelId, maximun_free_calendar
             }
         })
 
-        return updatedRes;
+        return mapHotelResToHotel(updatedRes);
     } catch (error) {
         throw error;
     }
@@ -238,7 +243,7 @@ export async function updateHotelDaysToCancel(hotelId, minimal_prev_days_to_canc
             }
         })
 
-        return updatedRes;
+        return mapHotelResToHotel(updatedRes);
     } catch (error) {
         throw error;
     }
