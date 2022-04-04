@@ -1,4 +1,14 @@
-import { createHotel as createHotelDao } from "dao/HotelDao";
+import {
+    createHotel as createHotelDao,
+    deleteHotelById as deleteHotelByIdDao,
+    getHotels as getHotelsDao,
+    updateHotelName as updateHotelNameDao,
+    updateHotelCheckInTime as updateHotelCheckInTimeDao,
+    updateHotelCheckOutTime as updateHotelCheckOutTimeDao,
+    updateHotelFreeCalendarDays as updateHotelFreeCalendarDaysDao,
+    updateHotelDaysToCancel as updateHotelDaysToCancelDao,
+    getHotelById as getHotelByIdDao
+} from "dao/HotelDao";
 import { getAdminById } from "dao/UserDao";
 import { isFullAdmin } from "dao/utils";
 
@@ -39,4 +49,30 @@ export async function createHotel({
 
 
 
+}
+
+export async function deleteHotelById(hotelId) {
+    return deleteHotelByIdDao(hotelId)
+}
+export async function getHotels() {
+    return getHotelsDao()
+}
+export async function updateHotelName(hotelId, hotelName) {
+    return updateHotelNameDao(hotelId, hotelName)
+}
+export async function updateHotelCheckInTime(hotelId, check_in_hour_time) {
+    return updateHotelCheckInTimeDao(hotelId, check_in_hour_time)
+}
+export async function updateHotelCheckOutTime(hotelId, check_out_hour_time) {
+    return updateHotelCheckOutTimeDao(hotelId, check_out_hour_time)
+}
+export async function updateHotelFreeCalendarDays(hotelId, maximun_free_calendar_days) {
+    return updateHotelFreeCalendarDaysDao(hotelId, maximun_free_calendar_days)
+}
+export async function updateHotelDaysToCancel(hotelId, minimal_prev_days_to_cancel) {
+    return updateHotelDaysToCancelDao(hotelId, minimal_prev_days_to_cancel)
+}
+
+export async function getHotelById(hotelId) {
+    return getHotelByIdDao(hotelId)
 }

@@ -5,12 +5,14 @@ const {
     updateHotelCheckInTime,
     updateHotelCheckOutTime,
     updateHotelFreeCalendarDays,
-    updateHotelDaysToCancel
+    updateHotelDaysToCancel,
+    getHotelById
 } = require("dao/HotelDao");
 import { createHotel as createHotelS } from "~/services/hotel"
 const { createAdmin, deleteAdminById } = require("dao/UserDao");
 const { mapTimeToDateTime } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
+import { NOT_FOUND_RECORD_ERROR_KEY } from "dao/Errors";
 describe(
     'Hotel Dao',
 
@@ -64,16 +66,17 @@ describe(
         test(
             "Delete a hotel that does not exists",
             async function () {
-                var dbError = null, delRes = 'something-that-should-be-undefined';
+                var dbError = null;
 
                 try {
-                    delRes = await deleteHotelById(100000);
+                    await deleteHotelById(100000);
                 } catch (error) {
                     dbError = error
+                    console.log(error)
                 }
 
-                expect(delRes).toBeUndefined();
-                expect(dbError).toBe(null);
+                expect(dbError).toBeDefined();
+                expect(dbError?.code).toBe(NOT_FOUND_RECORD_ERROR_KEY);
             }
         )
 
@@ -134,6 +137,30 @@ describe(
 
                 expect(dbError).toBeNull();
             }
+        )
+
+        test(
+            "Get Hotel By Id",
+            async function () {
+                var dbError = null, hotel = null, fooHotel = null;
+
+                try {
+                    fooHotel = await createHotel(hotelData);
+                    hotel = await getHotelById(fooHotel.id);
+
+                    console.log({ hotelById: hotel });
+                    // clean
+                    await deleteHotelById(hotel.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBeNull();
+                expect(hotel.id).toBeDefined();
+            }
+
         )
     }
 

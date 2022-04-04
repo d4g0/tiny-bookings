@@ -70,6 +70,22 @@ export async function createHotel({
     }
 }
 
+export async function getHotelById(hotelId) {
+    if (!isValidId(hotelId)) {
+        throw new Error('Non Valid Hotel Id');
+    }
+
+    try {
+        var hotel = await prisma.hotel.findFirst({
+            where: {
+                id: hotelId
+            }
+        })
+        return hotel;
+    } catch (error) {
+        throw error
+    }
+}
 
 export async function deleteHotelById(hotelId) {
     if (!isValidId(hotelId)) {
@@ -84,7 +100,10 @@ export async function deleteHotelById(hotelId) {
         })
         return delRes;
     } catch (error) {
-
+        if (error?.code == 'P2025') {
+            error = new NOT_FOUND_RECORD_ERROR('Not Found')
+        }
+        throw error
     }
 }
 
