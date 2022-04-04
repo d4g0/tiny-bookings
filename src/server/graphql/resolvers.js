@@ -4,7 +4,8 @@ import {
     getHotelById,
     createHotel,
     updateHotelName,
-    updateHotelFreeCalendarDays
+    updateHotelFreeCalendarDays,
+    updateHotelDaysToCancel
 } from "services/hotel";
 import {
     createAdminService,
@@ -225,7 +226,6 @@ export const resolvers = {
                         hotel_id,
                         maximun_free_calendar_days,
                     } = args.input;
-                    console.log({ args })
                     try {
                         // sanitation
                         var hotel = await updateHotelFreeCalendarDays(hotel_id, maximun_free_calendar_days);
@@ -237,6 +237,26 @@ export const resolvers = {
                 }
             )
         ),
+        
+        updateHotelDaysToCancel: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        minimal_prev_days_to_cancel,
+                    } = args.input;
+                    try {
+                        var hotel = await updateHotelDaysToCancel(hotel_id, minimal_prev_days_to_cancel);
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+        
 
 
 

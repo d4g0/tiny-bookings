@@ -145,6 +145,7 @@ export const typeDefinitions = gql`
     createHotel(input: HotelInput!): Hotel!
     updateHotelName(input: UpdateHotelName!): Hotel!
     updateHotelFreeCalendarDays(input: UpdateHotelFreeCalendarDays!): Hotel!
+    updateHotelDaysToCancel(input: UpdateHotelDaysToCancel!): Hotel!
   }
 
 
