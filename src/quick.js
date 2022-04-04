@@ -1,6 +1,7 @@
 require('dotenv').config()
 const Joi = require('joi');
 var param = process.argv[2] || 'foo@bar.baz';
+var set = require('date-fns/set');
 
 function emailCheck() {
     const emailSchema = Joi.string().email();
@@ -74,4 +75,51 @@ async function testToekn() {
 
 }
 
-testToekn();
+// testToekn();
+
+
+
+function testDate() {
+
+    const { format, utcToZonedTime, } = require("date-fns-tz");
+    const today = new Date(); // Wed Sep 16 2020 13:25:16
+    const timeZone = 'Europe/Paris'; // Let's see what time it is Down Under
+    const timeInBrisbane = utcToZonedTime(today, timeZone);
+    // console.log(`
+    //     Default time zone: ${format(today, 'yyyy-MM-dd HH:mm:ss')}
+    //     Time in Paris: ${format(timeInBrisbane, 'yyyy-MM-dd HH:mm:ss')}`
+    // );
+
+    const utcDate1 = new Date(Date.UTC(96, 1, 2, 3, 4, 5));
+    utcDate1.setUTCHours(10, 10, 0)
+    var now = new Date();
+
+
+
+
+    var dateObj = {
+        year: now.getUTCFullYear(),
+        month: now.getUTCMonth(),
+        date: now.getUTCDate(),
+        hours: now.getUTCHours(),
+        mins: now.getUTCMinutes(),
+        secs: now.getUTCSeconds(),
+    }
+
+
+
+    var time = mapTimeToDateTime({ hours: 23, mins: 00 });
+    var time2 = mapTimeToDateTime({ hours: 24, mins: 00 });
+    console.log({ time, time2 });
+
+
+}
+
+function mapTimeToDateTime({ hours, mins, secs = 0 }) {
+    var now = new Date(Date.UTC(2020, 0, 1, 0, 0, 0));
+    now.setUTCHours(hours, mins, secs);
+    return now;
+}
+
+
+testDate();

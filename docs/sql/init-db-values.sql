@@ -19,5 +19,5 @@ insert into admins (
      'system creator',
      '$2a$10$2nZp/EGj.aQY/PyyqGAMze2.a1C4H1knpdNSAO.TX/92katjMo75C'
  );
-
+ 
  

@@ -107,3 +107,48 @@ export function isValidId(creator_admin_id) {
     const { error, value } = idSchema.validate(creator_admin_id);
     return !error;
 }
+
+export function isValidInteger(number) {
+    const intSchema = Joi.number().integer();
+    const { error, value } = intSchema.validate(number);
+    return !error;
+}
+
+/**
+ * A valid Hotel Name is a string
+ * From 4 characters to 60
+ * @param {string} password 
+ * @returns 
+ */
+export function isValidHotelName(hotelName) {
+    // a password should have to be at least 8 chars long
+    // maximun 18 charactes
+    const hotelNameSchema = Joi.string().trim().min(4).max(60);
+    const { error, value } = hotelNameSchema.validate(hotelName);
+    return !error;
+}
+
+export function isValidHourTime({ hours = 0, mins = 0 }) {
+    // hours from 0 to 23 and min from 0 to 59
+    // to avoid date recalculations
+    const hourSchema = Joi.number().integer().min(0).max(23);
+    const minSchema = Joi.number().integer().min(0).max(59);
+
+    const { h_error, h_value } = hourSchema.validate(hours);
+    const { m_error, m_value } = minSchema.validate(mins);
+
+
+    return !h_error && !m_error;
+}
+
+/**
+ * 
+ * Maps a `time` obj to a Default Date with the `hour-time`
+ * sets as the time obj
+ * @returns 
+ */
+export function mapTimeToDateTime({ hours, mins }) {
+    var now = new Date(Date.UTC(2020, 0, 1, 0, 0, 0));
+    now.setUTCHours(hours, mins, 0);
+    return now;
+}

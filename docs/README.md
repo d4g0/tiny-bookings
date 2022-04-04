@@ -58,8 +58,7 @@
     -   lis their bookings
 
 -   role: `basic-admin`
-    -	create a hotel
-    -	edit hotel data
+    -	create and edit a hotel
     -	create rooms
     -	edit roooms availability (locking rooms for a time)
     -	edit rooms data
@@ -99,6 +98,11 @@
 -   list admins
 
 [✅]
--   
+-   delete admin
 
+[]
+-	create and edit a hotel 
+    -   start (3-april-11:38)
+    -   create done at 22:34
+    -   edit done at 23:19
 

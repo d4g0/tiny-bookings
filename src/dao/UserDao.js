@@ -7,15 +7,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
 
 
 
-/**
- * User Dao Errors
- */
-export const USER_DAO_ERRORS = {
-    // used for a not-found custom error
-    // that was refactored
-    // but im goin to leave the object here
-    // in case that later can be needed ok
-}
+
 
 /**
  * Retrives an admin user  from db 

@@ -15,3 +15,21 @@
 -- select * from emails;
 -- insert into emails (email, email_owner) values ('jose@mail.com','jose');
 -- drop table emails;
+
+
+-- test hotel
+
+insert into hotel ( 
+	hotel_name, 
+	maximun_free_calendar_days,
+	minimal_prev_days_to_cancel,
+	check_in_hour_time,
+	check_out_hour_time
+	
+) values (
+	'LoloSama Hotel',
+	30,
+	5,
+	'13:30',
+	'12:00'
+)

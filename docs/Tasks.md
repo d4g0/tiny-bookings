@@ -13,39 +13,35 @@
 
 ## users crud service
 - login 
-  - start 24-march-22-18:48
-  - end   
-  - study how works the prisma client
-    - create a singleton for lon running processeces (nodejs api on vps)
-    - create connect and disconnect functions to manage in the app flow 
-    - (24/19:32)
-  - create user dao (work-pause start again at 23:18)
-    - full admin
-      - create user
-      - retrive user 
-      - delete admin 
-        completed (27-march-05:27) then toke a pause
-      
-    - basic admin
-      - pending
-    - client with email
-      - pending
-    - client with name
-      - pending
-    - 
-  - setup basic express and graphql
-  - define create admin api
-    - set up basic graphql models and resolvers
-  - define login
-    - enabled for full admins
-    - enabled for full basic-admins
-    - enabled for full clients
-  - Define cross API Errors in Spec (tray to keep errors in services, and propagate from there)
-  - Define graphql errors
-  - Define Graphql directives 
-  - Api Logs 
-    - Study pino https://www.twilio.com/blog/guide-node-js-logging
-  - Learn about POSTGRES_Indexes
+- start 24-march-22-18:48
+- study how works the prisma client
+ - create a singleton for lon running processeces (nodejs api on vps)
+ - create connect and disconnect functions to manage in the app flow 
+ - (24/19:32)
+- create user dao (work-pause start again at 23:18)
+ - full admin
+   - create user
+   - retrive user 
+   - delete admin 
+     completed (27-march-05:27) then toke a pause
+   
+ - client with email
+   - pending
+ - client with name
+   - pending
+ - 
+- setup basic express and graphql
+- define create admin api
+ - set up basic graphql models and resolvers
+- define login
+ - enabled for full admins
+ - enabled for full basic-admins
+ - enabled for full clients
+- Define cross API Errors in Spec (tray to keep errors in services, and propagate from there)
+- Define Graphql directives 
+- Api Logs 
+ - Study pino https://www.twilio.com/blog/guide-node-js-logging
+- Learn about POSTGRES_Indexes
 
     
 
@@ -79,6 +75,7 @@ pending clients
 Start 
 2/april - 11:00
 brake to watch fm graphql course
+Done 3 april at some point in the morning
 
 ## Refactor graphql to separation of concerns patters
 start
@@ -88,5 +85,8 @@ start
 - authentication
 - authorization
   - Done 2-april-17:00
-### Data Validation and sanitation
-- props validation for resolvers
+
+## Create a Hotel
+- start (3-april-11:38)
+- Define check in times arrangment treatment
+
