@@ -14,7 +14,8 @@ import {
     updateHotelName,
     updateHotelFreeCalendarDays,
     updateHotelDaysToCancel,
-    updateHotelCheckInTime
+    updateHotelCheckInTime,
+    updateHotelCheckOutTime
 } from "services/hotel";
 
 export const resolvers = {
@@ -269,6 +270,26 @@ export const resolvers = {
                     try {
                         check_in_hour_time = mapTimeToDateTime(check_in_hour_time);
                         var hotel = await updateHotelCheckInTime(hotel_id, check_in_hour_time);
+                        return hotel;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateHotelCheckOut: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        check_out_hour_time,
+                    } = args.input;
+                    try {
+                        check_out_hour_time = mapTimeToDateTime(check_out_hour_time);
+                        var hotel = await updateHotelCheckOutTime(hotel_id, check_out_hour_time);
                         return hotel;
                     } catch (error) {
                         throw error;
