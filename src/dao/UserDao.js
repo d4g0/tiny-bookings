@@ -27,57 +27,61 @@ export async function getAdminByEmail(adminEmail) {
     if (!isValidString(adminEmail)) {
         throw new Error(`Non valid string provided: ${adminName}`)
     }
-
-    // query for user with user_role
-    var data = await prisma.admins.findUnique({
-        where: {
-            email: adminEmail
-        },
-        include: {
-            user_roles: true
-        },
-    })
+    try {
 
 
-    // handle not found case
-    if (!data) {
+        // query for user with user_role
+        var data = await prisma.admins.findUnique({
+            where: {
+                email: adminEmail
+            },
+            include: {
+                user_roles: true
+            },
+        })
 
-        return null;
-    }
-
-    // handle found case
-
-    /**
-    Query response data like
-       {
-            admin: {
-                id: 1,
-                user_role: 1,
-                admin_name: 'dago',
-                admin_description: 'system creator',
-                hash_password: '$2a$10$2nZp/EGj.aQY/PyyqGAMze2.a1C4H1knpdNSAO.TX/92katjMo75C',
-                reset_token: null,
-                created_at: 2022-03-26T05:02:30.090Z,
-                user_roles: { id: 1, user_role: 'full-admin' }
-            }
+        // handle not found case
+        if (!data) {
+            throw new NOT_FOUND_RECORD_ERROR('Not Admin Found');
         }
-     */
-    // --------------------
-    // MAP to a admin user 
-    // --------------------
-    var admin = mapAdminResponseDataToAdminUser({
-        id: data.id,
-        user_roles: data.user_roles,
-        email: data.email,
-        admin_name: data.admin_name,
-        admin_description: data.admin_description,
-        hash_password: data.hash_password,
-        reset_token: data.reset_token,
-        created_at: data.created_at
-    })
+
+        // handle found case
+
+        /**
+        Query response data like
+           {
+                admin: {
+                    id: 1,
+                    user_role: 1,
+                    admin_name: 'dago',
+                    admin_description: 'system creator',
+                    hash_password: '$2a$10$2nZp/EGj.aQY/PyyqGAMze2.a1C4H1knpdNSAO.TX/92katjMo75C',
+                    reset_token: null,
+                    created_at: 2022-03-26T05:02:30.090Z,
+                    user_roles: { id: 1, user_role: 'full-admin' }
+                }
+            }
+         */
+        // --------------------
+        // MAP to a admin user 
+        // --------------------
+        var admin = mapAdminResponseDataToAdminUser({
+            id: data.id,
+            user_roles: data.user_roles,
+            email: data.email,
+            admin_name: data.admin_name,
+            admin_description: data.admin_description,
+            hash_password: data.hash_password,
+            reset_token: data.reset_token,
+            created_at: data.created_at
+        })
 
 
-    return admin;
+        return admin;
+    }
+    catch (error) {
+        throw error
+    }
 }
 
 /**

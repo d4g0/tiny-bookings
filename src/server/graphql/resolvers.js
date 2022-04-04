@@ -1,6 +1,11 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { getHotelById } from "services/hotel";
-import { createAdminService, getAdminsService, getUserByEmailPassword, deleteAdminById } from "services/users/admin";
+import {
+    createAdminService,
+    getAdminsService,
+    getUserByEmailPassword,
+    deleteAdminById
+} from "services/users/admin";
 import xss from "xss";
 import { authenticated, authorized } from "./auth";
 
@@ -24,11 +29,12 @@ export const resolvers = {
 
 
             var { email, password } = args.input;
+            try {
 
-            var user = await getUserByEmailPassword(email, password);
-            // getUserByEmailPassword throws if not found, so
-            // if we are here we have a user
-            if (user) {
+
+                var user = await getUserByEmailPassword(email, password);
+                // getUserByEmailPassword throws if not found, so
+                // if we are here we have a user
 
                 Auth.user = user;
 
@@ -44,6 +50,8 @@ export const resolvers = {
                 Auth.token_created_at = new Date().toISOString();
 
                 return Auth;
+            } catch (error) {
+                throw error
             }
         },
 
@@ -83,7 +91,7 @@ export const resolvers = {
                         var hotel = await getHotelById(id);
                         return hotel;
                     } catch (error) {
-                        console.log(error)
+                        // console.log(error)
                         throw error
                     }
                 }

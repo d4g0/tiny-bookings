@@ -133,16 +133,8 @@ export async function getUserByEmailPassword(email, password) {
         // admin oulet
         var admin;
         // get admin if any
+        // if not any will throw a not-found-error
         var admin = await getAdminByEmailService(email);
-
-        // get client if not admin found
-        if (!admin) {
-
-            // check now for Clients TODO
-            // for now lets finish the function with a not found error
-            throw new NOT_FOUND_RECORD_ERROR('User Not Found');
-        }
-
 
 
         // check if match
@@ -150,10 +142,12 @@ export async function getUserByEmailPassword(email, password) {
         if (passwordsMatch) {
             return admin;
         }
-        if (!admin) {
-            var error = new Error('admin does not exist');
-            error.code = 404;
-            throw error
+        if (!passwordsMatch) {
+            // maybe a user was found
+            // but we are choosing not 
+            // bubble up this info to potential 
+            // atakers so we throw a not-found-error
+            throw new NOT_FOUND_RECORD_ERROR('Admin not found')
         }
 
     } catch (error) {
