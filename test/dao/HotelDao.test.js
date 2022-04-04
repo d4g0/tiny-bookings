@@ -1,4 +1,4 @@
-const {
+import {
     createHotel,
     deleteHotelById,
     updateHotelName,
@@ -7,8 +7,7 @@ const {
     updateHotelFreeCalendarDays,
     updateHotelDaysToCancel,
     getHotelById,
-    updateHotel
-} = require("dao/HotelDao");
+} from "dao/HotelDao";
 import { createHotel as createHotelS } from "~/services/hotel"
 const { createAdmin, deleteAdminById } = require("dao/UserDao");
 const { mapTimeToDateTime } = require("dao/utils");
@@ -180,49 +179,6 @@ describe(
             }
 
         )
-
-        test(
-            "Update a hotel (btach update)",
-            async function () {
-
-                var dbError = null, fooHotel = null, updatedFooHotel = null;
-
-                try {
-
-
-                    fooHotel = await createHotel(hotelData);
-
-                    updatedFooHotel = await updateHotel(
-                        fooHotel.id,
-                        updateHotelInput.hotel_name,
-                        updateHotelInput.check_in_hour_time,
-                        updateHotelInput.check_out_hour_time,
-                        updateHotelInput.maximun_free_calendar_days,
-                        updateHotelInput.minimal_prev_days_to_cancel,
-                    )
-
-                    console.log({ updatedFooHotel });
-
-                    // clean
-                    await deleteHotelById(fooHotel.id);
-                    console.log({ updatedFooHotel })
-                } catch (error) {
-                    console.log(error)
-                    dbError = error
-                }
-
-                expect(updatedFooHotel.id).toBeDefined();
-                expect(dbError).toBe(null);
-                expect(updatedFooHotel.hotel_name).toBe(updateHotelInput.hotel_name)
-                expect(updatedFooHotel.check_in_hour_time).toBe(updateHotelInput.check_in_hour_time.toUTCString())
-                expect(updatedFooHotel.check_out_hour_time).toBe(updateHotelInput.check_out_hour_time.toUTCString())
-                expect(updatedFooHotel.maximun_free_calendar_days).toBe(updateHotelInput.maximun_free_calendar_days)
-                expect(updatedFooHotel.minimal_prev_days_to_cancel).toBe(updateHotelInput.minimal_prev_days_to_cancel)
-            }
-        )
-
-
-
 
 
     }
