@@ -69,3 +69,38 @@ export async function deleteRoomTypeByType(room_type) {
         throw error;
     }
 }
+
+
+/**
+ * Retrives an admin user  from db 
+ * based in is user id since it's a 
+ * `UNIQUE` constrained field (PK)
+ * 
+ * Throws dbErrors:
+ * 
+ * If admin does not exists returns `null`
+ * 
+ * 
+ * 
+ * @param {String} roomType 
+ */
+export async function getRoomTypeByTpe(room_type) {
+    // validate
+    if (!isValidRoomType(room_type)) {
+        throw new Error('Non Valid [roomType] argument')
+    }
+
+    // query for user with user_role
+    var roomType = await prisma.room_types.findUnique({
+        where: {
+            room_type
+        }
+    })
+
+    // handle not found case
+    if (!roomType) {
+        throw new NOT_FOUND_RECORD_ERROR('No roomType Found');
+    }
+
+    return roomType;
+}
