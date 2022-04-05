@@ -60,9 +60,9 @@
 -   role: `basic-admin`
     -	edit rooms availability (locking rooms for a time)
     -	edit rooms data
-        -   create and edit room types
-        -   create and edit room amenities
-        -   create and edit room pictures
+        -   create, delete and edit room types
+        -   create, delete and edit room amenities
+        -   create, delete and edit room pictures
     -	create bookings
     	-	create clients (for bookings)
     -	cancel bookings
@@ -127,6 +127,6 @@
         - (graphql) start 12:19 brake at 12:47 start 14:36 done 15:08
     -   room amenities 
         -   (dao) -start 5-april 11:09 done at 11:47
-        -   (graphql) **ON THIS**
+        -   (graphql) done at 16:01
     -   room pictures (need rooms first)
     -   rooms start 

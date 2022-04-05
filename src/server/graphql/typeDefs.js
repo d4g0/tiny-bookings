@@ -213,6 +213,7 @@ export const typeDefinitions = gql`
     # roomAmenity
     createRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     updateRoomAmenity(input: RoomAmenityUpdateInput!): RoomAmenity!
+    deleteRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     
   }
 

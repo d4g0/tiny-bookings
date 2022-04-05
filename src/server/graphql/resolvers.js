@@ -18,7 +18,7 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone
 } from "services/hotel";
-import { createRoomAmenity, createRoomType, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
+import { createRoomAmenity, createRoomType, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
 
 export const resolvers = {
 
@@ -485,10 +485,24 @@ export const resolvers = {
             )
         ),
 
-        /**
-         deleteRoomAmenity(amenity)
-         */
+        deleteRoomAmenity: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        amenity,
+                    } = args.input;
+                    // sanitation (amenity was sanitaced in createRoomAmenity())
+                    try {
+                        var roomAmenity = await deleteRoomAmenity(amenity);
+                        return roomAmenity;
+                    } catch (error) {
+                        throw error;
+                    }
 
+                }
+            )
+        ),
 
 
 

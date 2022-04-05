@@ -170,3 +170,18 @@ mutation UpdateRoomAmenity ($input:RoomAmenityUpdateInput!){
 }
 ```
 
+### DeleteRoomAmenity
+```graphql
+mutation delRoomAmenity ($input: RoomAmenityInput!){
+ deleteRoomAmenity(input:$input){
+    id,
+    amenity
+  }
+}
+{
+  "input": {
+    "amenity": "Aire Acondicionado Mas Fuelte"
+  }
+}
+```
+
