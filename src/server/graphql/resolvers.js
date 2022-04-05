@@ -18,7 +18,7 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone
 } from "services/hotel";
-import { createRoomAmenity, createRoomType, deleteRoomType, getRoomType, getRoomTypes, updateRoomType } from "services/room";
+import { createRoomAmenity, createRoomType, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomType } from "services/room";
 
 export const resolvers = {
 
@@ -105,6 +105,7 @@ export const resolvers = {
         // ---------------
         // Room 
         // ---------------
+        // roomType
         getRoomType: async (root, args, ctx) => {
             var {
                 room_type,
@@ -120,6 +121,19 @@ export const resolvers = {
             try {
                 var roomTypes = await getRoomTypes();
                 return roomTypes;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        // roomAmenity
+        getRoomAmenity: async (root, args, ctx) => {
+            var {
+                amenity,
+            } = args.input;
+            try {
+                var roomAmenity = await getRoomAmenity(amenity);
+                return roomAmenity;
             } catch (error) {
                 throw error;
             }
@@ -443,8 +457,6 @@ export const resolvers = {
         ),
 
         /**
-         createRoomAmenity(amenity)
-         getRoomAmenity(amenity) 
          getRoomAmenities
          updateRoomAmenity(amenity, new_amenity)
          deleteRoomAmenity(amenity)
@@ -455,9 +467,6 @@ export const resolvers = {
 
     },
     // Root Types
-    /// ---------------
-    // User 
-    // ---------------
     User: {
         __resolveType(obj, ctx, info) {
             if (obj.user_role) {

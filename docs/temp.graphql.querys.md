@@ -125,3 +125,18 @@ mutation CreateRoomAmenity ($input: RoomAmenityInput!){
   }
 }
 ```
+
+### Get RoomAmenity
+```graphql
+query getAmenity($input:RoomAmenityInput!){
+  getRoomAmenity(input:$input){
+    id
+    amenity
+  }
+}
+{
+  "input": {
+    "amenity": "Aire Acondicionado"
+  }
+}
+```

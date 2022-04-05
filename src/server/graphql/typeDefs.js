@@ -182,8 +182,11 @@ export const typeDefinitions = gql`
     # hotel
     hotel(input: getHotelInput!): Hotel!
     # room
+    # roomType
     getRoomType(input: RoomTypeInput!): RoomType!
     getRoomTypes: [RoomType]!
+    # roomAmenity
+    getRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
   }
 
   ##
