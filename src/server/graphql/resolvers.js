@@ -18,13 +18,11 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone
 } from "services/hotel";
-import { createRoomType, deleteRoomType } from "services/room";
+import { createRoomType, deleteRoomType, getRoomType } from "services/room";
 
 export const resolvers = {
 
-    // ---------------
-    // Query 
-    // ---------------
+
     Query: {
 
         // ---------------
@@ -104,15 +102,31 @@ export const resolvers = {
             }
         },
 
+        // ---------------
+        // Room 
+        // ---------------
+        getRoomType: async (root, args, ctx) => {
+            var {
+                room_type,
+            } = args.input;
+            try {
+                var roomType = await getRoomType(room_type);
+                return roomType;
+            } catch (error) {
+                throw error;
+            }
+
+        },
+
 
     },
-    // ---------------
-    // Mutation 
-    // ---------------
+
     Mutation: {
 
 
-        // admin
+        // ---------------
+        // Admin 
+        // ---------------
         createAdmin: authenticated(
             authorized(
                 USER_ROLES.FULL_ADMIN.user_role,
@@ -166,7 +180,9 @@ export const resolvers = {
 
 
 
-        // hotel
+        // ---------------
+        // Hotel 
+        // ---------------
         createHotel: authenticated(
             authorized(
                 USER_ROLES.FULL_ADMIN.user_role,
@@ -332,7 +348,9 @@ export const resolvers = {
 
 
 
-        // room
+        // ---------------
+        // Room 
+        // ---------------
         createRoomType: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
@@ -368,6 +386,8 @@ export const resolvers = {
                 }
             )
         ),
+
+        
 
 
     },

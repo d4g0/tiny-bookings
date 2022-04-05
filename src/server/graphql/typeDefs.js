@@ -155,9 +155,14 @@ export const typeDefinitions = gql`
   # Query
   ##
   type Query {
+    # login
     login(input: loginInput!): Auth!
+    # admin
     admins: [Admin]!
+    # hotel
     hotel(input: getHotelInput!): Hotel!
+    # room
+    getRoomType(input: RoomTypeInput!): RoomType!
   }
 
   ##
@@ -178,7 +183,7 @@ export const typeDefinitions = gql`
     # room
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
-    getRoomType(input: RoomTypeInput!): RoomType!
+    
   }
 
 
