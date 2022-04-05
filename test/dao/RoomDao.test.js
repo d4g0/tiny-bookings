@@ -3,7 +3,7 @@ import {
     createHotel,
 
 } from "dao/HotelDao";
-import { createRoomType, deleteRoomTypeByType, getRoomTypeByTpe } from "dao/RoomDao";
+import { createRoomType, deleteRoomTypeByType, getRoomTypeByTpe, getRoomTypes } from "dao/RoomDao";
 import { v4 as uuid } from 'uuid';
 
 describe(
@@ -64,7 +64,7 @@ describe(
 
         // get a room by type
         test(
-            "Create a room type",
+            "Get a roomType by type",
             async function () {
 
                 var dbError = null, roomType = null, retrievedRoomType = null;
@@ -86,6 +86,35 @@ describe(
                 expect(roomType.id).toBe(retrievedRoomType.id);
                 expect(roomType.room_type).toBe(retrievedRoomType.room_type);
 
+            }
+        )
+
+        // get roomTypes getRoomTypes
+        test(
+            "Get RoomTypes",
+            async function () {
+
+                var dbError = null, roomType = null, roomType2 = null, roomTypes = null;
+
+                try {
+                    roomType = await createRoomType(uuid().substring(0, 10));
+                    roomType2 = await createRoomType(uuid().substring(0, 10));
+                    roomTypes = await getRoomTypes();
+                    console.log({ roomTypes });
+                    // clean
+                    await deleteRoomTypeByType(roomType.room_type);
+                    await deleteRoomTypeByType(roomType2.room_type);
+
+                } catch (error) {
+                    await deleteRoomTypeByType(roomType.room_type);
+                    await deleteRoomTypeByType(roomType2.room_type);
+
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBe(null);
+                expect(roomTypes.length).toBe(2);
             }
         )
 

@@ -90,17 +90,38 @@ export async function getRoomTypeByTpe(room_type) {
         throw new Error('Non Valid [roomType] argument')
     }
 
-    // query for user with user_role
-    var roomType = await prisma.room_types.findUnique({
-        where: {
-            room_type
-        }
-    })
+    try {
+        // query for user with user_role
+        var roomType = await prisma.room_types.findUnique({
+            where: {
+                room_type
+            }
+        })
 
-    // handle not found case
-    if (!roomType) {
-        throw new NOT_FOUND_RECORD_ERROR('No roomType Found');
+        // handle not found case
+        if (!roomType) {
+            throw new NOT_FOUND_RECORD_ERROR('No roomType Found');
+        }
+
+        return roomType;
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+/**
+ * Returns all the room types
+ * @returns 
+ */
+export async function getRoomTypes() {
+
+    try {
+        var admins = await prisma.room_types.findMany();
+        return admins;
+    } catch (error) {
+        throw error;
     }
 
-    return roomType;
 }
