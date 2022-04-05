@@ -177,6 +177,7 @@ export const typeDefinitions = gql`
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
     # room
     createRoomType(input: RoomTypeInput!): RoomType!
+    deleteRoomType(input: RoomTypeInput!): RoomType!
   }
 
 

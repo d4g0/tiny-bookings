@@ -18,7 +18,7 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone
 } from "services/hotel";
-import { createRoomType } from "services/room";
+import { createRoomType, deleteRoomType } from "services/room";
 
 export const resolvers = {
 
@@ -351,6 +351,23 @@ export const resolvers = {
             )
         ),
 
+        deleteRoomType: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_type,
+                    } = args.input;
+                    try {
+                        var roomType = await deleteRoomType(room_type);
+                        return roomType;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
 
 
     },
