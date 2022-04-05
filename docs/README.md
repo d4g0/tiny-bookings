@@ -122,5 +122,10 @@
 []
 -	create rooms
     -   start 4 april 21:37
-    -   room types -done at 22:00
-    -   room amenities -start 5-april 11:09 done at 11:47
+    -   room types 
+        - (dao)  -done at 22:00
+        - (graphql) start 12:19 brake at 12:47 start 14:36
+    -   room amenities 
+        -   (dao) -start 5-april 11:09 done at 11:47
+    -   room pictures 
+    -   rooms start 

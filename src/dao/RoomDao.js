@@ -297,3 +297,28 @@ export async function updateRoomAmenity(amenity, new_amenity) {
         throw error;
     }
 }
+
+// ---------------
+// Room Pictures 
+// ---------------
+// pending till rom completion since it's depending on those
+
+// ---------------
+// Rooms 
+// ---------------
+
+export async function createRoom(){
+
+
+
+    /**
+     * Schema:
+     * 
+        hotel_id
+        room_name
+        room_type
+        night_price
+        capacity
+        number_of_beds
+     */
+}

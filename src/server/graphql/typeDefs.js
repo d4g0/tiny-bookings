@@ -69,6 +69,7 @@ export const typeDefinitions = gql`
 
 
 
+
   ##
   # Hotel
   ##
@@ -133,6 +134,23 @@ export const typeDefinitions = gql`
   }
 
 
+
+  ##
+  # Rooms
+  ##
+  # RoomType
+  type RoomType {
+    id:               Int!
+    room_type:        String!
+  }
+
+  input RoomTypeInput {
+    room_type:        String!
+  }
+
+
+
+
   ##
   # Query
   ##
@@ -146,8 +164,10 @@ export const typeDefinitions = gql`
   # Mutation
   ##
   type Mutation {
+    # admin
     createAdmin(input: createAdminInput!) : Admin!
     deleteAdmin(id: Int!): Admin!
+    # hotel
     createHotel(input: HotelInput!): Hotel!
     updateHotelName(input: UpdateHotelName!): Hotel!
     updateHotelFreeCalendarDays(input: UpdateHotelFreeCalendarDays!): Hotel!
@@ -155,6 +175,8 @@ export const typeDefinitions = gql`
     updateHotelCheckIn(input: UpdateHotelCheckIn!): Hotel!
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
+    # room
+    createRoomType(input: RoomTypeInput!): RoomType!
   }
 
 
