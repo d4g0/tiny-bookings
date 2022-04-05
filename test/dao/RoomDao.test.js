@@ -3,16 +3,15 @@ import {
 
 } from "dao/HotelDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/RoomDao";
-
 import { v4 as uuid } from 'uuid';
 
 describe(
-    'Hotel Dao',
+    'Room Dao',
 
-    function hoetlDaoTest() {
+    function roomDaoTest() {
 
         var roomTypeData = {
-            roomType: 'Matrimonial'
+            roomType: uuid().substring(0, 10)
         }
 
 
