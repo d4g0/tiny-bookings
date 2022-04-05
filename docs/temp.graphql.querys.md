@@ -32,3 +32,40 @@ variables:{
   }
 }
 ```
+
+## Rooms
+
+### CreateRoomType
+```graphql
+mutation CreateRoomType ($input: RoomTypeInput!){
+  createRoomType(input:$input){
+    id,
+    room_type
+  }
+}
+# input
+{
+  "input": {
+    "room_type": "Matrimonial-22"
+  }
+}
+```
+
+### DeleteRoomType
+```graphql
+mutation DeleteRoomType ($input: RoomTypeInput!){
+  deleteRoomType(input:$input){
+    id,
+    room_type
+  }
+}
+
+# input
+{
+  "input": {
+    "room_type": "Matrimonial-22"
+  }
+}
+```
+
+

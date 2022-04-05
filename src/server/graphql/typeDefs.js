@@ -178,6 +178,7 @@ export const typeDefinitions = gql`
     # room
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
+    getRoomType(input: RoomTypeInput!): RoomType!
   }
 
 
