@@ -89,4 +89,8 @@ start
 ## Create a Hotel
 - start (3-april-11:38)
 - Define check in times arrangment treatment
+- Add Time Zone
+
+## Create Rooms
+-  Define date and time schema to match local time
 

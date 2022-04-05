@@ -58,7 +58,6 @@
     -   lis their bookings
 
 -   role: `basic-admin`
-    -	create rooms
     -	edit roooms availability (locking rooms for a time)
     -	edit rooms data
     -	create bookings
@@ -75,6 +74,7 @@
     -	create full admin users 
     -	list admins users
     -   delete other admin users
+    -	create rooms
 
 
 ##### `full-admin`
@@ -100,7 +100,7 @@
 [✅]
 -   delete admin
 
-[]
+[✅]
 -	create and edit a hotel 
     -   start (3-april-11:38)
         -   Dao
@@ -113,3 +113,11 @@
             -   read
                 -   done both at 1:40
             -   update
+                -   done at 15:04
+                -   extended (timezone) done at 15:43
+
+[]
+-	create rooms
+    -   start 4 april 21:37
+    -   room types
+    -   room amenities

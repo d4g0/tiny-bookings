@@ -219,3 +219,13 @@ export function mapHotelResToHotel({
         iana_time_zone
     }
 }
+
+
+export function isValidRoomType(roomType) {
+    var roomSchema = Joi.string().trim().min(4).max(30);
+    var { error, value } = roomSchema.validate(
+        roomType, 
+        { presence: 'required', convert: false }
+    )
+    return !error;
+}

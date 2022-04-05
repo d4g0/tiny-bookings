@@ -83,12 +83,29 @@ async function testToekn() {
 function testDate() {
 
     const { format, utcToZonedTime, } = require("date-fns-tz");
-    const today = new Date(); // Wed Sep 16 2020 13:25:16
-    const timeZone = 'Europe/Paris'; // Let's see what time it is Down Under
+    const today = new Date();
+    const timeZone = 'Europe/Paris';
+    const peruTimeZone = 'America/Lima';
     const timeInBrisbane = utcToZonedTime(today, timeZone);
+    const timeInPeru = utcToZonedTime(today, peruTimeZone);
+    var dateForm = 'yyyy-MM-dd HH:mm:ss';
+    var timeAcumulator = [
+        {
+            country: 'Cuba',
+            date: format(today,dateForm)
+        },
+        {
+            country: 'Peru',
+            date: format(timeInPeru,dateForm)
+        }
+    ]
+    console.table(timeAcumulator);
+    
     // console.log(`
     //     Default time zone: ${format(today, 'yyyy-MM-dd HH:mm:ss')}
-    //     Time in Paris: ${format(timeInBrisbane, 'yyyy-MM-dd HH:mm:ss')}`
+    //     Time in Paris: ${format(timeInBrisbane, 'yyyy-MM-dd HH:mm:ss')}
+    //     Time in Peru: ${format(timeInPeru, 'yyyy-MM-dd HH:mm:ss')}
+    //     `
     // );
 
     const utcDate1 = new Date(Date.UTC(96, 1, 2, 3, 4, 5));
@@ -128,7 +145,7 @@ function mapTimeToDateTime({ hours, mins, secs = 0 }) {
 }
 
 
-// testDate();
+testDate();
 
 
 function testFnObjParams() {
@@ -151,4 +168,4 @@ function testFnObjParams() {
     foo();
 }
 
-testFnObjParams();
+// testFnObjParams();
