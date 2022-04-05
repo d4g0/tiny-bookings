@@ -3,6 +3,10 @@ import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors';
 import { isValidRoomType } from './utils';
 
 
+// ---------------
+// Room Types 
+// ---------------
+
 /**
  * Create a room Type
  * Returns the created Room Type
@@ -72,17 +76,13 @@ export async function deleteRoomTypeByType(room_type) {
 
 
 /**
- * Retrives an admin user  from db 
- * based in is user id since it's a 
- * `UNIQUE` constrained field (PK)
+ * Retrives a room type  from db 
+ * based in is `room_type` 
  * 
- * Throws dbErrors:
- * 
- * If admin does not exists returns `null`
+ * Throws dbErrors, Not Found errors
  * 
  * 
- * 
- * @param {String} roomType 
+ * @param {String} room_type 
  */
 export async function getRoomTypeByTpe(room_type) {
     // validate
@@ -113,7 +113,7 @@ export async function getRoomTypeByTpe(room_type) {
 
 /**
  * Returns all the room types
- * @returns 
+ * @returns {Promise<[RoomType]>} 
  */
 export async function getRoomTypes() {
 
