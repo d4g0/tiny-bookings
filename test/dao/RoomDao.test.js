@@ -120,7 +120,7 @@ describe(
                 }
 
                 expect(dbError).toBe(null);
-                expect(roomTypes.length).toBe(2);
+                expect(roomTypes.length).toBeGreaterThanOrEqual(2); // you might have other roomTypes in db ok
             }
         )
 
