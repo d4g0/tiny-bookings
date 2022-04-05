@@ -93,3 +93,20 @@ query getRoomTypes{
   }
 }
 ```
+
+### UpdateRoomType
+```graphql
+mutation UpdateRoomType ($input: RoomTypeUpdateInput!){
+  updateRoomType(input:$input){
+    id,
+    room_type
+  }
+}
+# input
+{
+  "input":{
+    "room_type": "Matrimonial",
+    "new_room_type": "Matrimonial-2"
+  }
+}
+```

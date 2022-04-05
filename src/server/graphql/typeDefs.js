@@ -148,6 +148,11 @@ export const typeDefinitions = gql`
     room_type:        String!
   }
 
+  input RoomTypeUpdateInput {
+    room_type:        String!
+    new_room_type:    String!
+  }
+  
 
 
 
@@ -184,6 +189,7 @@ export const typeDefinitions = gql`
     # room
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
+    updateRoomType(input: RoomTypeUpdateInput!): RoomType!
     
   }
 
