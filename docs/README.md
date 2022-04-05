@@ -122,5 +122,5 @@
 []
 -	create rooms
     -   start 4 april 21:37
-    -   room types
-    -   room amenities
+    -   room types -done at 22:00
+    -   room amenities -start 5-april 11:09 done at 11:47

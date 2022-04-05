@@ -184,6 +184,29 @@ export function isValidTimeZone(iana_time_zone) {
 }
 
 
+
+export function isValidRoomType(roomType) {
+    var roomSchema = Joi.string().trim().min(4).max(30);
+    var { error, value } = roomSchema.validate(
+        roomType, 
+        { presence: 'required', convert: false }
+    )
+    return !error;
+}
+
+
+export function isValidRoomAmenity(amenity) {
+    var amenitySchema = Joi.string().trim().min(4).max(30);
+    var { error, value } = amenitySchema.validate(
+        amenity, 
+        { presence: 'required', convert: false }
+    )
+    return !error;
+}
+
+
+
+
 // ---------------
 // Mapers 
 // ---------------
@@ -220,12 +243,3 @@ export function mapHotelResToHotel({
     }
 }
 
-
-export function isValidRoomType(roomType) {
-    var roomSchema = Joi.string().trim().min(4).max(30);
-    var { error, value } = roomSchema.validate(
-        roomType, 
-        { presence: 'required', convert: false }
-    )
-    return !error;
-}
