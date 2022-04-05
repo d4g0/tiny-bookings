@@ -110,3 +110,18 @@ mutation UpdateRoomType ($input: RoomTypeUpdateInput!){
   }
 }
 ```
+
+### CreateRoomAmenity
+```graphql
+mutation CreateRoomAmenity ($input: RoomAmenityInput!){
+  createRoomAmenity(input:$input){
+    id,
+    amenity
+  }
+}
+{
+  "input": {
+    "amenity": "Aire Acondicionado"
+  }
+}
+```

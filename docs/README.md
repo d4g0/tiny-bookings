@@ -124,8 +124,9 @@
     -   start 4 april 21:37
     -   room types 
         - (dao)  -done at 22:00
-        - (graphql) start 12:19 brake at 12:47 start 14:36
+        - (graphql) start 12:19 brake at 12:47 start 14:36 done 15:08
     -   room amenities 
         -   (dao) -start 5-april 11:09 done at 11:47
-    -   room pictures 
+        -   (graphql) **ON THIS**
+    -   room pictures (need rooms first)
     -   rooms start 

@@ -123,8 +123,8 @@ export async function getRoomTypeByTpe(room_type) {
 export async function getRoomTypes() {
 
     try {
-        var admins = await prisma.room_types.findMany();
-        return admins;
+        var roomTypes = await prisma.room_types.findMany();
+        return roomTypes;
     } catch (error) {
         throw error;
     }
@@ -230,6 +230,21 @@ export async function getRoomAmenity(amenity) {
     catch (error) {
         throw error
     }
+}
+
+/**
+ * Returns all the room types
+ * @returns {Promise<[RoomAmenity]>} 
+ */
+ export async function getRoomAmenities() {
+
+    try {
+        var amenities = await prisma.room_amenity.findMany();
+        return amenities;
+    } catch (error) {
+        throw error;
+    }
+
 }
 
 

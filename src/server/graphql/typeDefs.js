@@ -154,6 +154,21 @@ export const typeDefinitions = gql`
   }
   
 
+  # RoomAmenity
+  type RoomAmenity {
+    id:               Int!
+    amenity:          String!
+  }
+
+  input RoomAmenityInput {
+    amenity:          String!
+  }
+
+  input RoomAmenityUpdateInput {
+    amenity:          String!
+    new_amenity:      String!
+  }
+
 
 
   ##
@@ -187,9 +202,12 @@ export const typeDefinitions = gql`
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
     # room
+    # roomType
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
     updateRoomType(input: RoomTypeUpdateInput!): RoomType!
+    # roomAmenity
+    createRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     
   }
 
