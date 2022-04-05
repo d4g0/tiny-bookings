@@ -187,6 +187,7 @@ export const typeDefinitions = gql`
     getRoomTypes: [RoomType]!
     # roomAmenity
     getRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
+    getRoomAmenities: [RoomAmenity]!
   }
 
   ##

@@ -139,6 +139,14 @@ export const resolvers = {
             }
         },
 
+        getRoomAmenities: async (root, args, ctx) => {
+            try {
+                var roomAmenities = await getRoomAmenities();
+                return roomAmenities;
+            } catch (error) {
+                throw error;
+            }
+        },
 
     },
 

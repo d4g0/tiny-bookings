@@ -140,3 +140,17 @@ query getAmenity($input:RoomAmenityInput!){
   }
 }
 ```
+
+
+
+
+### Get RoomAmenities
+```graphql
+query {
+  getRoomAmenities{
+    id
+    amenity
+  }
+}
+```
+
