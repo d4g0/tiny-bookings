@@ -58,8 +58,11 @@
     -   lis their bookings
 
 -   role: `basic-admin`
-    -	edit roooms availability (locking rooms for a time)
+    -	edit rooms availability (locking rooms for a time)
     -	edit rooms data
+        -   create and edit room types
+        -   create and edit room amenities
+        -   create and edit room pictures
     -	create bookings
     	-	create clients (for bookings)
     -	cancel bookings
