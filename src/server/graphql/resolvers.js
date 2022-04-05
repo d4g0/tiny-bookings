@@ -18,7 +18,7 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone
 } from "services/hotel";
-import { createRoomType, deleteRoomType, getRoomType } from "services/room";
+import { createRoomType, deleteRoomType, getRoomType, getRoomTypes } from "services/room";
 
 export const resolvers = {
 
@@ -115,7 +115,14 @@ export const resolvers = {
             } catch (error) {
                 throw error;
             }
-
+        },
+        getRoomTypes: async (root, args, ctx) => {
+            try {
+                var roomTypes = await getRoomTypes();
+                return roomTypes;
+            } catch (error) {
+                throw error;
+            }
         },
 
 
@@ -358,8 +365,10 @@ export const resolvers = {
                     var {
                         room_type,
                     } = args.input;
+                    // sanitation
+                    var s_room_type = xss(room_type)
                     try {
-                        var roomType = await createRoomType(room_type);
+                        var roomType = await createRoomType(s_room_type);
                         return roomType;
                     } catch (error) {
                         throw error;
@@ -376,6 +385,7 @@ export const resolvers = {
                     var {
                         room_type,
                     } = args.input;
+
                     try {
                         var roomType = await deleteRoomType(room_type);
                         return roomType;
@@ -387,7 +397,7 @@ export const resolvers = {
             )
         ),
 
-        
+
 
 
     },

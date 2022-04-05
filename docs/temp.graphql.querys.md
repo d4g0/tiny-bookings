@@ -68,4 +68,28 @@ mutation DeleteRoomType ($input: RoomTypeInput!){
 }
 ```
 
+### GetRoomType
+```graphql
+query getRoomType($input: RoomTypeInput!){
+  getRoomType(input:$input){
+    id
+    room_type
+  }
+}
+# input
+{
+  "input": {
+    "room_type": "Matrimonial"
+  }
+}
+```
 
+### GetRoomTypes
+```graphql
+query getRoomTypes{
+  getRoomTypes{
+    id
+    room_type
+  }
+}
+```
