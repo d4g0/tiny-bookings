@@ -212,6 +212,7 @@ export const typeDefinitions = gql`
     updateRoomType(input: RoomTypeUpdateInput!): RoomType!
     # roomAmenity
     createRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
+    updateRoomAmenity(input: RoomAmenityUpdateInput!): RoomAmenity!
     
   }
 

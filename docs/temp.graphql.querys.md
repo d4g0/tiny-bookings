@@ -154,3 +154,19 @@ query {
 }
 ```
 
+### UpdateRoomAMenity
+```graphql
+mutation UpdateRoomAmenity ($input:RoomAmenityUpdateInput!){
+ updateRoomAmenity(input:$input){
+    id,
+    amenity
+  }
+}
+{
+  "input": {
+    "amenity": "Aire Acondicionado",
+    "new_amenity": "Aire Acondicionado Mas Fuelte"
+  }
+}
+```
+
