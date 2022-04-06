@@ -130,7 +130,9 @@
         -   (graphql) done at 16:01
     -   room pictures (need rooms first)
     -   rooms start **ON THIS** 
-        -   (dao) start 20:30
+        -   defer pictures uploads
+        -   for add pictures to rooms this needs to be created first
+        -   (dao) start 20:30   create and delete done at 23:48
 
 
 

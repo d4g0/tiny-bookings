@@ -390,6 +390,15 @@ async function mapAmenitiesToIds(amenities) {
 // Rooms *ON THIS*
 // ---------------
 //  
+/**
+ * Creates a room.
+ * If amenities: `[room_amenity]` are provided
+ * it will check if those existis, if not, it will 
+ * create those, then it will create the 
+ * respective `rooms_amenities` units of the 
+ * many to many relation bettewn `room` and `room_amenity`
+ * @returns 
+ */
 export async function createRoom({
     hotel_id,       // Int reference to a Hotel id
     room_type,      // Int reference to RoomType id
@@ -397,7 +406,7 @@ export async function createRoom({
     night_price,    // Int
     capacity,       // Int
     number_of_beds, // Int
-    amenities = [],      // Array Of Amenity Strings
+    amenities = [], // Array Of Amenity Strings
 }) {
 
     // validation
@@ -523,6 +532,15 @@ async function createRoomsAmenities(amenities_ids, room) {
     }
 }
 
+
+/**
+ * Deletes a `room`
+ * with all it's dependent 
+ * `rooms_amenities` and `room_pictures`
+ * records.
+ * @param {number} room_id 
+ * @returns 
+ */
 export async function deleteRoom(room_id) {
 
     // validation
@@ -532,7 +550,7 @@ export async function deleteRoom(room_id) {
 
     try {
 
-        // fetch room with rooms_amenities as is a dependecy
+        // fetch room with  its  dependecies
         var room = await prisma.room.findFirst({
             where: {
                 id: room_id
@@ -560,7 +578,7 @@ export async function deleteRoom(room_id) {
         })
 
 
-        // finaly no dependencies 
+        // finaly no dependencies, not forgein key errors
         // delete the room
         var delRes = await prisma.room.delete({
             where: {
@@ -573,31 +591,11 @@ export async function deleteRoom(room_id) {
     } catch (error) {
         // case prisma record not found
         if (error.code == 'P2025') {
-            var customError = new NOT_FOUND_RECORD_ERROR('[room_type] not found');
+            var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
             throw customError;
         }
         throw error;
     }
-
-    // delete all rooms
-
-    // prisma delete cascading sample
-    /**
-       const deletePosts = prisma.post.deleteMany({
-        where: {
-            authorId: 7,
-        },
-        })
-
-        const deleteUser = prisma.user.delete({
-        where: {
-            id: 7,
-        },
-        })
-
-        // transaction
-        const transaction = await prisma.$transaction([deletePosts, deleteUser])
-     */
 
 }
 
