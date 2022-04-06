@@ -2,7 +2,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime } from 'dao/utils';
-import { createRoom } from "dao/room/RoomDao";
+import { createRoom, deleteRoom } from "dao/room/RoomDao";
 describe(
     'Room Dao',
 
@@ -41,15 +41,13 @@ describe(
                 // clean created roomType
                 // await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                // await deleteHotelById(customHotel.id); // delete depending room first TODO
+                await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
         })
 
-        var roomTypeData = {
-            roomType: uuid().substring(0, 10)
-        }
+
 
         var roomData = {
             // hotel_id, await to run test functions to use global `customHotel.id`
@@ -70,7 +68,7 @@ describe(
         ]
 
         test(
-            "Create a room",
+            "Create and delete room",
             async function () {
                 var dbError = null, room = null;
 
@@ -84,6 +82,8 @@ describe(
                     })
 
                     console.log({ room });
+
+                    await deleteRoom(room.id);
                 } catch (error) {
                     console.log(error)
                     dbError = error;
