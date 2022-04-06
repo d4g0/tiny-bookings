@@ -1,21 +1,8 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
-import {
-    createRoom,
-    createRoomAmenity,
-    createRoomType,
-    deleteRoom,
-    deleteRoomAmenity,
-    deleteRoomTypeByType,
-    getARoomItsAmenities,
-    getRoomAmenity,
-    getRoomTypeByTpe,
-    getRoomTypes,
-    updateRoomAmenity,
-    updateRoomType
-} from "dao/RoomDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime } from 'dao/utils';
+import { createRoom } from "dao/room/RoomDao";
 describe(
     'Room Dao',
 
@@ -37,10 +24,10 @@ describe(
                 });
 
                 // create a room type for use it
-                customRoomType = await createRoomType(
-                    // 'supper fussy'
-                    uuid().substring(10)
-                );
+                // customRoomType = await createRoomType(
+                //     // 'supper fussy'
+                //     uuid().substring(10)
+                // );
 
             } catch (error) {
                 console.log(error);
@@ -52,9 +39,9 @@ describe(
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                await deleteRoomTypeByType(customRoomType.room_type);
+                // await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                await deleteHotelById(customHotel.id);
+                // await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
@@ -82,100 +69,37 @@ describe(
             'Safe Box',
         ]
 
-
-
-        // Create, read, delete and update a room amenity
         test(
-            "Create, read, delete and update a room amenity",
-            async function () {
-                var dbError = null,
-                    amenity = null,
-                    r_amenity = null,
-                    u_amenity = null,
-                    d_amenity = null,
-                    idMatch = false
-                    ;
-
-                const AMENITY = uuid().substring(10);
-                const NEW_AMENITY = uuid().substring(10);
-                try {
-
-                    // create
-                    amenity = await createRoomAmenity(AMENITY);
-                    // read
-                    r_amenity = await getRoomAmenity(AMENITY);
-                    // update
-                    u_amenity = await updateRoomAmenity(AMENITY, NEW_AMENITY);
-                    // delete
-                    d_amenity = await deleteRoomAmenity(NEW_AMENITY);
-
-                    idMatch = (
-                        amenity.id == r_amenity.id &&
-                        r_amenity.id == u_amenity.id &&
-                        u_amenity.id == d_amenity.id
-                    )
-
-                } catch (error) {
-                    dbError = error;
-                    console.log(error);
-                }
-                expect(dbError).toBe(null);
-                expect(idMatch).toBe(true);
-            }
-        )
-
-
-        test(
-            "Create and delete a Room with amenities",
+            "Create a room",
             async function () {
                 var dbError = null, room = null;
 
                 try {
                     room = await createRoom({
                         hotel_id: customHotel.id,
-                        room_type: customRoomType.id,
-                        ...roomData,
-                        amenities: gloablAmenities
-                    });
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
 
-                    console.log({ room })
-
-                    await deleteRoom(room.id);
+                    console.log({ room });
                 } catch (error) {
-                    dbError = error;
                     console.log(error)
+                    dbError = error;
                 }
 
-                expect(dbError).toBeNull();
-                expect(room.id).toBeGreaterThanOrEqual(0);
+                expect(dbError).toBe(null);
+                expect(room.id).toBeDefined()
+                expect(room.hotel_id).toBeDefined()
+                expect(room.room_name).toBeDefined()
+                expect(room.night_price).toBeDefined()
+                expect(room.number_of_beds).toBeDefined()
+                expect(room.capacity).toBeDefined()
+                expect(room.created_at).toBeDefined()
+
             }
         )
-
-        // // get a room it's amenities
-        // test(
-        //     "Get a room it's amenities",
-        //     async function () {
-        //         var dbError = null, fooRoomAmenities, fooRoom;
-
-        //         try {
-        //             fooRoom = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_type: customRoomType.id,
-        //                 ...roomData,
-        //                 amenities: gloablAmenities
-        //             });
-
-        //             fooRoomAmenities = await getARoomItsAmenities(fooRoom.id);
-        //             console.log({ fooRoomAmenities })
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-
-        //         expect(dbError).toBeNull();
-        //         expect(fooRoomAmenities.length).toBe(gloablAmenities.length);
-        //     }
-        // )
 
     }
 
