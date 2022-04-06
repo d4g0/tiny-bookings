@@ -92,6 +92,15 @@ auth: {
   }
 ```
 
+## RoomAmenitiy
+```js
+  {
+    id: 0,
+    amenity: 'type'
+  }
+```
+
+
 ## Room
 ```js
   room:{

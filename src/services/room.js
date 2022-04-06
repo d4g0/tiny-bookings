@@ -1,15 +1,20 @@
+// room types
+import { 
+    createRoomType as createRoomTypeDao, 
+    deleteRoomTypeByType, 
+    getRoomTypeByTpe, 
+    getRoomTypes as getRoomTypesDao, 
+    updateRoomType as updateRoomTypeDao
+} from 'dao/room/RoomTypesDao'
+
+// room amenities
 import {
-    createRoomType as createRoomTypeDao,
-    deleteRoomTypeByType,
-    getRoomTypeByTpe,
-    getRoomTypes as getRoomTypesDao,
-    updateRoomType as updateRoomTypeDao,
     createRoomAmenity as createRoomAmenityDao,
     getRoomAmenity as getRoomAmenityDao,
     updateRoomAmenity as updateRoomAmenityDao,
     deleteRoomAmenity as deleteRoomAmenityDao,
     getRoomAmenities as getRoomAmenitiesDao
-} from '~/dao/RoomDao'
+} from '~/dao/room/RoomAmenitiesDao'
 
 export async function createRoomType(room_type) {
     return createRoomTypeDao(room_type);
@@ -45,6 +50,6 @@ export async function deleteRoomAmenity(amenity) {
     return deleteRoomAmenityDao(amenity);
 }
 
-export async function getRoomAmenities(){
+export async function getRoomAmenities() {
     return getRoomAmenitiesDao()
 }
