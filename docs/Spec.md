@@ -84,3 +84,28 @@ auth: {
   }
 
 ```
+## RoomType
+```js
+  {
+    id: 0,
+    room_type: 'type'
+  }
+```
+
+## Room
+```js
+  room:{
+    id,
+    hotel_id,
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    room_type         // maped room_type string
+    amenities         // amenities string array
+    room_pictures     // room_pictures array
+    created_at
+  }
+
+
+```
