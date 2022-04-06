@@ -26,3 +26,18 @@ export class NOT_FOUND_RECORD_ERROR extends Error {
         this.code = NOT_FOUND_RECORD_ERROR_KEY;
     }
 }
+
+
+/**
+ * Delete record not found
+ */
+// P2025
+// key
+export const FORGEIN_KEY_ERROR_KEY = 'FORGEIN_KEY_ERROR'
+// class
+export class FORGEIN_KEY_ERROR extends Error {
+    constructor(message) {
+        super(message);
+        this.code = FORGEIN_KEY_ERROR_KEY;
+    }
+}

@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js';
-import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors';
-import { isValidRoomAmenity, isValidRoomType } from './utils';
+import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors';
+import { isValidId, isValidInteger, isValidRoomAmenity, isValidRoomType, isValidRoomName, mapCreateRoomResToRoom } from './utils';
 
 
 
@@ -55,7 +55,7 @@ export async function createRoomType(room_type) {
 export async function deleteRoomTypeByType(room_type) {
     // validate
     if (!isValidRoomType(room_type)) {
-        throw new Error('Non Valid [roomType] argument: '+ room_type)
+        throw new Error('Non Valid [roomType] argument: ' + room_type)
     }
 
 
@@ -236,7 +236,7 @@ export async function getRoomAmenity(amenity) {
  * Returns all the room types
  * @returns {Promise<[RoomAmenity]>} 
  */
- export async function getRoomAmenities() {
+export async function getRoomAmenities() {
 
     try {
         var amenities = await prisma.room_amenity.findMany();
@@ -286,7 +286,7 @@ export async function updateRoomAmenity(amenity, new_amenity) {
  * by his `amenity`
  * @param {String} amenity 
  */
- export async function deleteRoomAmenity(amenity) {
+export async function deleteRoomAmenity(amenity) {
     // validate
     if (!isValidRoomAmenity(amenity)) {
         throw new Error('Non Valid [amenity] argument')
@@ -309,6 +309,11 @@ export async function updateRoomAmenity(amenity, new_amenity) {
             var customError = new NOT_FOUND_RECORD_ERROR('[amenity] not found');
             throw customError;
         }
+        
+        if(error.code == 'P2003'){
+            var customError = new FORGEIN_KEY_ERROR('Forgein Key Error');
+            throw customError;
+        }
         throw error;
     }
 }
@@ -321,19 +326,104 @@ export async function updateRoomAmenity(amenity, new_amenity) {
 // ---------------
 // Rooms 
 // ---------------
+// ON THIS + [ add room amenities ]
+export async function createRoom({
+    hotel_id,       // Int reference to a Hotel id
+    room_type,      // Int reference to RoomType id
+    room_name,      // String
+    night_price,    // Int
+    capacity,       // Int
+    number_of_beds, // Int
+}) {
 
-export async function createRoom(){
+    // validation
+    if (!isValidId(hotel_id)) {
+        throw new Error('Non Valid Id')
+    }
+    if (!isValidId(room_type)) {
+        throw new Error('Non Valid Id')
+    }
+    if (!isValidRoomName(room_name)) {
+        throw new Error('Non Valid Room Name: ' + room_name)
+    }
+    if (!isValidInteger(night_price)) {
+        throw new Error('Non Valid Night Price')
+    }
+    if (!isValidInteger(capacity)) {
+        throw new Error('Non Valid Capacity')
+    }
+    if (!isValidInteger(number_of_beds)) {
+        throw new Error('Non Valid Number Of Beds')
+    }
+
+    try {
+        var room = await prisma.room.create({
+            data: {
+                hotel_id,
+                room_type,
+                room_name,
+                night_price,
+                capacity,
+                number_of_beds
+            },
+            include: {
+                room_types: true
+            }
+        });
+
+        var mapedRoom = mapCreateRoomResToRoom(room);
+        return mapedRoom;
+
+    } catch (error) {
+        throw error;
+    }
+}
 
 
+export async function deleteRoom(room_id) {
 
+    // validation
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid Room Id')
+    }
+
+    try {
+
+        var delRes = await prisma.room.delete({
+            where: {
+                id: room_id
+            },
+        })
+
+        return delRes;
+
+    } catch (error) {
+        // case prisma record not found
+        if (error.code == 'P2025') {
+            var customError = new NOT_FOUND_RECORD_ERROR('[room_type] not found');
+            throw customError;
+        }
+        throw error;
+    }
+
+    // delete all rooms
+
+    // prisma delete cascading sample
     /**
-     * Schema:
-     * 
-        hotel_id
-        room_name
-        room_type
-        night_price
-        capacity
-        number_of_beds
+       const deletePosts = prisma.post.deleteMany({
+        where: {
+            authorId: 7,
+        },
+        })
+
+        const deleteUser = prisma.user.delete({
+        where: {
+            id: 7,
+        },
+        })
+
+        // transaction
+        const transaction = await prisma.$transaction([deletePosts, deleteUser])
      */
+
 }

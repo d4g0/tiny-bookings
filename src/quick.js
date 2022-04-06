@@ -92,15 +92,15 @@ function testDate() {
     var timeAcumulator = [
         {
             country: 'Cuba',
-            date: format(today,dateForm)
+            date: format(today, dateForm)
         },
         {
             country: 'Peru',
-            date: format(timeInPeru,dateForm)
+            date: format(timeInPeru, dateForm)
         }
     ]
     console.table(timeAcumulator);
-    
+
     // console.log(`
     //     Default time zone: ${format(today, 'yyyy-MM-dd HH:mm:ss')}
     //     Time in Paris: ${format(timeInBrisbane, 'yyyy-MM-dd HH:mm:ss')}
@@ -169,3 +169,22 @@ function testFnObjParams() {
 }
 
 // testFnObjParams();
+
+function testJoi() {
+    var str = 'f6c-4a51-841b-9f65929e50eb';
+    const isValidNameStr = isValidRoomName(str);
+    console.log(isValidNameStr)
+}
+
+function isValidRoomName(room_name) {
+    var roomNameSchema = Joi.string().trim().min(4).max(20);
+    var { error, value } = roomNameSchema.validate(
+        room_name,
+        { presence: 'required', convert: false }
+    )
+
+    console.log({ error, value });
+    return !error;
+}
+
+testJoi()

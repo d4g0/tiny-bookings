@@ -123,10 +123,47 @@
 -	create rooms
     -   start 4 april 21:37
     -   room types 
-        - (dao)  -done at 22:00
-        - (graphql) start 12:19 brake at 12:47 start 14:36 done 15:08
+        -   (dao)  -done at 22:00
+        -   (graphql) start 12:19 brake at 12:47 start 14:36 done 15:08
     -   room amenities 
         -   (dao) -start 5-april 11:09 done at 11:47
         -   (graphql) done at 16:01
     -   room pictures (need rooms first)
-    -   rooms start 
+    -   rooms start **ON THIS** start 20:30 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Useful Links
+Dates Managment
+Time
+https://time.is/PET
+Time Zones
+https://nodatime.org/TimeZones
+
+Date Convertions and stuff
+`date-fns`

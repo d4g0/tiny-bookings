@@ -1,7 +1,10 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
+import { createHotel, deleteHotelById } from "dao/HotelDao";
 import {
+    createRoom,
     createRoomAmenity,
     createRoomType,
+    deleteRoom,
     deleteRoomAmenity,
     deleteRoomTypeByType,
     getRoomAmenity,
@@ -11,14 +14,58 @@ import {
     updateRoomType
 } from "dao/RoomDao";
 import { v4 as uuid } from 'uuid';
-
+import { mapTimeToDateTime } from 'dao/utils';
 describe(
     'Room Dao',
 
     function roomDaoTest() {
 
+        var customHotel;
+        var customRoomType;
+        beforeAll(async () => {
+
+            try {
+                // create a hotel for use it in the tests
+                customHotel = await createHotel({
+                    hotel_name: uuid().substring(10),
+                    maximun_free_calendar_days: 30,
+                    check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
+                    check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
+                    minimal_prev_days_to_cancel: 5,
+                    iana_time_zone: 'America/Lima'
+                });
+
+                // create a room type for use it
+                customRoomType = await createRoomType(uuid().substring(10));
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+
+        afterAll(async () => {
+            try {
+                // make sure there is not dependent room at this point ok
+                // clean created roomType
+                await deleteRoomTypeByType(customRoomType.room_type);
+                // clean created hotel
+                await deleteHotelById(customHotel.id);
+            } catch (error) {
+                console.log(error);
+            }
+        })
+
         var roomTypeData = {
             roomType: uuid().substring(0, 10)
+        }
+
+        var roomData = {
+            // hotel_id, await to run test functions to use global `customHotel.id`
+            // room_type, await to run test functions to use global `customHotel.id`
+            room_name: uuid().substring(0, 10),
+            night_price: 10,
+            capacity: 2,
+            number_of_beds: 1
         }
 
         // create a room type
@@ -146,7 +193,7 @@ describe(
             }
         )
 
-        // create a room amenity
+        // Create, read, delete and update a room amenity
         test(
             "Create, read, delete and update a room amenity",
             async function () {
@@ -186,7 +233,31 @@ describe(
             }
         )
 
+        // create a room
+        test(
+            "Create and delete a Room",
+            async function () {
+                var dbError = null, room = null;
 
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_type: customRoomType.id,
+                        ...roomData
+                    });
+
+                    console.log({ room })
+
+                    await deleteRoom(room.id);
+                } catch (error) {
+                    dbError = error;
+                    console.log(error)
+                }
+
+                expect(dbError).toBeNull();
+                expect(room.id).toBeGreaterThanOrEqual(0);
+            }
+        )
 
     }
 

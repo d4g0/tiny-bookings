@@ -40,7 +40,7 @@ export function mapAdminResponseDataToAdminUser({ // rename
         admin_description,
         hash_password,
         reset_token,
-        created_at: new Date(created_at).toISOString()
+        created_at: new Date(created_at).toUTCString()
     }
 }
 
@@ -188,7 +188,7 @@ export function isValidTimeZone(iana_time_zone) {
 export function isValidRoomType(roomType) {
     var roomSchema = Joi.string().trim().min(4).max(30);
     var { error, value } = roomSchema.validate(
-        roomType, 
+        roomType,
         { presence: 'required', convert: false }
     )
     return !error;
@@ -198,7 +198,17 @@ export function isValidRoomType(roomType) {
 export function isValidRoomAmenity(amenity) {
     var amenitySchema = Joi.string().trim().min(4).max(30);
     var { error, value } = amenitySchema.validate(
-        amenity, 
+        amenity,
+        { presence: 'required', convert: false }
+    )
+    return !error;
+}
+
+
+export function isValidRoomName(room_name) {
+    var roomNameSchema = Joi.string().trim().min(4).max(20);
+    var { error, value } = roomNameSchema.validate(
+        room_name,
         { presence: 'required', convert: false }
     )
     return !error;
@@ -210,6 +220,7 @@ export function isValidRoomAmenity(amenity) {
 // ---------------
 // Mapers 
 // ---------------
+
 /**
  * 
  * Maps a `time` obj to a Default Date with the `hour-time`
@@ -242,4 +253,47 @@ export function mapHotelResToHotel({
         iana_time_zone
     }
 }
+
+export function mapCreateRoomResToRoom({
+    id,
+    hotel_id,
+    room_name,
+    night_price,
+    capacity,
+    number_of_beds,
+    room_type,
+    created_at,
+    room_types,
+}) {
+
+    return {
+        id,
+        hotel_id,
+        room_name,
+        night_price,
+        capacity,
+        number_of_beds,
+        room_type: room_types.room_type,
+        created_at: new Date(created_at).toUTCString()
+    }
+    /**
+     * Res Sample
+     *     {
+      room: {
+        id: 1,
+        hotel_id: 246,
+        room_name: 'fdcfd999-8',
+        night_price: 10,
+        capacity: 2,
+        number_of_beds: 1,
+        room_type: 169,
+        created_at: 2022-04-05T21:00:28.386Z,
+        room_types: { id: 169, room_type: '1b5-4ebd-9248-78af1f73da50' }
+      }
+    }
+     */
+}
+
+
+
 
