@@ -196,7 +196,7 @@ export function isValidRoomType(roomType) {
 
 
 export function isValidRoomAmenity(amenity) {
-    var amenitySchema = Joi.string().trim().min(4).max(30);
+    var amenitySchema = Joi.string().trim().min(1).max(30);
     var { error, value } = amenitySchema.validate(
         amenity,
         { presence: 'required', convert: false }
@@ -214,7 +214,25 @@ export function isValidRoomName(room_name) {
     return !error;
 }
 
+export function areValidAmenities(amenities = []) {
+    if (!Array.isArray(amenities)) {
+        return false
+    }
+    if (!amenities.length) {
+        return false
+    }
 
+    var areValidAmenities = true;
+
+    for (let i = 0; i < amenities.length; i++) {
+        if (!isValidRoomAmenity(amenities[i])) {
+            areValidAmenities = false;
+            break;
+        }
+
+    }
+    return areValidAmenities;
+}
 
 
 // ---------------
@@ -254,17 +272,19 @@ export function mapHotelResToHotel({
     }
 }
 
-export function mapCreateRoomResToRoom({
+export function mapRoomResToRoom({
     id,
     hotel_id,
     room_name,
     night_price,
     capacity,
     number_of_beds,
-    room_type,
     created_at,
-    room_types,
+    room_types, // {id:0 , room_type: type }
+    amenities, //  virtual field, provided array of amenities strings
 }) {
+
+
 
     return {
         id,
@@ -274,24 +294,9 @@ export function mapCreateRoomResToRoom({
         capacity,
         number_of_beds,
         room_type: room_types.room_type,
-        created_at: new Date(created_at).toUTCString()
+        created_at: new Date(created_at).toUTCString(),
+        amenities 
     }
-    /**
-     * Res Sample
-     *     {
-      room: {
-        id: 1,
-        hotel_id: 246,
-        room_name: 'fdcfd999-8',
-        night_price: 10,
-        capacity: 2,
-        number_of_beds: 1,
-        room_type: 169,
-        created_at: 2022-04-05T21:00:28.386Z,
-        room_types: { id: 169, room_type: '1b5-4ebd-9248-78af1f73da50' }
-      }
-    }
-     */
 }
 
 

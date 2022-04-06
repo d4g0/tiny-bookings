@@ -129,7 +129,8 @@
         -   (dao) -start 5-april 11:09 done at 11:47
         -   (graphql) done at 16:01
     -   room pictures (need rooms first)
-    -   rooms start **ON THIS** start 20:30 
+    -   rooms start **ON THIS** 
+        -   (dao) start 20:30
 
 
 

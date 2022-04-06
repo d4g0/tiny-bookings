@@ -36,7 +36,10 @@ describe(
                 });
 
                 // create a room type for use it
-                customRoomType = await createRoomType(uuid().substring(10));
+                customRoomType = await createRoomType(
+                    // 'supper fussy'
+                    uuid().substring(10)
+                );
 
             } catch (error) {
                 console.log(error);
@@ -45,11 +48,12 @@ describe(
 
         afterAll(async () => {
             try {
+                // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                await deleteRoomTypeByType(customRoomType.room_type);
+                // await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                await deleteHotelById(customHotel.id);
+                // await deleteHotelById(customHotel.id);
             } catch (error) {
                 console.log(error);
             }
@@ -67,6 +71,15 @@ describe(
             capacity: 2,
             number_of_beds: 1
         }
+
+        var gloablAmenities = [
+            'Air conditioner',
+            'Jacussi',
+            'Mini Bar',
+            'Desktop',
+            'TV',
+            'Safe Box',
+        ]
 
         // create a room type
         test(
@@ -153,15 +166,12 @@ describe(
                     roomType = await createRoomType(uuid().substring(0, 10));
                     roomType2 = await createRoomType(uuid().substring(0, 10));
                     roomTypes = await getRoomTypes();
-                    console.log({ roomTypes });
+                    // console.log({ roomTypes });
                     // clean
                     await deleteRoomTypeByType(roomType.room_type);
                     await deleteRoomTypeByType(roomType2.room_type);
 
                 } catch (error) {
-                    await deleteRoomTypeByType(roomType.room_type);
-                    await deleteRoomTypeByType(roomType2.room_type);
-
                     dbError = error;
                     console.log(error);
                 }
@@ -233,9 +243,9 @@ describe(
             }
         )
 
-        // create a room
+
         test(
-            "Create and delete a Room",
+            "Create and delete a Room with amenities",
             async function () {
                 var dbError = null, room = null;
 
@@ -243,12 +253,13 @@ describe(
                     room = await createRoom({
                         hotel_id: customHotel.id,
                         room_type: customRoomType.id,
-                        ...roomData
+                        ...roomData,
+                        amenities: gloablAmenities
                     });
 
                     console.log({ room })
 
-                    await deleteRoom(room.id);
+                    // await deleteRoom(room.id);
                 } catch (error) {
                     dbError = error;
                     console.log(error)
