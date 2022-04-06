@@ -51,9 +51,9 @@ describe(
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                // await deleteRoomTypeByType(customRoomType.room_type);
+                await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                // await deleteHotelById(customHotel.id);
+                await deleteHotelById(customHotel.id);
             } catch (error) {
                 console.log(error);
             }
@@ -143,7 +143,6 @@ describe(
                     // clean
                     await deleteRoomTypeByType(roomTypeData.roomType);
                 } catch (error) {
-                    await deleteRoomTypeByType(roomTypeData.roomType);
                     dbError = error;
                     console.log(error);
                 }
@@ -259,7 +258,7 @@ describe(
 
                     console.log({ room })
 
-                    // await deleteRoom(room.id);
+                    await deleteRoom(room.id);
                 } catch (error) {
                     dbError = error;
                     console.log(error)

@@ -389,7 +389,7 @@ async function mapAmenitiesToIds(amenities) {
 // ---------------
 // Rooms *ON THIS*
 // ---------------
-//  + [ add room amenities ]
+//  
 export async function createRoom({
     hotel_id,       // Int reference to a Hotel id
     room_type,      // Int reference to RoomType id
@@ -532,6 +532,36 @@ export async function deleteRoom(room_id) {
 
     try {
 
+        // fetch room with rooms_amenities as is a dependecy
+        var room = await prisma.room.findFirst({
+            where: {
+                id: room_id
+            },
+            include: {
+                rooms_amenities: true,
+                room_pictures: true,
+            }
+        })
+
+        // clean dependencies
+        // rooms_amenities
+        var roomsAmenities = room.rooms_amenities;
+        await prisma.rooms_amenities.deleteMany({
+            where: {
+                room_id: room.id
+            }
+        })
+        // room pictures
+        var roomPictures = room.room_pictures;
+        await prisma.room_pictures.deleteMany({
+            where: {
+                room_id: room.id
+            }
+        })
+
+
+        // finaly no dependencies 
+        // delete the room
         var delRes = await prisma.room.delete({
             where: {
                 id: room_id
