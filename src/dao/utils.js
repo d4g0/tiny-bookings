@@ -243,7 +243,7 @@ export function areValidAmenities(amenities = []) {
     return areValidAmenities;
 }
 
-export function areValidIds(ids = []) {
+export function areValidAmenitiesIds(ids = []) {
     if (!Array.isArray(ids)) {
         return false
     }

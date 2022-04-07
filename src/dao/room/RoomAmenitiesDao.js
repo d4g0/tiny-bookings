@@ -1,5 +1,5 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
-import { areValidIds, isValidId, isValidRoomAmenity } from "dao/utils";
+import { areValidAmenitiesIds, isValidId, isValidRoomAmenity } from "dao/utils";
 import { prisma } from 'dao/PrismaClient.js';
 
 
@@ -214,7 +214,6 @@ export async function mapAmenitiesToIds(amenities_strs) {
 
 /**
  * Return an array of `room_amenities`
- * amenities strings based in the provided ids
  * @param {number[]} amenities_ids 
  * @returns 
  */
@@ -222,7 +221,7 @@ export async function getAmenitiesByIds(amenities_ids) {
     if (!Array.isArray(amenities_ids)) {
         throw new Error('Non Valid Amenities Ids')
     }
-    if (!areValidIds(amenities_ids)) {
+    if (!areValidAmenitiesIds(amenities_ids)) {
         throw new Error('Non valid amenities_ids:')
     }
 
@@ -234,7 +233,7 @@ export async function getAmenitiesByIds(amenities_ids) {
                     id: amenities_ids[i]
                 }
             })
-            amenities.push(currentAmenity.amenity);
+            amenities.push(currentAmenity);
         }
 
         return amenities;
@@ -293,20 +292,17 @@ export async function createARoomIsAmenity(room_id, amenity_id) {
     }
 }
 
-export async function deleteARoomIsAmenity(room_id, amenity_id) {
-    if (!isValidId(room_id)) {
-        throw new Error('Non Valid Id')
-    }
-    if (!isValidId(amenity_id)) {
-        throw new Error('Non Valid Id')
+export async function deleteARoomIsAmenity(room_is_amenity_id) {
+    if (!isValidId(room_is_amenity_id)) {
+        throw new Error('Non Valid room_is_amenity_id')
     }
 
     try {
         var roomIsAmenity = await prisma.rooms_amenities.delete({
             where: {
-                room_id,
-                amenity_id
-            }
+                id: room_is_amenity_id
+            },
+
         })
 
         return roomIsAmenity;

@@ -179,7 +179,7 @@ export async function updateRoomName(room_id, room_name) {
 
 
 /**
- * Update a room it's name
+ * Update a room it's `room_type`
  * @param {number} room_id 
  * @param {string} room_name 
  */

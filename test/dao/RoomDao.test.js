@@ -5,6 +5,7 @@ import { mapTimeToDateTime } from 'dao/utils';
 import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
+import { createARoomIsAmenity, createRoomAmenity, deleteARoomIsAmenity } from "dao/room/RoomAmenitiesDao";
 describe(
     'Room Dao',
 
@@ -68,7 +69,7 @@ describe(
             'TV',
             'Safe Box',
         ]
-
+        // create and delete
         test(
             "Create and delete room",
             async function () {
@@ -102,7 +103,7 @@ describe(
 
             }
         )
-
+        // roomName
         test(
             "Update a room name",
             async function () {
@@ -136,7 +137,7 @@ describe(
             }
         )
 
-
+        // update a room is type
         test(
             "Update a Room is Type",
             async function () {
@@ -170,12 +171,12 @@ describe(
 
                 expect(dbError).toBe(null);
                 expect(room.id).toBeDefined()
-                expect(u_room.room_type).toBe(ROOM_TYPE_KEY); // wait till maping
+                expect(u_room.room_type).toBe(ROOM_TYPE_KEY);
 
             }
         )
 
-
+        // get room with pictures
         test(
             "Get a room with pictures",
             async function () {
@@ -211,7 +212,7 @@ describe(
             }
         )
 
-
+        //  with pictures and type
         test(
             "Get a room with picures and  room type",
             async function () {
@@ -348,6 +349,66 @@ describe(
                 }
                 expect(dbError).toBeNull();
                 expect(uc_room.capacity).toBe(NEW_CAPACITY);
+            }
+        )
+
+        // amenities 
+        test(
+            "Create a room with amenities, type, pictures",
+            async function () {
+
+                var dbError = null,
+                    room = null,
+                    roomType = null,
+                    ROOM_TYPE_KEY = uuid().substring(0, 10),
+                    amenity = null,
+                    AMENITY_KEY = uuid().substring(0, 10),
+                    roomPicture = null, FILE_NAME = 'supper-foo-picture',
+                    final_room = null,
+                    roomAmenity
+                    ;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
+
+                    // create a room_type to use it
+                    roomType = await createRoomType(ROOM_TYPE_KEY);
+                    // update with the type
+                    await updateARoomIsType(room.id, roomType.id);
+                    // amenity
+                    amenity = await createRoomAmenity(AMENITY_KEY);
+                    roomAmenity = await createARoomIsAmenity(room.id, amenity.id);
+                    console.log({ roomAmenity })
+                    // pictures
+                    roomPicture = await createARoomPicture(room.id, FILE_NAME);
+
+                    final_room = await getRoomById(room.id);
+
+                    console.log({
+                        final_room,
+                        amenities: final_room.amenities,
+                        room_pictures: final_room.room_pictures
+                    })
+                    // clean
+                    await deleteARoomIsAmenity(roomAmenity.id)
+                    await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
+                    await deleteRoomTypeByType(roomType.room_type)
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
+
+                expect(dbError).toBe(null);
+                expect(room.id).toBeDefined()
+                // expect(u_room.room_type).toBe(ROOM_TYPE_KEY);
+
             }
         )
 
