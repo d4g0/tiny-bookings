@@ -111,8 +111,8 @@ auth: {
     capacity
     number_of_beds
     room_type         // maped room_type string
-    amenities         // amenities string array
-    room_pictures     // room_pictures array
+    amenities         // rooms_amenities []
+    room_pictures     // room_pictures []
     created_at
   }
 
