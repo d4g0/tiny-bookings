@@ -64,6 +64,10 @@ export async function createRoom({
         return specRoom;
 
     } catch (error) {
+        // console.log({ target: error?.meta?.target[0] });
+        if (error.code = 'P2002') {
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unique constraint error', error?.meta?.target[0]);
+        }
         throw error
     }
 

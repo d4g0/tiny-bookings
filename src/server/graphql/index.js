@@ -21,20 +21,9 @@ const server = new ApolloServer({
     const user = getUserFromToken(token);
     return { user, createAdminToken }
   },
-  formatError(error) {
-
-    // custom errors
-    if (error?.extensions?.exception?.code) {
-
-      return {
-        ...error,
-        // bubble up custom error code
-        code: error.extensions.exception.code
-      }
-    }
-
-    return error;
-  }
+  // formatError(error) {
+  //   return error;
+  // }
 });
 
 export default server;
