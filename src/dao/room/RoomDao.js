@@ -4,7 +4,7 @@
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { prisma } from 'dao/PrismaClient.js';
-import { isValidId, isValidInteger, isValidPrice, isValidRoomName } from "dao/utils";
+import { isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName } from "dao/utils";
 import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
 
 
@@ -24,10 +24,10 @@ export async function createRoom({
     if (!isValidRoomName(room_name)) {
         throw new Error('Non Valid Room Name: ' + room_name)
     }
-    if (!isValidInteger(night_price)) {
+    if (!isValidPrice(night_price)) {
         throw new Error('Non Valid Night Price')
     }
-    if (!isValidInteger(capacity)) {
+    if (!(isValidInteger(capacity) && capacity > 0)) {
         throw new Error('Non Valid Capacity')
     }
     if (!isValidInteger(number_of_beds)) {
@@ -250,7 +250,35 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
             }
         })
 
-        console.log({ room });
+        var room = await getRoomById(room_id);
+        return room
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updateRoomCapacity(room_id, new_capacity) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+    if (!(isValidPositiveInteger(new_capacity) && new_capacity > 0)) {
+        throw new Error('Non Valid new_capacity');
+    }
+
+    try {
+        await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                capacity: new_capacity
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+            }
+        })
+
         var room = await getRoomById(room_id);
         return room
     } catch (error) {
@@ -264,7 +292,7 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
 
 
 
-// ON THIS
+
 export async function getRoomById(room_id) {
     if (!isValidId(room_id)) {
         throw new Error('Non valid [room_id]');
@@ -291,7 +319,7 @@ export async function getRoomById(room_id) {
         id: room_id,
         hotel_id: roomRes.hotel_id,
         room_name: roomRes.room_name,
-        night_price: roomRes.night_price,
+        night_price: +roomRes.night_price,
         capacity: roomRes.capacity,
         number_of_beds: roomRes.number_of_beds,
         room_type: roomRes.room_type,

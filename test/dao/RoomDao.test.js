@@ -255,17 +255,23 @@ describe(
         test(
             "Update a room night price",
             async function () {
-                var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20;
+                var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20.79;
 
                 try {
                     room = await createRoom({
                         hotel_id: customHotel.id,
                         room_name: roomData.room_name,
-                        night_price: roomData.night_price,
+                        night_price: 13.50,
                         number_of_beds: roomData.number_of_beds,
                         capacity: roomData.capacity
                     });
 
+                    console.log({
+                        'typeofNightPrice': typeof room.night_price,
+                        np: room.night_price,
+                        'decimal.toFixed': room.night_price.toFixed(2),
+                        n: 123
+                    })
                     u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
 
                     console.log({ u_room });
@@ -276,8 +282,18 @@ describe(
                     dbError = error;
                     console.log(error);
                 }
+                expect(dbError).toBeNull();
+                expect(u_room.night_price).toBe(NEW_NIGHT_PRICE);
             }
         )
+
+        // updateRoomCapacity
+        // test(
+        //     "Update a room capacity",
+        //     async function () {
+
+        //     }
+        // )
 
 
     }

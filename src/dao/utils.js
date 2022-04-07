@@ -137,6 +137,15 @@ export function isValidInteger(number) {
     return !error;
 }
 
+export function isValidPositiveInteger(number) {
+    const intSchema = Joi.number().integer().required().min(0);
+    const { error, value } = intSchema.validate(
+        number,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
 /**
  * A valid Hotel Name is a string
  * From 4 characters to 60
