@@ -2,7 +2,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime } from 'dao/utils';
-import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
+import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
 describe(
@@ -319,13 +319,37 @@ describe(
 
 
         // updateRoomCapacity
-        // test(
-        //     "Update a room capacity",
-        //     async function () {
+        test(
+            "Update a room capacity",
+            async function () {
+                var dbError = null, room = null, uc_room = null, NEW_CAPACITY = 40;
 
-        //     }
-        // )
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: 13.50,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
 
+                    // console.log({
+                    //     'ntofb': typeof room.number_of_beds
+                    // })
+                    uc_room = await updateRoomCapacity(room.id, NEW_CAPACITY);
+
+                    console.log({ uc_room });
+
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+                expect(dbError).toBeNull();
+                expect(uc_room.capacity).toBe(NEW_CAPACITY);
+            }
+        )
 
     }
 
