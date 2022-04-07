@@ -2,7 +2,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime } from 'dao/utils';
-import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomName } from "dao/room/RoomDao";
+import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomName, updateRoomNightPrice } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
 describe(
@@ -194,11 +194,11 @@ describe(
 
                     fetch_room = await getRoomById(room.id);
 
-                    // console.log({
-                    //     roomPicture,
-                    //     fetch_room,
-                    //     f_rp: fetch_room.room_pictures
-                    // });
+                    console.log({
+                        roomPicture,
+                        fetch_room,
+                        f_rp: fetch_room.room_pictures
+                    });
 
 
                     await deleteARoomPicture(roomPicture.id);
@@ -242,6 +242,34 @@ describe(
 
 
                     await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+            }
+        )
+
+        // updateRoomNightPrice
+        test(
+            "Update a room night price",
+            async function () {
+                var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
+
+                    u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
+
+                    console.log({ u_room });
+
                     await deleteRoom(room.id);
 
                 } catch (error) {

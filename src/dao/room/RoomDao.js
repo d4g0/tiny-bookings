@@ -4,7 +4,7 @@
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { prisma } from 'dao/PrismaClient.js';
-import { isValidId, isValidInteger, isValidRoomName } from "dao/utils";
+import { isValidId, isValidInteger, isValidPrice, isValidRoomName } from "dao/utils";
 import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
 
 
@@ -184,7 +184,6 @@ export async function updateRoomName(room_id, room_name) {
  * @param {string} room_name 
  */
 export async function updateARoomIsType(room_id, room_type_id) {
-    // console.log({ room_id, room_type_id });
     // validate
     if (!isValidId(room_id)) {
         throw new Error('Non valid [room_id]');
@@ -221,6 +220,40 @@ export async function updateARoomIsType(room_id, room_type_id) {
             var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
             throw customError;
         }
+        throw error;
+    }
+}
+
+
+
+export async function updateRoomNightPrice(room_id, new_night_price) {
+    // validate
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+
+    if (!isValidPrice(new_night_price)) {
+        throw new Error('Non valid [room_id]');
+    }
+
+    try {
+        await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                night_price: new_night_price
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+            }
+        })
+
+        console.log({ room });
+        var room = await getRoomById(room_id);
+        return room
+    } catch (error) {
         throw error;
     }
 }
@@ -302,7 +335,7 @@ function mapRoomResToRoom({
         // console.log({ room_type })
         return room_type
     }
-    
+
     // leave as it is   
     // handle pictures
     // var room_pictures_value = []

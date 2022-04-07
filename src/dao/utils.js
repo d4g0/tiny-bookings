@@ -260,7 +260,7 @@ export function areValidIds(ids = []) {
 export async function isValidPrice(price) {
     const priceSchema = Joi.number().required().min(0.1);
     const { error, value } = priceSchema.validate(
-        number,
+        price,
         { presence: 'required', convert: false }
     );
     return !error;
