@@ -234,12 +234,13 @@ export function areValidAmenities(amenities = []) {
     return areValidAmenities;
 }
 
-export async function areValidIds(ids = []) {
+export function areValidIds(ids = []) {
     if (!Array.isArray(ids)) {
         return false
     }
     if (!ids.length) {
-        return false
+        // empty amenities array case
+        return true
     }
 
     var areValidIds = true;
@@ -252,6 +253,17 @@ export async function areValidIds(ids = []) {
 
     }
     return areValidIds;
+}
+
+
+// ON THIS
+export async function isValidPrice(price) {
+    const priceSchema = Joi.number().required().min(0.1);
+    const { error, value } = priceSchema.validate(
+        number,
+        { presence: 'required', convert: false }
+    );
+    return !error;
 }
 
 
@@ -269,89 +281,5 @@ export function mapTimeToDateTime({ hours, mins }) {
     var now = new Date(Date.UTC(1970, 0, 1, 0, 0, 0));
     now.setUTCHours(hours, mins, 0);
     return now;
-}
-
-
-export function mapHotelResToHotel({
-    id,
-    hotel_name,
-    maximun_free_calendar_days,
-    minimal_prev_days_to_cancel,
-    check_in_hour_time,
-    check_out_hour_time,
-    iana_time_zone,
-}) {
-    return {
-        id,
-        hotel_name,
-        maximun_free_calendar_days,
-        minimal_prev_days_to_cancel,
-        check_in_hour_time: check_in_hour_time.toUTCString(),
-        check_out_hour_time: check_out_hour_time.toUTCString(),
-        iana_time_zone
-    }
-}
-
-/**
- * 
- Maps a create, update, read, or delete `room` response
- to a `spec` room object
-
-
- `createRoom()` response:
- ```js
- room: {
-    id: 56,
-    hotel_id: 295,
-    room_name: '67867b86-2',
-    night_price: 10,
-    capacity: 2,
-    number_of_beds: 1,
-    room_type: null,
-    created_at: 2022-04-06T17:17:26.885Z
-  }
-  ```
- */
-export function mapRoomResToRoom({
-    id,              // integer
-    hotel_id,        // integer
-    room_name,       // string
-    night_price,     // number
-    capacity,        // integer
-    number_of_beds,  // integer
-    room_type,       // null or integer for the room_type reference
-    created_at,      // string
-
-
-    room_types = null,   // {id:0 , room_type: type }
-    amenities = [],    //  virtual field, provided array of amenities strings
-    room_pictures = [] // eventual pictures
-}) {
-
-
-    // handle room type maping to spec
-    var room_type_value = null;
-    if (room_type || room_type == 0) {
-        room_type_value = extractRoomType(room_types);
-    }
-
-
-
-    return {
-        id,
-        hotel_id,
-        room_name,
-        night_price,
-        capacity,
-        number_of_beds,
-        room_type: room_type_value,
-        created_at: new Date(created_at).toUTCString(),
-        amenities
-    }
-}
-
-
-function extractRoomType({ id, room_type }) {
-    return room_type
 }
 
