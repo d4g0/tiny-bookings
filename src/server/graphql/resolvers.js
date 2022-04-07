@@ -16,9 +16,10 @@ import {
     updateHotelDaysToCancel,
     updateHotelCheckInTime,
     updateHotelCheckOutTime,
-    updateHotelTimeZone
+    updateHotelTimeZone,
+    getHotels
 } from "services/hotel";
-import { createRoomAmenity, createRoomType, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
+import { createRoom, createRoomAmenity, createRoomType, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
 
 export const resolvers = {
 
@@ -96,6 +97,16 @@ export const resolvers = {
             try {
                 var hotel = await getHotelById(id);
                 return hotel;
+            } catch (error) {
+                // console.log(error)
+                throw error
+            }
+        },
+
+        hotels: async (root, args, ctx, info) => {
+            try {
+                var hotels = await getHotels();
+                return hotels;
             } catch (error) {
                 // console.log(error)
                 throw error
@@ -496,6 +507,38 @@ export const resolvers = {
                     try {
                         var roomAmenity = await deleteRoomAmenity(amenity);
                         return roomAmenity;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+
+        // room
+        createRoom: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        hotel_id,
+                        room_name,
+                        night_price,
+                        capacity,
+                        number_of_beds,
+                    } = args.input;
+                    // sanitation 
+                    var s_room_name = xss(room_name);
+                    try {
+                        var room = await createRoom({
+                            hotel_id,
+                            room_name: s_room_name,
+                            night_price,
+                            capacity,
+                            number_of_beds
+                        });
+                        return room;
                     } catch (error) {
                         throw error;
                     }

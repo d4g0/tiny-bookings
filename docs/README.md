@@ -8,6 +8,8 @@
     - [From admin](#from-admin)
       - [Operations Roles](#operations-roles)
         - [`full-admin`](#full-admin)
+  - [Notes](#notes)
+    - [Availability](#availability)
 
 ## Requirement Map
 
@@ -157,7 +159,10 @@
 
 
 
+## Notes
 
+### Availability
+Acotar busquedas de availability por intervalos maximos  del dias libres en el calendario del hotel
 
 
 

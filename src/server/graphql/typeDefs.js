@@ -169,6 +169,51 @@ export const typeDefinitions = gql`
     new_amenity:      String!
   }
 
+  # Room Picture
+  type RoomPicture{
+    id:               Int!
+    room_id:          Int!
+    filename:         String!
+  }
+
+  # Room Is Amenity (many-to-many)
+  type RoomIsAmenity {
+    id:               Int!
+    room_id:          Int!
+    amenity_id:       Int!
+  }
+
+  input deleteARoomIsAmenityInput{
+    id:               Int!
+  }
+
+  input createARoomIsAmenityInput{
+    room_id:          Int!
+    amenity_id:       Int!
+  }
+
+  # Room
+  type Room {
+    id:               Int!
+    hotel_id:         Int!
+    room_name:        String!
+    night_price:      Float!
+    capacity:         Int!
+    number_of_beds:   Int!
+    room_type:        Int
+    amenities:        [String]!
+    rooms_amenities:  [RoomIsAmenity]!
+    room_pictures:    [RoomPicture]!
+    created_at:       String!
+  }
+
+  input CreateRoomInput {
+    hotel_id:         Int!
+    room_name:        String!
+    night_price:      Float!
+    capacity:         Int!
+    number_of_beds:   Int!
+  }
 
 
   ##
@@ -181,6 +226,7 @@ export const typeDefinitions = gql`
     admins: [Admin]!
     # hotel
     hotel(input: getHotelInput!): Hotel!
+    hotels: [Hotel]!
     # room
     # roomType
     getRoomType(input: RoomTypeInput!): RoomType!
@@ -205,7 +251,7 @@ export const typeDefinitions = gql`
     updateHotelCheckIn(input: UpdateHotelCheckIn!): Hotel!
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
-    # room
+    # rooms
     # roomType
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
@@ -214,6 +260,10 @@ export const typeDefinitions = gql`
     createRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     updateRoomAmenity(input: RoomAmenityUpdateInput!): RoomAmenity!
     deleteRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
+    createARoomIsAmenity(input: createARoomIsAmenityInput!): RoomIsAmenity!
+    deleteARoomIsAmenity(input: deleteARoomIsAmenityInput!): RoomIsAmenity!
+    # room
+    createRoom(input: CreateRoomInput!): Room!
     
   }
 

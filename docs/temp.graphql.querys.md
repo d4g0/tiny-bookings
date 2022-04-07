@@ -185,3 +185,41 @@ mutation delRoomAmenity ($input: RoomAmenityInput!){
 }
 ```
 
+
+### Create a room
+```graphql
+# create room
+mutation CreateARoom($input: CreateRoomInput!){
+  createRoom(input:$input){
+		id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    room_type
+    amenities
+    rooms_amenities {
+      id
+      room_id
+      amenity_id
+    }
+    room_pictures {
+      id
+      room_id
+      filename
+    }
+    created_at
+  }
+}
+
+{
+	"input":{
+	"hotel_id": 227,
+  "room_name": "Blue Room",
+    "night_price": 20,
+    "capacity": 2,
+    "number_of_beds": 1
+  }
+}
+```
