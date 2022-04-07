@@ -238,3 +238,19 @@ mutation deleteARoom($input: DeleteRoomInput!){
   }
 }
 ```
+
+### updateRoomName
+```graphql
+mutation updateRoomName($input: UpdateRoomNameInput!){
+	updateRoomName(input:$input){
+    id
+    room_name
+  }
+}
+{
+  "input": {
+			"id": 527,
+			"room_name": "Marazul 2"
+  }
+}
+```

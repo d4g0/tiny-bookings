@@ -219,6 +219,11 @@ export const typeDefinitions = gql`
     id:               Int!
   }
 
+  input UpdateRoomNameInput {
+    id:               Int!
+    room_name:        String!
+  }
+
 
   ##
   # Query
@@ -269,6 +274,7 @@ export const typeDefinitions = gql`
     # room
     createRoom(input: CreateRoomInput!): Room!
     deleteRoom(input: DeleteRoomInput!): Room!
+    updateRoomName(input: UpdateRoomNameInput!): Room!
     # updateARoomIsType
     
   }

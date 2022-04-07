@@ -136,3 +136,5 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 export async function getRoomById(room_id) {
     return getRoomByIdDao(room_id);
 }
+
+// getRooms TODO

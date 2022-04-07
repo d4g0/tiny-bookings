@@ -80,6 +80,7 @@
     -	list admins users
     -   delete other admin users
     -	create rooms
+    -   delete rooms
 
 
 ##### `full-admin`
@@ -122,7 +123,7 @@
                 -   extended (timezone) done at 15:43
 
 []
--	create rooms
+-	rooms
     -   start 4 april 21:37
     -   room types 
         -   (dao)  -done at 22:00
@@ -139,6 +140,7 @@
         -   (grapqhl) 
             -   create done 7 april at 16:10 brake
             -   delete start 18: 50  done 19:00 
+            -   updateRoomName done 19:11
 
 
 
