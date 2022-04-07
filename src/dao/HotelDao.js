@@ -1,8 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
-import { isValidString } from 'utils'
-
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
-import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, isValidTimeZone, mapHotelResToHotel } from './utils'
+import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, isValidTimeZone } from './utils'
 
 
 
@@ -281,3 +279,24 @@ export async function updateHotelTimeZone(hotelId, iana_time_zone) {
     }
 }
 
+
+
+export function mapHotelResToHotel({
+    id,
+    hotel_name,
+    maximun_free_calendar_days,
+    minimal_prev_days_to_cancel,
+    check_in_hour_time,
+    check_out_hour_time,
+    iana_time_zone,
+}) {
+    return {
+        id,
+        hotel_name,
+        maximun_free_calendar_days,
+        minimal_prev_days_to_cancel,
+        check_in_hour_time: check_in_hour_time.toUTCString(),
+        check_out_hour_time: check_out_hour_time.toUTCString(),
+        iana_time_zone
+    }
+}
