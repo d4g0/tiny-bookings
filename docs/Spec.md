@@ -126,7 +126,7 @@ auth: {
     number_of_beds: 1,
     room_type: 'b72f9820-a',
     amenities: [ { id: 76, amenity: 'fb5cd71f-4' } ],
-    rooms_amenities: [ { id: 156, room_id: 486, amenity_id: 78 } ], // ON THIS
+    rooms_amenities: [ { id: 156, room_id: 486, amenity_id: 78 } ],
     room_pictures: [ { id: 101, room_id: 468, filename: 'supper-foo-picture' } ],
     created_at: 'Thu, 07 Apr 2022 05:46:45 GMT'
   },

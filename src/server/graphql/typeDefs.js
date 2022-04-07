@@ -215,6 +215,10 @@ export const typeDefinitions = gql`
     number_of_beds:   Int!
   }
 
+  input DeleteRoomInput {
+    id:               Int!
+  }
+
 
   ##
   # Query
@@ -264,6 +268,8 @@ export const typeDefinitions = gql`
     deleteARoomIsAmenity(input: deleteARoomIsAmenityInput!): RoomIsAmenity!
     # room
     createRoom(input: CreateRoomInput!): Room!
+    deleteRoom(input: DeleteRoomInput!): Room!
+    # updateARoomIsType
     
   }
 

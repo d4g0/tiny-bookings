@@ -19,7 +19,7 @@ import {
     updateHotelTimeZone,
     getHotels
 } from "services/hotel";
-import { createRoom, createRoomAmenity, createRoomType, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
+import { createRoom, createRoomAmenity, createRoomType, deleteRoom, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomType } from "services/room";
 
 export const resolvers = {
 
@@ -538,6 +538,25 @@ export const resolvers = {
                             capacity,
                             number_of_beds
                         });
+                        return room;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        deleteRoom: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var {
+                        id,
+                    } = args.input;
+                    // sanitation 
+                    try {
+                        var room = await deleteRoom(id);
                         return room;
                     } catch (error) {
                         throw error;
