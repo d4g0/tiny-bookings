@@ -261,7 +261,7 @@ export async function getAmenitiesByRoom(room_id) {
         })
         // map to amenities_ids (room_amenities might be an empty array ok)
         var amenities_ids = rooms_amenities.map(a => a.amenity_id);
-        
+
         // map to amenities strings
         var amenities = await getAmenitiesByIds(amenities_ids);
         return amenities;
@@ -282,6 +282,28 @@ export async function createARoomIsAmenity(room_id, amenity_id) {
     try {
         var roomIsAmenity = await prisma.rooms_amenities.create({
             data: {
+                room_id,
+                amenity_id
+            }
+        })
+
+        return roomIsAmenity;
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function deleteARoomIsAmenity(room_id, amenity_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid Id')
+    }
+    if (!isValidId(amenity_id)) {
+        throw new Error('Non Valid Id')
+    }
+
+    try {
+        var roomIsAmenity = await prisma.rooms_amenities.delete({
+            where: {
                 room_id,
                 amenity_id
             }
