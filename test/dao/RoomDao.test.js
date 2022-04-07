@@ -26,10 +26,10 @@ describe(
                 });
 
                 // create a room type for use it
-                // customRoomType = await createRoomType(
-                //     // 'supper fussy'
-                //     uuid().substring(10)
-                // );
+                customRoomType = await createRoomType(
+                    // 'supper fussy'
+                    uuid().substring(10)
+                );
 
             } catch (error) {
                 console.log(error);
@@ -41,9 +41,9 @@ describe(
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                // await deleteRoomTypeByType(customRoomType.room_type);
+                await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                // await deleteHotelById(customHotel.id); // delete depending room first TODO
+                await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
@@ -104,7 +104,7 @@ describe(
         )
 
         test(
-            "Update a room",
+            "Update a room name",
             async function () {
                 var dbError = null, room = null, NEW_NAME = uuid().substring(0, 10);
 
@@ -194,10 +194,50 @@ describe(
 
                     fetch_room = await getRoomById(room.id);
 
+                    // console.log({
+                    //     roomPicture,
+                    //     fetch_room,
+                    //     f_rp: fetch_room.room_pictures
+                    // });
+
+
+                    await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+            }
+        )
+
+
+        test(
+            "Get a room with picures and  room type",
+            async function () {
+                var dbError = null, room = null, roomPicture = null, FILE_NAME = 'supper-foo-picture', fetch_room = null;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
+
+                    roomPicture = await createARoomPicture(room.id, FILE_NAME);
+
+                    await updateARoomIsType(room.id, customRoomType.id);
+
+
+                    fetch_room = await getRoomById(room.id);
+
                     console.log({
                         roomPicture,
                         fetch_room,
-                        f_rp: fetch_room.room_pictures
+                        f_rp: fetch_room.room_pictures,
+                        f_rt: fetch_room.room_type,
                     });
 
 

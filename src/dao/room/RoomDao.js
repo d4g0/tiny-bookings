@@ -4,7 +4,8 @@
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { prisma } from 'dao/PrismaClient.js';
-import { isValidId, isValidInteger, isValidRoomName, mapRoomResToRoom } from "dao/utils";
+import { isValidId, isValidInteger, isValidRoomName } from "dao/utils";
+import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
 
 
 export async function createRoom({
@@ -42,6 +43,10 @@ export async function createRoom({
                 night_price,
                 capacity,
                 number_of_beds,
+            },
+            include: {
+                room_types: true,
+                room_pictures: true
             }
         })
 
@@ -74,7 +79,7 @@ export async function createRoom({
  * @param {number} room_id 
  * @returns 
  */
- export async function deleteRoom(room_id) {
+export async function deleteRoom(room_id) {
 
     // validation
     if (!isValidId(room_id)) {
@@ -130,4 +135,192 @@ export async function createRoom({
         throw error;
     }
 
+}
+
+
+/**
+ * Update a room it's name
+ * @param {number} room_id 
+ * @param {string} room_name 
+ */
+export async function updateRoomName(room_id, room_name) {
+
+    // validate
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+    if (!isValidRoomName(room_name)) {
+        throw new Error('Non valid [room_name]');
+    }
+
+    try {
+
+
+        var roomRes = await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                room_name
+            }
+        })
+
+        return mapRoomResToRoom(roomRes);
+
+    } catch (error) {
+        // case prisma record not found
+        if (error.code == 'P2025') {
+            var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
+            throw customError;
+        }
+        throw error;
+    }
+}
+
+
+/**
+ * Update a room it's name
+ * @param {number} room_id 
+ * @param {string} room_name 
+ */
+export async function updateARoomIsType(room_id, room_type_id) {
+    // console.log({ room_id, room_type_id });
+    // validate
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+    if (!isValidId(room_type_id)) {
+        throw new Error('Non valid [room_type_id]');
+    }
+
+    try {
+
+
+        var roomRes = await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                room_type: room_type_id
+            },
+            // return the room_types
+            include: {
+                room_pictures: true,
+                room_types: true,
+            }
+        })
+
+
+        return mapRoomResToRoom(roomRes);
+        // test only
+        // return roomRes;
+
+    } catch (error) {
+        // case prisma record not found
+        if (error.code == 'P2025') {
+            var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
+            throw customError;
+        }
+        throw error;
+    }
+}
+
+
+
+
+
+
+
+// ON THIS
+export async function getRoomById(room_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+
+
+    // fetch room data
+
+    var roomRes = await prisma.room.findFirst({
+        where: {
+            id: room_id
+        },
+        include: {
+            room_pictures: true,
+            room_types: true,
+        }
+    })
+    // fetch room dependencies units of many to many relations
+    // amenities
+    var roomAmenities = await getAmenitiesByRoom(room_id);
+
+    // wrap it all together
+    var specRoom = mapRoomResToRoom({
+        id: room_id,
+        hotel_id: roomRes.hotel_id,
+        room_name: roomRes.room_name,
+        night_price: roomRes.night_price,
+        capacity: roomRes.capacity,
+        number_of_beds: roomRes.number_of_beds,
+        room_type: roomRes.room_type,
+        created_at: roomRes.created_at,
+        amenities: roomAmenities, // [ amenityStr ]
+        room_pictures: roomRes.room_pictures, // [{ id, room_id, filename }]
+        room_type: roomRes.room_type, // int
+        room_types: roomRes.room_types, // { id, room_type }
+    })
+
+    return specRoom;
+
+}
+
+
+function mapRoomResToRoom({
+    id,              // integer
+    hotel_id,        // integer
+    room_name,       // string
+    night_price,     // number
+    capacity,        // integer
+    number_of_beds,  // integer
+    room_type,       // null or integer for the room_type reference
+    created_at,      // string
+
+
+    room_types = null,   // {id:0 , room_type: type }
+    amenities = [],    //  virtual field, provided array of amenities strings
+    room_pictures = [] // eventual pictures [{ id, room_id, filename }]
+}) {
+
+
+
+    // handle room type maping to spec
+    var room_type_value = null;
+    if (room_type || room_type == 0) {
+        room_type_value = extractRoomType(room_types);
+    }
+
+    function extractRoomType({ id, room_type }) {
+        // console.log({ room_type })
+        return room_type
+    }
+    
+    // leave as it is   
+    // handle pictures
+    // var room_pictures_value = []
+    // if(room_pictures.length){
+    //     room_pictures_value = room_pictures.map(rp=>)
+    // }
+
+
+    return {
+        id,
+        hotel_id,
+        room_name,
+        night_price,
+        capacity,
+        number_of_beds,
+        room_type: room_type_value,
+        amenities,
+        room_pictures,
+        created_at: new Date(created_at).toUTCString(),
+    }
 }

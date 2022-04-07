@@ -16,6 +16,10 @@ import {
     getRoomAmenities as getRoomAmenitiesDao
 } from '~/dao/room/RoomAmenitiesDao'
 
+
+// ---------------
+// Room Types 
+// ---------------
 export async function createRoomType(room_type) {
     return createRoomTypeDao(room_type);
 }
@@ -37,6 +41,10 @@ export async function updateRoomType(room_type, new_room_type) {
 }
 
 
+
+// ---------------
+// Room Amenities 
+// ---------------
 export async function createRoomAmenity(amenity) {
     return createRoomAmenityDao(amenity);
 }

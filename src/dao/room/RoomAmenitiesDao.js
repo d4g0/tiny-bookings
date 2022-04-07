@@ -1,5 +1,5 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
-import { isValidId, isValidRoomAmenity } from "dao/utils";
+import { areValidIds, isValidId, isValidRoomAmenity } from "dao/utils";
 import { prisma } from 'dao/PrismaClient.js';
 
 
@@ -266,6 +266,28 @@ export async function getAmenitiesByRoom(room_id) {
 
         return amenities;
 
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function createARoomIsAmenity(room_id, amenity_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid Id')
+    }
+    if (!isValidId(amenity_id)) {
+        throw new Error('Non Valid Id')
+    }
+
+    try {
+        var roomIsAmenity = await prisma.rooms_amenities.create({
+            data: {
+                room_id,
+                amenity_id
+            }
+        })
+
+        return roomIsAmenity;
     } catch (error) {
         throw error
     }
