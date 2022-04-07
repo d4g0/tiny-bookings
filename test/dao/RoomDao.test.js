@@ -408,7 +408,7 @@ describe(
 
                 expect(dbError).toBe(null);
                 expect(room.id).toBeDefined()
-                // expect(u_room.room_type).toBe(ROOM_TYPE_KEY);
+                expect(final_room.room_type).toBe(ROOM_TYPE_KEY);
 
             }
         )
