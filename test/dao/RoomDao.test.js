@@ -393,6 +393,7 @@ describe(
                     console.log({
                         final_room,
                         amenities: final_room.amenities,
+                        rooms_amenities: final_room.rooms_amenities,
                         room_pictures: final_room.room_pictures
                     })
                     // clean
