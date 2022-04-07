@@ -30,7 +30,7 @@ export async function createRoom({
     if (!(isValidInteger(capacity) && capacity > 0)) {
         throw new Error('Non Valid Capacity')
     }
-    if (!isValidInteger(number_of_beds)) {
+    if (!(isValidInteger(number_of_beds) && number_of_beds > 0)) {
         throw new Error('Non Valid Number Of Beds')
     }
 
@@ -195,24 +195,18 @@ export async function updateARoomIsType(room_id, room_type_id) {
     try {
 
 
-        var roomRes = await prisma.room.update({
+        await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 room_type: room_type_id
-            },
-            // return the room_types
-            include: {
-                room_pictures: true,
-                room_types: true,
             }
         })
 
 
-        return mapRoomResToRoom(roomRes);
-        // test only
-        // return roomRes;
+        var room = await getRoomById(room_id);
+        return room;
 
     } catch (error) {
         // case prisma record not found
@@ -243,10 +237,6 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
             },
             data: {
                 night_price: new_night_price
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
             }
         })
 
@@ -273,10 +263,6 @@ export async function updateRoomCapacity(room_id, new_capacity) {
             data: {
                 capacity: new_capacity
             },
-            include: {
-                room_pictures: true,
-                room_types: true,
-            }
         })
 
         var room = await getRoomById(room_id);
@@ -286,7 +272,31 @@ export async function updateRoomCapacity(room_id, new_capacity) {
     }
 }
 
+export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid room_id')
+    }
+    if (!(isValidInteger(new_number_of_beds) && new_number_of_beds > 0)) {
+        throw new Error('Non Valid Number Of Beds')
+    }
+
+    try {
+        await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                number_of_beds: new_number_of_beds
+            }
+        })
+
+        var room = await getRoomById(room_id);
+        return room
+    } catch (error) {
+        throw error;
+    }
+}
 
 
 
