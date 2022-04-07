@@ -318,6 +318,7 @@ export async function getRoomById(room_id) {
         include: {
             room_pictures: true,
             room_types: true,
+            rooms_amenities: true
         }
     })
     // fetch room dependencies units of many to many relations
@@ -335,6 +336,7 @@ export async function getRoomById(room_id) {
         room_type: roomRes.room_type,
         created_at: roomRes.created_at,
         amenities: roomAmenities, // [ amenityStr ]
+        rooms_amenities: roomRes.rooms_amenities,
         room_pictures: roomRes.room_pictures, // [{ id, room_id, filename }]
         room_type: roomRes.room_type, // int
         room_types: roomRes.room_types, // { id, room_type }
@@ -356,9 +358,10 @@ function mapRoomResToRoom({
     created_at,      // string
 
 
-    room_types = null,   // {id:0 , room_type: type }
-    amenities = [],    //  virtual field, provided array of amenities strings
-    room_pictures = [] // eventual pictures [{ id, room_id, filename }]
+    room_types = null,      // {id:0 , room_type: type }
+    amenities = [],         //  virtual field, provided array of amenities strings
+    rooms_amenities = [],   // acctual rooms_amenities units of the many to many
+    room_pictures = []      // eventual pictures [{ id, room_id, filename }]
 }) {
 
 
@@ -391,6 +394,7 @@ function mapRoomResToRoom({
         number_of_beds,
         room_type: room_type_value,
         amenities,
+        rooms_amenities,
         room_pictures,
         created_at: new Date(created_at).toUTCString(),
     }
