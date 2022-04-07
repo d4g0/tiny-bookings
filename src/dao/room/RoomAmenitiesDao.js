@@ -223,7 +223,7 @@ export async function getAmenitiesByIds(amenities_ids) {
         throw new Error('Non Valid Amenities Ids')
     }
     if (!areValidIds(amenities_ids)) {
-        throw new Error('Non valid amenities_ids')
+        throw new Error('Non valid amenities_ids:')
     }
 
     try {
@@ -259,11 +259,11 @@ export async function getAmenitiesByRoom(room_id) {
                 room_id
             }
         })
-        // map to amenities_ids
+        // map to amenities_ids (room_amenities might be an empty array ok)
         var amenities_ids = rooms_amenities.map(a => a.amenity_id);
+        
         // map to amenities strings
         var amenities = await getAmenitiesByIds(amenities_ids);
-
         return amenities;
 
     } catch (error) {
