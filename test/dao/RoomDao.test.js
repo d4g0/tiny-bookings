@@ -181,6 +181,36 @@ describe(
             }
         )
 
+        // updateRoomNightPrice
+        test(
+            "Update a room night price",
+            async function () {
+                var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20.79;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: 13.50,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
+
+                    u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
+
+                    console.log({ u_room });
+
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+                expect(dbError).toBeNull();
+                expect(+u_room.night_price).toBe(NEW_NIGHT_PRICE);
+            }
+        )
+
         // get room with pictures
         // test(
         //     "Get a room with pictures",
@@ -257,35 +287,7 @@ describe(
         //     }
         // )
 
-        // updateRoomNightPrice
-        // test(
-        //     "Update a room night price",
-        //     async function () {
-        //         var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20.79;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
-
-        //             console.log({ u_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(u_room.night_price).toBe(NEW_NIGHT_PRICE);
-        //     }
-        // )
+        
 
 
         // updateRoomNumberOfBeds

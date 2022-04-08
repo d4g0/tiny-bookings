@@ -245,17 +245,25 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
     }
 
     try {
-        await prisma.room.update({
+        var room = await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 night_price: new_night_price
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
             }
         })
 
-        var room = await getRoomById(room_id);
-        return room
+        return room;
     } catch (error) {
         throw error;
     }
