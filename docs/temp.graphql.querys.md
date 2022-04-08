@@ -337,4 +337,11 @@ mutation updateNightPrice($input:UpdateRoomNightPriceInput!){
     created_at
   }
 }
+
+{
+  "input":{
+		"room_id": 528,
+		"new_night_price": 340
+  }
+}
 ```
