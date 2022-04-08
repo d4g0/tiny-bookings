@@ -319,7 +319,7 @@ describe(
             }
         )
 
-        // total coverage 
+        // total room spec coverage 
         test(
             "Create a room with amenities, type, pictures",
             async function () {
@@ -404,7 +404,7 @@ describe(
                 expect(final_room.rooms_amenities[0].room_amenity.amenity).toBe(amenity.amenity);
             }
         )
-
+        
     }
 
 )
