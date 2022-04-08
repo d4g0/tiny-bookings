@@ -198,7 +198,7 @@ describe(
 
                     u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
 
-                    console.log({ u_room });
+                    // console.log({ u_room });
 
                     await deleteRoom(room.id);
 
@@ -208,6 +208,39 @@ describe(
                 }
                 expect(dbError).toBeNull();
                 expect(+u_room.night_price).toBe(NEW_NIGHT_PRICE);
+            }
+        )
+
+        // updateRoomCapacity
+        test(
+            "Update a room capacity",
+            async function () {
+                var dbError = null, room = null, uc_room = null, NEW_CAPACITY = 40;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: 13.50,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
+
+                    // console.log({
+                    //     'ntofb': typeof room.number_of_beds
+                    // })
+                    uc_room = await updateRoomCapacity(room.id, NEW_CAPACITY);
+
+                    console.log({ uc_room });
+
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+                expect(dbError).toBeNull();
+                expect(uc_room.capacity).toBe(NEW_CAPACITY);
             }
         )
 
@@ -326,38 +359,7 @@ describe(
 
 
 
-        // updateRoomCapacity
-        // test(
-        //     "Update a room capacity",
-        //     async function () {
-        //         var dbError = null, room = null, uc_room = null, NEW_CAPACITY = 40;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             // console.log({
-        //             //     'ntofb': typeof room.number_of_beds
-        //             // })
-        //             uc_room = await updateRoomCapacity(room.id, NEW_CAPACITY);
-
-        //             console.log({ uc_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(uc_room.capacity).toBe(NEW_CAPACITY);
-        //     }
-        // )
+        
 
         // amenities 
         // test(

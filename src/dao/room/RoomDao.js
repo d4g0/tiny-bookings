@@ -278,16 +278,23 @@ export async function updateRoomCapacity(room_id, new_capacity) {
     }
 
     try {
-        await prisma.room.update({
+        var room = await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 capacity: new_capacity
             },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
+            }
         })
-
-        var room = await getRoomById(room_id);
         return room
     } catch (error) {
         throw error;
@@ -386,3 +393,18 @@ export async function getRooms() {
         throw error
     }
 }
+
+
+/**
+ 
+include: {
+    room_pictures: true,
+    room_types: true,
+    rooms_amenities: {
+        include: {
+            room_amenity: true
+        }
+    }
+}
+
+*/
