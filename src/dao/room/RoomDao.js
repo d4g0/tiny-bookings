@@ -36,7 +36,7 @@ export async function createRoom({
 
     try {
 
-        var roomRes = await prisma.room.create({
+        var room = await prisma.room.create({
             data: {
                 hotel_id,
                 room_name,
@@ -45,27 +45,20 @@ export async function createRoom({
                 number_of_beds,
             },
             include: {
+                room_pictures: true,
                 room_types: true,
-                room_pictures: true
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
             }
         })
 
-        // return roomRes;
-        var specRoom = mapRoomResToRoom({
-            id: roomRes.id,
-            hotel_id: roomRes.hotel_id,
-            room_name: roomRes.room_name,
-            night_price: roomRes.night_price,
-            capacity: roomRes.capacity,
-            number_of_beds: roomRes.number_of_beds,
-            room_type: roomRes.room_type,
-            created_at: roomRes.created_at,
-        })
-        return specRoom;
+        return room;
 
     } catch (error) {
-        // console.log({ target: error?.meta?.target[0] });
-        if (error.code = 'P2002') {
+        if (error.code == 'P2002') {
             throw new DB_UNIQUE_CONSTRAINT_ERROR('Unique constraint error', error?.meta?.target[0]);
         }
         throw error
@@ -304,103 +297,67 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 
 
 
-
-
-
 export async function getRoomById(room_id) {
+
     if (!isValidId(room_id)) {
-        throw new Error('Non valid [room_id]');
+        throw new Error('Non Valid room_id');
     }
 
+    // fetch the room
+    try {
 
-    // fetch room data
+        var room = await prisma.room.findUnique({
+            where: {
+                id: room_id
+            },
+            // room spec pack
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
+            }
 
-    var roomRes = await prisma.room.findFirst({
-        where: {
-            id: room_id
-        },
-        include: {
-            room_pictures: true,
-            room_types: true,
-            rooms_amenities: true
-        }
-    })
-    // fetch room dependencies units of many to many relations
-    // amenities
-    var roomAmenities = await getAmenitiesByRoom(room_id);
+        });
 
-    // wrap it all together
-    var specRoom = mapRoomResToRoom({
-        id: room_id,
-        hotel_id: roomRes.hotel_id,
-        room_name: roomRes.room_name,
-        night_price: +roomRes.night_price,
-        capacity: roomRes.capacity,
-        number_of_beds: roomRes.number_of_beds,
-        room_type: roomRes.room_type,
-        created_at: roomRes.created_at,
-        amenities: roomAmenities, // [ amenityStr ]
-        rooms_amenities: roomRes.rooms_amenities,
-        room_pictures: roomRes.room_pictures, // [{ id, room_id, filename }]
-        room_type: roomRes.room_type, // int
-        room_types: roomRes.room_types, // { id, room_type }
-    })
+        return room;
 
-    return specRoom;
-
+    } catch (error) {
+        throw error
+    }
 }
 
 
-function mapRoomResToRoom({
-    id,              // integer
-    hotel_id,        // integer
-    room_name,       // string
-    night_price,     // number
-    capacity,        // integer
-    number_of_beds,  // integer
-    room_type,       // null or integer for the room_type reference
-    created_at,      // string
+export async function getRooms() {
+    var rooms = [];
 
+    try {
+        var roomsRaw = await prisma.room.findMany({
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
+            }
+        });
+        var sampleRoomRsAms = roomsRaw[0].rooms_amenities;
 
-    room_types = null,      // {id:0 , room_type: type }
-    amenities = [],         //  virtual field, provided array of amenities strings
-    rooms_amenities = [],   // acctual rooms_amenities units of the many to many
-    room_pictures = []      // eventual pictures [{ id, room_id, filename }]
-}) {
+        console.log({
+            firstRoomsRaw: roomsRaw[0],
+            sampleRoomRsAms,
+            firstRoomRsAmsAmenity: sampleRoomRsAms[0].room_amenity
+        });
 
+        return []
 
-
-    // handle room type maping to spec
-    var room_type_key = null;
-    if (room_type || room_type == 0) {
-        room_type_key = extractRoomType(room_types);
-    }
-
-    function extractRoomType({ id, room_type }) {
-        // console.log({ room_type })
-        return room_type
-    }
-
-    // leave as it is   
-    // handle pictures
-    // var room_pictures_value = []
-    // if(room_pictures.length){
-    //     room_pictures_value = room_pictures.map(rp=>)
-    // }
-
-
-    return {
-        id,
-        hotel_id,
-        room_name,
-        night_price,
-        capacity,
-        number_of_beds,
-        room_type,
-        room_type_key,
-        amenities,
-        rooms_amenities,
-        room_pictures,
-        created_at: new Date(created_at).toUTCString(),
+    } catch (error) {
+        console.log(error);
+        throw error
     }
 }
