@@ -372,10 +372,9 @@ export async function getRoomById(room_id) {
 
 
 export async function getRooms() {
-    var rooms = [];
 
     try {
-        var roomsRaw = await prisma.room.findMany({
+        var rooms = await prisma.room.findMany({
             include: {
                 room_pictures: true,
                 room_types: true,
@@ -386,15 +385,9 @@ export async function getRooms() {
                 }
             }
         });
-        var sampleRoomRsAms = roomsRaw[0].rooms_amenities;
+        
 
-        console.log({
-            firstRoomsRaw: roomsRaw[0],
-            sampleRoomRsAms,
-            firstRoomRsAmsAmenity: sampleRoomRsAms[0].room_amenity
-        });
-
-        return []
+        return rooms;
 
     } catch (error) {
         console.log(error);
