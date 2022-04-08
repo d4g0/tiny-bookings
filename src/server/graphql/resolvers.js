@@ -19,21 +19,22 @@ import {
     updateHotelTimeZone,
     getHotels
 } from "services/hotel";
-import { 
-    createRoom, 
-    createRoomAmenity, 
-    createRoomType, 
-    deleteRoom, 
-    deleteRoomAmenity, 
-    deleteRoomType, 
-    getRoomAmenities, 
-    getRoomAmenity, 
-    getRoomType, 
-    getRoomTypes, 
-    updateRoomAmenity, 
-    updateRoomName, 
-    updateRoomType, 
-    updateARoomIsType
+import {
+    createRoom,
+    createRoomAmenity,
+    createRoomType,
+    deleteRoom,
+    deleteRoomAmenity,
+    deleteRoomType,
+    getRoomAmenities,
+    getRoomAmenity,
+    getRoomType,
+    getRoomTypes,
+    updateRoomAmenity,
+    updateRoomName,
+    updateRoomType,
+    updateARoomIsType,
+    updateRoomNightPrice
 } from "services/room";
 
 export const resolvers = {
@@ -612,6 +613,25 @@ export const resolvers = {
                     } = args.input;
                     try {
                         var room = await updateARoomIsType(room_id, room_type_id);
+                        return room;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateRoomNightPrice: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        new_night_price
+                    } = args.input;
+                    try {
+                        var room = await updateRoomNightPrice(room_id, new_night_price);
                         return room;
                     } catch (error) {
                         throw error;

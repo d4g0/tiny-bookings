@@ -230,6 +230,12 @@ export const typeDefinitions = gql`
     room_type_id:     Int!
   }
 
+  input UpdateRoomNightPriceInput {
+    room_id:          Int!
+    new_night_price:  Float!
+  }
+  
+
 
   ##
   # Query
@@ -282,6 +288,7 @@ export const typeDefinitions = gql`
     deleteRoom(input: DeleteRoomInput!): Room!
     updateRoomName(input: UpdateRoomNameInput!): Room!
     updateARoomIsType(input: UpdateRoomIsTypeInput!): Room!
+    updateRoomNightPrice(input: UpdateRoomNightPriceInput!): Room!
     
   }
 
