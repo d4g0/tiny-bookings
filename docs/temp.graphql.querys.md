@@ -16,6 +16,7 @@
     - [DeleteARoom](#deletearoom)
     - [updateRoomName](#updateroomname)
     - [UpdateARoomIsType](#updatearoomistype)
+    - [UpdateNightPrice](#updatenightprice)
 
 ## Login
 
@@ -307,5 +308,33 @@ mutation updateARoomIsType($input: UpdateRoomIsTypeInput!){
   "room_id": 528,
   "room_type_id": 733
 }
+}
+```
+
+### UpdateNightPrice
+```graphql
+mutation updateNightPrice($input:UpdateRoomNightPriceInput!){
+  updateRoomNightPrice(input:$input){
+    id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    room_type
+    room_type_key
+    amenities
+    rooms_amenities {
+      id
+      room_id
+      amenity_id
+    }
+    room_pictures {
+      id
+      room_id
+      filename
+    }
+    created_at
+  }
 }
 ```
