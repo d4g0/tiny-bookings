@@ -278,40 +278,46 @@ describe(
         )
 
         // get room with pictures
-        // test(
-        //     "Get a room with pictures",
-        //     async function () {
-        //         var dbError = null, room = null, roomPicture = null, FILE_NAME = 'supper-foo-picture', fetch_room = null;
+        test(
+            "Get a room with pictures",
+            async function () {
+                var dbError = null, room = null, roomPicture = null, FILE_NAME = 'supper-foo-picture', fetch_room = null;
 
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
 
-        //             roomPicture = await createARoomPicture(room.id, FILE_NAME);
+                    roomPicture = await createARoomPicture(room.id, FILE_NAME);
 
-        //             fetch_room = await getRoomById(room.id);
+                    fetch_room = await getRoomById(room.id);
 
-        //             console.log({
-        //                 roomPicture,
-        //                 fetch_room,
-        //                 f_rp: fetch_room.room_pictures
-        //             });
+                    // console.log({
+                    //     roomPicture,
+                    //     fetch_room,
+                    //     f_rp: fetch_room.room_pictures,
+                    // });
 
 
-        //             await deleteARoomPicture(roomPicture.id);
-        //             await deleteRoom(room.id);
+                    await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
 
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //     }
-        // )
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBeNull();
+                // room picture test
+                expect(fetch_room.room_pictures[0].id).toBeDefined()
+                expect(fetch_room.room_pictures[0].room_id).toBeDefined()
+                expect(fetch_room.room_pictures[0].filename).toBe(FILE_NAME);
+            }
+        )
 
         //  with pictures and type
         // test(
@@ -353,15 +359,15 @@ describe(
         //     }
         // )
 
-        
-
-
-        
 
 
 
 
-        
+
+
+
+
+
 
         // amenities 
         // test(
