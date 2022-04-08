@@ -319,7 +319,7 @@ describe(
             }
         )
 
-        // amenities 
+        // total coverage 
         test(
             "Create a room with amenities, type, pictures",
             async function () {
