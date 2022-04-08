@@ -36,7 +36,8 @@ import {
     updateARoomIsType,
     updateRoomNightPrice,
     updateRoomCapacity,
-    updateRoomNumberOfBeds
+    updateRoomNumberOfBeds,
+    getRoomById
 } from "services/room";
 
 export const resolvers = {
@@ -172,6 +173,16 @@ export const resolvers = {
             try {
                 var roomAmenities = await getRoomAmenities();
                 return roomAmenities;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        room: async (root, args, ctx) => {
+            try {
+                var { room_id } = args;
+                var room = await getRoomById(room_id);
+                return room;
             } catch (error) {
                 throw error;
             }

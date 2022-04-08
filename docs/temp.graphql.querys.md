@@ -18,6 +18,7 @@
     - [UpdateARoomIsType](#updatearoomistype)
     - [UpdateNightPrice](#updatenightprice)
     - [updateRoomCapacity](#updateroomcapacity)
+    - [Get A Room](#get-a-room)
 
 ## Login
 
@@ -377,6 +378,18 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
   "input":{
 		"room_id": 528,
 		"new_number_of_beds": 15
+  }
+}
+```
+
+### Get A Room
+```graphql
+query {
+  room(room_id:528 ){
+		id
+    hotel_id
+    room_name
+    night_price
   }
 }
 ```
