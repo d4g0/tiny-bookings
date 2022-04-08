@@ -404,7 +404,7 @@ export async function getRooms() {
 
 
 /**
- 
+ Room Spec Completion Pack for read and update with prisma
 include: {
     room_pictures: true,
     room_types: true,
@@ -414,5 +414,4 @@ include: {
         }
     }
 }
-
 */
