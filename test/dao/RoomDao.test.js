@@ -42,9 +42,9 @@ describe(
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                // await deleteRoomTypeByType(customRoomType.room_type);
+                await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                // await deleteHotelById(customHotel.id); // delete depending room first TODO
+                await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
@@ -66,7 +66,7 @@ describe(
         test(
             "Create and delete room",
             async function () {
-                var dbError = null, room = null;
+                var dbError = null, room = null, del_result = null;
 
                 try {
                     room = await createRoom({
@@ -79,13 +79,16 @@ describe(
 
                     console.log({ room });
 
-                    await deleteRoom(room.id);
+                    del_result = await deleteRoom(room.id);
                 } catch (error) {
                     console.log(error)
                     dbError = error;
                 }
 
                 expect(dbError).toBe(null);
+                // //
+                // Create tests
+                // //
                 // spec check when created 
                 // some fields are null or empty arrays
                 expect(room.id).toBeDefined();
@@ -99,6 +102,10 @@ describe(
                 expect(room.room_types).toBeNull();
                 expect(room.room_pictures).toStrictEqual([]);
                 expect(room.rooms_amenities).toStrictEqual([]);
+                // //
+                // Delete tests
+                // //
+                expect(del_result.id).toBeDefined();
 
             }
         )

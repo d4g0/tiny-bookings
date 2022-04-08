@@ -102,6 +102,7 @@ auth: {
 
 
 ## Room
+Create and update Model of room
 ```js
   room:{
     id,
@@ -147,11 +148,22 @@ auth: {
 
 ```
 
-For delete a room is amenity you match the current amenity key to delete with the room `rooms_amenities` array, get the actual `id` of that particular `roomIsAmenity` and then proceed to deletion with it.
+Delete room model response
 
 
 ```js
-  // Room samples
-var rawRoom = 
-
+  
+var del_res = {
+        id: 585,
+        hotel_id: 407,
+        room_name: '7693b0fb-1',
+        night_price: 10,
+        capacity: 2,
+        number_of_beds: 1,
+        room_type: null,
+        created_at: '2022-04-08T17:47:05.558Z',
+        room_pictures: [],
+        room_types: null,
+        rooms_amenities: []
+}
     
