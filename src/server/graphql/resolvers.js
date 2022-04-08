@@ -19,7 +19,22 @@ import {
     updateHotelTimeZone,
     getHotels
 } from "services/hotel";
-import { createRoom, createRoomAmenity, createRoomType, deleteRoom, deleteRoomAmenity, deleteRoomType, getRoomAmenities, getRoomAmenity, getRoomType, getRoomTypes, updateRoomAmenity, updateRoomName, updateRoomType } from "services/room";
+import { 
+    createRoom, 
+    createRoomAmenity, 
+    createRoomType, 
+    deleteRoom, 
+    deleteRoomAmenity, 
+    deleteRoomType, 
+    getRoomAmenities, 
+    getRoomAmenity, 
+    getRoomType, 
+    getRoomTypes, 
+    updateRoomAmenity, 
+    updateRoomName, 
+    updateRoomType, 
+    updateARoomIsType
+} from "services/room";
 
 export const resolvers = {
 
@@ -552,11 +567,11 @@ export const resolvers = {
                 USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx) => {
                     var {
-                        id,
+                        room_id,
                     } = args.input;
                     // sanitation 
                     try {
-                        var room = await deleteRoom(id);
+                        var room = await deleteRoom(room_id);
                         return room;
                     } catch (error) {
                         throw error;
@@ -571,14 +586,33 @@ export const resolvers = {
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
                     var {
-                        id,
+                        room_id,
                         room_name
                     } = args.input;
                     // sanitation (amenity was sanitaced in createRoomAmenity())
                     var s_room_name = xss(room_name);
                     try {
-                        var roomAmenity = await updateRoomName(id, s_room_name);
-                        return roomAmenity;
+                        var room = await updateRoomName(room_id, s_room_name);
+                        return room;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        updateARoomIsType: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        room_type_id
+                    } = args.input;
+                    try {
+                        var room = await updateARoomIsType(room_id, room_type_id);
+                        return room;
                     } catch (error) {
                         throw error;
                     }

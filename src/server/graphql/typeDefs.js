@@ -201,6 +201,7 @@ export const typeDefinitions = gql`
     capacity:         Int!
     number_of_beds:   Int!
     room_type:        Int
+    room_type_key:    String
     amenities:        [String]!
     rooms_amenities:  [RoomIsAmenity]!
     room_pictures:    [RoomPicture]!
@@ -216,12 +217,17 @@ export const typeDefinitions = gql`
   }
 
   input DeleteRoomInput {
-    id:               Int!
+    room_id:          Int!
   }
 
   input UpdateRoomNameInput {
-    id:               Int!
+    room_id:          Int!
     room_name:        String!
+  }
+
+  input UpdateRoomIsTypeInput {
+    room_id:          Int!
+    room_type_id:     Int!
   }
 
 
@@ -275,7 +281,7 @@ export const typeDefinitions = gql`
     createRoom(input: CreateRoomInput!): Room!
     deleteRoom(input: DeleteRoomInput!): Room!
     updateRoomName(input: UpdateRoomNameInput!): Room!
-    # updateARoomIsType
+    updateARoomIsType(input: UpdateRoomIsTypeInput!): Room!
     
   }
 
