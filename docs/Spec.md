@@ -106,32 +106,52 @@ auth: {
   room:{
     id,
     hotel_id,
-    room_name
-    night_price
-    capacity
-    number_of_beds
-    room_type         // maped room_type string
-    amenities         // rooms_amenities []
-    room_pictures     // room_pictures []
-    created_at
+    room_name,
+    night_price,
+    capacity,
+    number_of_beds,
+    created_at,
+    room_type,
+    room_types,
+    room_pictures,
+    rooms_amenities,
   }
 
   // sample full
-  sample_room: {
-    id: 468,
-    hotel_id: 386,
-    room_name: '5605ed26-a',
-    night_price: 10,
-    capacity: 2,
-    number_of_beds: 1,
-    room_type: 1,
-    room_type_key: 'b72f9820-a',
-    amenities: [ { id: 76, amenity: 'fb5cd71f-4' } ],
-    rooms_amenities: [ { id: 156, room_id: 486, amenity_id: 78 } ],
-    room_pictures: [ { id: 101, room_id: 468, filename: 'supper-foo-picture' } ],
-    created_at: 'Thu, 07 Apr 2022 05:46:45 GMT'
-  },
+  sample_room:{
+    "id": 528,
+    "hotel_id": 227,
+    "room_name": "Marazul 30",
+    "night_price": "340",
+    "capacity": 5,
+    "number_of_beds": 15,
+    "created_at": "2022-04-07T23:19:57.852Z",
+    "room_type": 733,
+    "room_types": {
+        "id": 733,
+        "room_type": "Triple"
+    },
+    "room_pictures": [ { "id": 101, "room_id": 468, "filename": "file" } ],
+    "rooms_amenities": [
+        {
+            "id": 162,
+            "room_id": 528,
+            "amenity_id": 26,
+            "room_amenity": {
+                "id": 26,
+                "amenity": "Air conditioner"
+            }
+        }
+    ] // might be an empty array
+  }
 
 ```
 
 For delete a room is amenity you match the current amenity key to delete with the room `rooms_amenities` array, get the actual `id` of that particular `roomIsAmenity` and then proceed to deletion with it.
+
+
+```js
+  // Room samples
+var rawRoom = 
+
+    
