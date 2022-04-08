@@ -126,7 +126,7 @@ describe(
 
                     // update
                     var u_room = await updateRoomName(room.id, NEW_NAME);
-                    console.log({u_room});
+                    // console.log({u_room});
                     // clean
                     await deleteRoom(room.id);
                 } catch (error) {
@@ -142,44 +142,44 @@ describe(
         )
 
         // update a room is type
-        // test(
-        //     "Update a Room is Type",
-        //     async function () {
+        test(
+            "Update a Room is Type",
+            async function () {
 
-        //         var dbError = null, room = null, roomType = null, ROOM_TYPE_KEY = uuid().substring(0, 10);
+                var dbError = null, room = null, roomType = null, ROOM_TYPE_KEY = uuid().substring(0, 10);
 
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
 
-        //             // create a room_type to use it
-        //             roomType = await createRoomType(ROOM_TYPE_KEY);
-        //             // console.log({ roomType })
-        //             // update
-        //             var u_room = await updateARoomIsType(room.id, roomType.id);
+                    // create a room_type to use it
+                    roomType = await createRoomType(ROOM_TYPE_KEY);
+                    // console.log({ roomType })
+                    // update
+                    var u_room = await updateARoomIsType(room.id, roomType.id);
 
-        //             // console.log({ u_room })
+                    // console.log({ u_room })
 
-        //             // clean
-        //             await deleteRoom(room.id);
-        //             await deleteRoomTypeByType(roomType.room_type)
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
+                    // clean
+                    await deleteRoom(room.id);
+                    await deleteRoomTypeByType(roomType.room_type)
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
 
-        //         expect(dbError).toBe(null);
-        //         expect(room.id).toBeDefined()
-        //         expect(u_room.room_type).toBe(roomType.id);
-        //         expect(u_room.room_type_key).toBe(ROOM_TYPE_KEY);
+                expect(dbError).toBe(null);
+                expect(room.id).toBeDefined()
+                expect(u_room.room_type).toBe(roomType.id);
+                expect(u_room.room_types.room_type).toBe(ROOM_TYPE_KEY);
 
-        //     }
-        // )
+            }
+        )
 
         // get room with pictures
         // test(

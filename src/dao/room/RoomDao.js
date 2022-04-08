@@ -201,17 +201,25 @@ export async function updateARoomIsType(room_id, room_type_id) {
     try {
 
 
-        await prisma.room.update({
+        var room = await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 room_type: room_type_id
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
             }
         })
 
 
-        var room = await getRoomById(room_id);
         return room;
 
     } catch (error) {
