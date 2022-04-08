@@ -371,9 +371,9 @@ function mapRoomResToRoom({
 
 
     // handle room type maping to spec
-    var room_type_value = null;
+    var room_type_key = null;
     if (room_type || room_type == 0) {
-        room_type_value = extractRoomType(room_types);
+        room_type_key = extractRoomType(room_types);
     }
 
     function extractRoomType({ id, room_type }) {
@@ -396,7 +396,8 @@ function mapRoomResToRoom({
         night_price,
         capacity,
         number_of_beds,
-        room_type: room_type_value,
+        room_type,
+        room_type_key,
         amenities,
         rooms_amenities,
         room_pictures,
