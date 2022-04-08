@@ -17,6 +17,7 @@
     - [updateRoomName](#updateroomname)
     - [UpdateARoomIsType](#updatearoomistype)
     - [UpdateNightPrice](#updatenightprice)
+    - [updateRoomCapacity](#updateroomcapacity)
 
 ## Login
 
@@ -345,3 +346,20 @@ mutation updateNightPrice($input:UpdateRoomNightPriceInput!){
   }
 }
 ```
+
+### updateRoomCapacity
+```graphql
+mutation updateCapacity($input:UpdateRoomCapacityInput!){
+  updateRoomCapacity(input:$input){
+    id
+    room_name
+    capacity
+  }
+}
+{
+  "input":{
+		"room_id": 528,
+		"new_capacity": 5
+  }
+}
+````

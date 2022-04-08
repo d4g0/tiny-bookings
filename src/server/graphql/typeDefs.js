@@ -235,6 +235,11 @@ export const typeDefinitions = gql`
     new_night_price:  Float!
   }
   
+  input UpdateRoomCapacityInput {
+    room_id:          Int!
+    new_capacity:     Int!
+
+  }
 
 
   ##
@@ -289,6 +294,7 @@ export const typeDefinitions = gql`
     updateRoomName(input: UpdateRoomNameInput!): Room!
     updateARoomIsType(input: UpdateRoomIsTypeInput!): Room!
     updateRoomNightPrice(input: UpdateRoomNightPriceInput!): Room!
+    updateRoomCapacity(input: UpdateRoomCapacityInput!): Room!
     
   }
 
