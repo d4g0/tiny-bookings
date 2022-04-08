@@ -35,7 +35,8 @@ import {
     updateRoomType,
     updateARoomIsType,
     updateRoomNightPrice,
-    updateRoomCapacity
+    updateRoomCapacity,
+    updateRoomNumberOfBeds
 } from "services/room";
 
 export const resolvers = {
@@ -661,8 +662,24 @@ export const resolvers = {
             )
         ),
 
+        updateRoomNumberOfBeds: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        new_number_of_beds
+                    } = args.input;
+                    try {
+                        var room = await updateRoomNumberOfBeds(room_id, new_number_of_beds);
+                        return room;
+                    } catch (error) {
+                        throw error;
+                    }
 
-
+                }
+            )
+        ),
     },
     // Root Types
     User: {

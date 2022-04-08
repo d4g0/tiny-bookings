@@ -363,3 +363,21 @@ mutation updateCapacity($input:UpdateRoomCapacityInput!){
   }
 }
 ````
+
+### updateNumberOfBeds
+```graphql
+mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
+  updateRoomNumberOfBeds(input:$input){
+    id
+    room_name
+    number_of_beds
+  }
+}
+{
+  "input":{
+		"room_id": 528,
+		"new_number_of_beds": 15
+  }
+}
+```
+
