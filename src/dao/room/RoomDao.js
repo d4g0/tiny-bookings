@@ -311,16 +311,24 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
     }
 
     try {
-        await prisma.room.update({
+        var room = await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 number_of_beds: new_number_of_beds
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
             }
         })
 
-        var room = await getRoomById(room_id);
         return room
     } catch (error) {
         throw error;

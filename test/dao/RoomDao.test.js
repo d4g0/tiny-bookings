@@ -231,7 +231,7 @@ describe(
                     // })
                     uc_room = await updateRoomCapacity(room.id, NEW_CAPACITY);
 
-                    console.log({ uc_room });
+                    // console.log({ uc_room });
 
                     await deleteRoom(room.id);
 
@@ -241,6 +241,39 @@ describe(
                 }
                 expect(dbError).toBeNull();
                 expect(uc_room.capacity).toBe(NEW_CAPACITY);
+            }
+        )
+
+        // updateRoomNumberOfBeds
+        test(
+            "Update a room number_of_beds",
+            async function () {
+                var dbError = null, room = null, u_room = null, NEW_NUMBER_OF_BEDS = 4;
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: 13.50,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
+
+                    // console.log({
+                    //     'ntofb': typeof room.number_of_beds
+                    // })
+                    u_room = await updateRoomNumberOfBeds(room.id, NEW_NUMBER_OF_BEDS);
+
+                    // console.log({ u_room });
+
+                    await deleteRoom(room.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+                expect(dbError).toBeNull();
+                expect(u_room.number_of_beds).toBe(NEW_NUMBER_OF_BEDS);
             }
         )
 
@@ -323,38 +356,7 @@ describe(
         
 
 
-        // updateRoomNumberOfBeds
-        // test(
-        //     "Update a room number_of_beds",
-        //     async function () {
-        //         var dbError = null, room = null, u_room = null, NEW_NUMBER_OF_BEDS = 4;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             // console.log({
-        //             //     'ntofb': typeof room.number_of_beds
-        //             // })
-        //             u_room = await updateRoomNumberOfBeds(room.id, NEW_NUMBER_OF_BEDS);
-
-        //             console.log({ u_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(u_room.number_of_beds).toBe(NEW_NUMBER_OF_BEDS);
-        //     }
-        // )
+        
 
 
 
