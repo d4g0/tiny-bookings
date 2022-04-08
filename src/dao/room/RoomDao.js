@@ -153,16 +153,25 @@ export async function updateRoomName(room_id, room_name) {
     try {
 
 
-        var roomRes = await prisma.room.update({
+        var room = await prisma.room.update({
             where: {
                 id: room_id
             },
             data: {
                 room_name
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
             }
         })
 
-        return mapRoomResToRoom(roomRes);
+        return room;
 
     } catch (error) {
         // case prisma record not found

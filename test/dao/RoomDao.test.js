@@ -77,7 +77,7 @@ describe(
                         capacity: roomData.capacity
                     })
 
-                    console.log({ room });
+                    // console.log({ room });
 
                     del_result = await deleteRoom(room.id);
                 } catch (error) {
@@ -110,38 +110,36 @@ describe(
             }
         )
         // roomName
-        // test(
-        //     "Update a room name",
-        //     async function () {
-        //         var dbError = null, room = null, NEW_NAME = uuid().substring(0, 10);
+        test(
+            "Update a room name",
+            async function () {
+                var dbError = null, room = null, NEW_NAME = uuid().substring(0, 10);
 
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
 
-        //             // update
-        //             var u_room = await updateRoomName(room.id, NEW_NAME);
+                    // update
+                    var u_room = await updateRoomName(room.id, NEW_NAME);
+                    console.log({u_room});
+                    // clean
+                    await deleteRoom(room.id);
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
 
-        //             // console.log({ u_room })
+                expect(dbError).toBe(null);
+                expect(room.id).toBeDefined()
+                expect(u_room.room_name).toBe(NEW_NAME);
 
-
-        //             await deleteRoom(room.id);
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
-
-        //         expect(dbError).toBe(null);
-        //         expect(room.id).toBeDefined()
-        //         expect(u_room.room_name).toBe(NEW_NAME);
-
-        //     }
-        // )
+            }
+        )
 
         // update a room is type
         // test(
