@@ -319,117 +319,91 @@ describe(
             }
         )
 
-        //  with pictures and type
-        // test(
-        //     "Get a room with picures and  room type",
-        //     async function () {
-        //         var dbError = null, room = null, roomPicture = null, FILE_NAME = 'supper-foo-picture', fetch_room = null;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             roomPicture = await createARoomPicture(room.id, FILE_NAME);
-
-        //             await updateARoomIsType(room.id, customRoomType.id);
-
-
-        //             fetch_room = await getRoomById(room.id);
-
-        //             console.log({
-        //                 roomPicture,
-        //                 fetch_room,
-        //                 f_rp: fetch_room.room_pictures,
-        //                 f_rt: fetch_room.room_type,
-        //             });
-
-
-        //             await deleteARoomPicture(roomPicture.id);
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //     }
-        // )
-
-
-
-
-
-
-
-
-
-
-
         // amenities 
-        // test(
-        //     "Create a room with amenities, type, pictures",
-        //     async function () {
+        test(
+            "Create a room with amenities, type, pictures",
+            async function () {
 
-        //         var dbError = null,
-        //             room = null,
-        //             roomType = null,
-        //             ROOM_TYPE_KEY = uuid().substring(0, 10),
-        //             amenity = null,
-        //             AMENITY_KEY = uuid().substring(0, 10),
-        //             roomPicture = null, FILE_NAME = 'supper-foo-picture',
-        //             final_room = null,
-        //             roomAmenity
-        //             ;
+                var dbError = null,
+                    room = null,
+                    roomType = null,
+                    ROOM_TYPE_KEY = uuid().substring(0, 10),
+                    amenity = null,
+                    AMENITY_KEY = uuid().substring(0, 10),
+                    roomPicture = null, FILE_NAME = 'supper-foo-picture',
+                    final_room = null,
+                    roomAmenity
+                    ;
 
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
 
-        //             // create a room_type to use it
-        //             roomType = await createRoomType(ROOM_TYPE_KEY);
-        //             // update with the type
-        //             await updateARoomIsType(room.id, roomType.id);
-        //             // amenity
-        //             amenity = await createRoomAmenity(AMENITY_KEY);
-        //             roomAmenity = await createARoomIsAmenity(room.id, amenity.id);
-        //             console.log({ roomAmenity })
-        //             // pictures
-        //             roomPicture = await createARoomPicture(room.id, FILE_NAME);
+                    // create a room_type to use it
+                    roomType = await createRoomType(ROOM_TYPE_KEY);
+                    // update with the type
+                    await updateARoomIsType(room.id, roomType.id);
+                    // amenity
+                    amenity = await createRoomAmenity(AMENITY_KEY);
+                    roomAmenity = await createARoomIsAmenity(room.id, amenity.id);
+                    console.log({ roomAmenity })
+                    // pictures
+                    roomPicture = await createARoomPicture(room.id, FILE_NAME);
 
-        //             final_room = await getRoomById(room.id);
+                    final_room = await getRoomById(room.id);
 
-        //             console.log({
-        //                 final_room,
-        //                 amenities: final_room.amenities,
-        //                 rooms_amenities: final_room.rooms_amenities,
-        //                 room_pictures: final_room.room_pictures
-        //             })
-        //             // clean
-        //             await deleteARoomIsAmenity(roomAmenity.id)
-        //             await deleteARoomPicture(roomPicture.id);
-        //             await deleteRoom(room.id);
-        //             await deleteRoomTypeByType(roomType.room_type)
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
+                    console.log({
+                        final_room,
+                        amenities: final_room.amenities,
+                        rooms_amenities: final_room.rooms_amenities,
+                        room_pictures: final_room.room_pictures
+                    })
+                    // clean
+                    await deleteARoomIsAmenity(roomAmenity.id)
+                    await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
+                    await deleteRoomTypeByType(roomType.room_type)
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
 
-        //         expect(dbError).toBe(null);
-        //         expect(room.id).toBeDefined()
-        //         expect(final_room.room_type).toBe(roomType.id);
-        //         expect(final_room.room_type_key).toBe(ROOM_TYPE_KEY);
+                expect(dbError).toBe(null);
+                // ALL CHEKS
 
-        //     }
-        // )
+                // simples
+                expect(final_room.id).toBeDefined();
+                expect(final_room.hotel_id).toBeDefined();
+                expect(final_room.room_name).toBeDefined();
+                expect(final_room.night_price).toBeDefined();
+                expect(final_room.capacity).toBeDefined();
+                expect(final_room.number_of_beds).toBeDefined();
+                expect(final_room.created_at).toBeDefined();
+                // type
+                expect(final_room.room_type).toBe(roomType.id);
+                expect(final_room.room_types.id).toBe(roomType.id);
+                expect(final_room.room_types.room_type).toBe(roomType.room_type);
+                // pictures
+                expect(final_room.room_pictures[0]).toBeDefined();
+                expect(final_room.room_pictures[0].id).toBe(roomPicture.id);
+                expect(final_room.room_pictures[0].room_id).toBe(roomPicture.room_id);
+                expect(final_room.room_pictures[0].filename).toBe(roomPicture.filename);
+                // amenities
+                // amenity
+                // roomAmenity
+                expect(final_room.rooms_amenities[0]).toBeDefined();
+                expect(final_room.rooms_amenities[0].id).toBe(roomAmenity.id);
+                expect(final_room.rooms_amenities[0].amenity_id).toBe(roomAmenity.amenity_id);
+                expect(final_room.rooms_amenities[0].room_id).toBe(roomAmenity.room_id);
+                expect(final_room.rooms_amenities[0].room_amenity.id).toBe(amenity.id);
+                expect(final_room.rooms_amenities[0].room_amenity.amenity).toBe(amenity.amenity);
+            }
+        )
 
     }
 
