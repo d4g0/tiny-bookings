@@ -1,3 +1,4 @@
+import { getUserRoleId, USER_ROLES } from 'dao/DBConstans';
 import { createUserRole, deleteUserRole, getUserRoleByKey } from 'dao/users/UserRoleDao';
 import { v4 as uuid } from 'uuid';
 
@@ -86,6 +87,32 @@ describe(
                 // assertions
                 expect(dbError.code).toBe('P2025');// prisma error code
             }
+        )
+
+        // test initUserRoles Secuence
+        test(
+            "Init UserRoles secuence",
+            async function () {
+                var dbError = null;
+                var fullAdminRole = null, basicAdminRole = null, clientRole = null;
+
+                try {
+                    fullAdminRole = await getUserRoleByKey(USER_ROLES.FULL_ADMIN.user_role);
+                    basicAdminRole = await getUserRoleByKey(USER_ROLES.BASIC_ADMIN.user_role);
+                    clientRole = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
+                } catch (error) {
+                    console.log(error);
+                    dbError = error;
+                }
+
+                // normal behavior
+                expect(dbError).toBeNull();
+                // assertions
+                expect(fullAdminRole.id).toBe(getUserRoleId(USER_ROLES.FULL_ADMIN.user_role));
+                expect(basicAdminRole.id).toBe(getUserRoleId(USER_ROLES.BASIC_ADMIN.user_role));
+                expect(clientRole.id).toBe(getUserRoleId(USER_ROLES.CLIENT.user_role));
+            }
+
         )
     }
 )
