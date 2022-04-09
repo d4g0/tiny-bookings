@@ -46,14 +46,16 @@ describe(
         )
 
         test(
-            "Test Get Res when querying for a non existing user role",
+            "Test when fetching  for a non existing user role",
             async function () {
-                var dbError = null, userRole = null, RANDOM_KEY = uuid().substring(0, 10);
+                var dbError = null,
+                    userRole = null,
+                    RANDOM_KEY = uuid().substring(0, 10);
 
                 try {
                     userRole = await getUserRoleByKey(RANDOM_KEY);
                     console.log({
-                        userRole
+                        userRole,
                     });
                 } catch (error) {
                     console.log(error);
@@ -63,6 +65,26 @@ describe(
                 expect(dbError).toBeNull()
                 // assertions
                 expect(userRole).toBeNull();
+            }
+        )
+
+
+        test(
+            "Test when deleting for a non existing user role",
+            async function () {
+                var dbError = null,
+                    RANDOM_KEY = uuid().substring(0, 10);
+
+                try {
+                    await deleteUserRole(RANDOM_KEY);
+                } catch (error) {
+                    console.log(error);
+                    dbError = error;
+                }
+                // normal behavior
+                expect(dbError).toBeDefined()
+                // assertions
+                expect(dbError.code).toBe('P2025');// prisma error code
             }
         )
     }

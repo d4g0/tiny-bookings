@@ -1,7 +1,12 @@
 import { prisma } from "~/dao/PrismaClient";
 import { isValidUserRoleKey } from "dao/utils";
 
-
+/**
+ * Create a `user_role` record in the db 
+ * and returns it
+ * @param {String} user_role_key 
+ * @returns {{ id: number, user_role: String}}
+ */
 export async function createUserRole(user_role_key) {
     if (!isValidUserRoleKey(user_role_key)) {
         throw new Error(`Non valid user role key: ${user_role_key}`)
@@ -21,6 +26,12 @@ export async function createUserRole(user_role_key) {
     }
 }
 
+/**
+ * Attemp to retrieve a `user_role` record in the db 
+ * and returns it, returns `null` if record does not exists
+ * @param {String} user_role_key 
+ * @returns {{ id: number, user_role: String}}
+ */
 export async function getUserRoleByKey(user_role_key) {
     if (!isValidUserRoleKey(user_role_key)) {
         throw new Error(`Non valid user role key: ${user_role_key}`)
@@ -40,6 +51,12 @@ export async function getUserRoleByKey(user_role_key) {
     }
 }
 
+/**
+ * Attemp to delete a `user_role` record in the db 
+ * throws a prisma `P2025` error if record does not exists
+ * @param {String} user_role_key 
+ * @returns {{ id: number, user_role: String}}
+ */
 export async function deleteUserRole(user_role_key) {
     if (!isValidUserRoleKey(user_role_key)) {
         throw new Error(`Non valid user role key: ${user_role_key}`)
