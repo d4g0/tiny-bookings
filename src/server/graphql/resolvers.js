@@ -37,7 +37,9 @@ import {
     updateRoomNightPrice,
     updateRoomCapacity,
     updateRoomNumberOfBeds,
-    getRoomById
+    getRoomById,
+    getRooms,
+    createARoomIsAmenity
 } from "services/room";
 
 export const resolvers = {
@@ -89,10 +91,7 @@ export const resolvers = {
         // ---------------
         admins: authenticated(
             authorized(
-                [
-                    USER_ROLES.FULL_ADMIN.user_role,
-                    USER_ROLES.BASIC_ADMIN.user_role
-                ],
+                USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx, info) => {
                     var admins = await getAdminsService();
                     if (admins) {
@@ -183,6 +182,15 @@ export const resolvers = {
                 var { room_id } = args;
                 var room = await getRoomById(room_id);
                 return room;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        rooms: async (root, args, ctx) => {
+            try {
+                var rooms = await getRooms();
+                return rooms;
             } catch (error) {
                 throw error;
             }
@@ -684,6 +692,27 @@ export const resolvers = {
                     try {
                         var room = await updateRoomNumberOfBeds(room_id, new_number_of_beds);
                         return room;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        // deps
+        // amenities
+        createARoomIsAmenity: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        amenity_id
+                    } = args.input;
+                    try {
+                        var roomIsAmenity = await createARoomIsAmenity(room_id, amenity_id);
+                        return roomIsAmenity;
                     } catch (error) {
                         throw error;
                     }

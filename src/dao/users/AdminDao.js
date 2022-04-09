@@ -342,14 +342,15 @@ export async function getAdmins() {
         }
     })
 
-    if (admins) {
+    var mapedAdmins = [];
+    // case admins exists
+    if (admins.length) {
         // console.log({ loc: 'dao', admins })
-        var mapedAdmins = admins.map(function mapToAdmin(adminData) {
+        mapedAdmins = admins.map(function mapToAdmin(adminData) {
             return mapAdminResponseDataToAdminUser(adminData)
         })
-
-        return mapedAdmins
     }
+    return mapedAdmins
 }
 
 function mapAdminResponseDataToAdminUser({ // rename
