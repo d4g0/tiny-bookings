@@ -1,6 +1,6 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { createAdminService, getAdminByEmailService, getAdminsService } from "services/users/admin";
-import { createAdmin, deleteAdminByEmail } from '~/dao/UserDao'
+import { createAdmin, deleteAdminByEmail } from 'dao/users/AdminDao'
 
 describe(
     'Admin Service Tests',

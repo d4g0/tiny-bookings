@@ -1,5 +1,5 @@
 import { USER_ROLES } from "dao/DBConstans";
-import { getAdminById, getAdminByEmail, getAdmins } from "dao/UserDao";
+import { getAdminById, getAdminByEmail, getAdmins } from "dao/users/AdminDao";
 import {
     isInAdminRoles,
     isValidEmail,
@@ -9,7 +9,7 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { createAdmin, deleteAdminById as delAdminByIdDao } from '~/dao/UserDao'
+import { createAdmin, deleteAdminById as delAdminByIdDao } from 'dao/users/AdminDao'
 import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 
 
