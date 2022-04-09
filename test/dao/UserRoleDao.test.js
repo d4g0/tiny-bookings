@@ -1,4 +1,4 @@
-import { createUserRole, getUserRoleByKey } from 'dao/users/UserRoleDao';
+import { createUserRole, deleteUserRole, getUserRoleByKey } from 'dao/users/UserRoleDao';
 import { v4 as uuid } from 'uuid';
 
 describe(
@@ -8,18 +8,22 @@ describe(
 
         // create a user role
         test(
-            "Create, fetch a user role",
+            "Create, fetch and delete a user role",
             async function () {
                 var dbError = null, USER_ROLE_KEY = uuid().substring(0, 10),
-                    userRole = null, fetchedUserRole = null;
+                    userRole = null, fetchedUserRole = null, delUserRole = null;
                 try {
                     // create
                     userRole = await createUserRole(USER_ROLE_KEY);
+                    // read
                     fetchedUserRole = await getUserRoleByKey(USER_ROLE_KEY);
+                    // delete
+                    delUserRole = await deleteUserRole(USER_ROLE_KEY);
 
                     console.log({
                         userRole,
-                        fetchedUserRole
+                        fetchedUserRole,
+                        delUserRole
                     });
                 } catch (error) {
                     console.log(error);
@@ -34,6 +38,9 @@ describe(
                 // fetch assertions
                 expect(fetchedUserRole.id).toBe(userRole.id);
                 expect(fetchedUserRole.user_role).toBe(USER_ROLE_KEY);
+                // delete assertions
+                expect(delUserRole.id).toBe(userRole.id);
+                expect(delUserRole.user_role).toBe(USER_ROLE_KEY);
 
             }
         )
