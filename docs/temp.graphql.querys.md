@@ -2,6 +2,8 @@
 - [GraphQL API Querys](#graphql-api-querys)
   - [Login](#login)
   - [Admins](#admins)
+    - [Create Admin](#create-admin)
+    - [Delete admin](#delete-admin)
   - [Rooms](#rooms)
     - [Get A Room](#get-a-room)
     - [CreateRoomType](#createroomtype)
@@ -58,6 +60,8 @@ variables:{
 ```
 
 ## Admins
+
+### Create Admin
 ```graphql
 mutation createAdmin($input:createAdminInput!){
   createAdmin(input:$input){
@@ -79,6 +83,17 @@ mutation createAdmin($input:createAdminInput!){
     "admin_name": "susy",
     "admin_description": "susy likes salsa",
     "password":  "supper-foo-pass"
+  }
+}
+```
+
+### Delete admin
+```graphql
+mutation deleteAdmin{
+  deleteAdmin(id:19){
+    id
+    user_role
+    admin_name
   }
 }
 ```
