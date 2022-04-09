@@ -1,6 +1,6 @@
 import { prisma } from "~/dao/PrismaClient";
 import { isValidUserRoleKey } from "dao/utils";
-import { USER_ROLES } from "dao/DBConstans";
+import { setUserRoleId, USER_ROLES } from "dao/DBConstans";
 
 /**
  * Create a `user_role` record in the db 
@@ -82,8 +82,8 @@ export async function deleteUserRole(user_role_key) {
  * they should be properly initialiced
  * this functions does exactly that.
  * Create a FULL_ADMIN, BASIC_ADMIN, CLIENT
- * user roles in that order, to match the `DBConstanst`
- * Throws if it can't do it.
+ * And set it's ids to match the ones in the db to avoid
+ * inesesary hits to db since this values should never change
  */
 export async function initUserRoles() {
     try {
@@ -96,14 +96,8 @@ export async function initUserRoles() {
         if (!fullAdmin) {
             fullAdmin = await createUserRole(USER_ROLES.FULL_ADMIN.user_role);
         }
-        // TODO
-        // Valorating eliminaiting the match ids test since 
-        // it's potentially dangerous for production dbs
-        // commented out for the moment 
-        // check id match constans
-        // if (fullAdmin.id != USER_ROLES.FULL_ADMIN.id) {
-        //     throw new Error(`(init:user_roles) Admin has a non establish id: expecting ${USER_ROLES.FULL_ADMIN.id}, recived ${fullAdmin.id}`)
-        // }
+        // set id
+        setUserRoleId(fullAdmin.user_role, fullAdmin.id);
 
         // basic admin
         var basicAdmin = await getUserRoleByKey(USER_ROLES.BASIC_ADMIN.user_role);
@@ -111,10 +105,8 @@ export async function initUserRoles() {
         if (!basicAdmin) {
             basicAdmin = await createUserRole(USER_ROLES.BASIC_ADMIN.user_role);
         }
-        // check id match constans
-        // if (basicAdmin.id != USER_ROLES.BASIC_ADMIN.id) {
-        //     throw new Error(`(init:user_roles) Admin has a non stablish id: expecting ${USER_ROLES.BASIC_ADMIN.id}, recived ${basicAdmin.id}`)
-        // }
+        // set id
+        setUserRoleId(basicAdmin.user_role, basicAdmin.id);
 
         // client
         var client = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
@@ -122,10 +114,10 @@ export async function initUserRoles() {
         if (!client) {
             client = await createUserRole(USER_ROLES.CLIENT.user_role);
         }
-        // check id match constans
-        // if (client.id != USER_ROLES.CLIENT.id) {
-        //     throw new Error(`(init:user_roles) Admin has a non stablish id: expecting ${USER_ROLES.CLIENT.id}, recived ${client.id}`)
-        // }
+        // set id
+        setUserRoleId(client.user_role, client.id);
+
+
 
     } catch (error) {
         throw error
