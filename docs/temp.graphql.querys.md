@@ -60,7 +60,15 @@ variables:{
 ```
 
 ## Admins
-
+```graphql
+query admins{
+  admins{
+    id
+    user_role
+    admin_name
+  }
+}
+```
 ### Create Admin
 ```graphql
 mutation createAdmin($input:createAdminInput!){
