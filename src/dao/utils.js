@@ -264,9 +264,7 @@ export function areValidAmenitiesIds(ids = []) {
     return areValidIds;
 }
 
-
-// ON THIS
-export async function isValidPrice(price) {
+export function isValidPrice(price) {
     const priceSchema = Joi.number().required().min(0.1);
     const { error, value } = priceSchema.validate(
         price,
@@ -274,6 +272,16 @@ export async function isValidPrice(price) {
     );
     return !error;
 }
+
+export function isValidUserRoleKey(user_role_key) {
+    var userRoleSchema = Joi.string().required().trim().min(3).max(40);
+    const { error, value } = userRoleSchema.validate(
+        user_role_key,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
 
 
 // ---------------
