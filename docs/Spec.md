@@ -16,6 +16,8 @@ so as the diagram and their respective sql mapped script are the single source o
 election, this project it's using a one to many relation from `user_roles` to `admin` and `client` users.
 In this context it makes sense `create` and `read` `user_roles` records; but not update or delete those;
 the latter just implemented to clean the `dev-db` when testing.
+Make sure when starting the `initUserRoles` fn runs properly, in the test and in the actual server as part of 
+the bootin secuence. If fails to complete you might need to restore the `dev` db
 
 
 ### ADMIN
