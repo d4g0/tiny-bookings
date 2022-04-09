@@ -6,6 +6,17 @@
 -   BASIC_ADMIN
 -   CLIENT
 
+Anatomy:
+```js
+ var userRole = { id: 1, user_role: 'user-role-key' } ;
+```
+DB Table name: `user_roles`
+A UserRoles Table is intended to be used as `enums`, but currently the pgadmin erd tool don't support those; 
+so as the diagram and their respective sql mapped script are the single source of `true` by design flow 
+election, this project it's using a one to many relation from `user_roles` to `admin` and `client` users.
+In this context it makes sense `create` and `read` `user_roles` records; but not update or delete those;
+the latter just implemented to clean the `dev-db` when testing.
+
 
 ### ADMIN
 ```js
