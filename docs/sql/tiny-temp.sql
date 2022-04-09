@@ -2,66 +2,67 @@
 -- Please log an issue at https://redmine.postgresql.org/projects/pgadmin4/issues/new if you find any bugs, including reproduction steps.
 BEGIN;
 
--- Enum likes
--- unique `user_role`, divergence from pgadmin-erd-tool, not suported unique constrains
+
 CREATE TABLE IF NOT EXISTS public.user_roles
 (
     id serial,
-    user_role character varying(40) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    user_role character varying(40) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_user_role UNIQUE (user_role)
 );
 
--- unique `booking_state`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.booking_states
 (
     id serial,
-    booking_state character varying(40) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    booking_state character varying(40) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_booking_state UNIQUE (booking_state)
 );
 
--- unique `payment_type`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.payment_types
 (
     id serial,
-    payment_type character varying(60) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    payment_type character varying(60) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_payment_types UNIQUE (payment_type)
 );
 
--- unique `currency`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.currencies
 (
     id serial,
-    currency character varying(10) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    currency character varying(10) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_currency UNIQUE (currency)
 );
 
--- unique `hotel_name`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.hotel
 (
     id serial,
-    hotel_name character varying(100) NOT NULL UNIQUE,
+    hotel_name character varying(100) NOT NULL,
     maximun_free_calendar_days integer NOT NULL DEFAULT 30,
-    check_in_hour_time timestamp without time zone NOT NULL,
-    check_out_hour_time timestamp without time zone NOT NULL,
+    check_in_hour_time time without time zone NOT NULL,
+    check_out_hour_time time without time zone NOT NULL,
     minimal_prev_days_to_cancel integer NOT NULL DEFAULT 5,
-    PRIMARY KEY (id)
+    iana_time_zone character varying(60) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_hotel_name UNIQUE (hotel_name)
 );
 
-
--- unique `admin_name`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.admins
 (
     id serial,
     user_role integer NOT NULL,
-    admin_name character varying(100) NOT NULL UNIQUE,
+    admin_name character varying(100) NOT NULL,
     admin_description character varying(150),
+    email character varying(80) NOT NULL,
     hash_password text NOT NULL,
     reset_token text,
     created_at timestamp without time zone DEFAULT now(),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT unique_admin_name UNIQUE (admin_name),
+    CONSTRAINT unique_admin_email UNIQUE (email)
 );
 
--- unique `email`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.clients
 (
     id serial,
@@ -69,10 +70,11 @@ CREATE TABLE IF NOT EXISTS public.clients
     client_name character varying(60) NOT NULL,
     client_last_name character varying(60) NOT NULL,
     hash_password text,
-    email character varying(120) UNIQUE,
+    email character varying(120),
     reset_token text,
     created_at timestamp without time zone DEFAULT now(),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT unique_email UNIQUE (email)
 );
 
 COMMENT ON COLUMN public.clients.hash_password
@@ -81,34 +83,35 @@ COMMENT ON COLUMN public.clients.hash_password
 COMMENT ON COLUMN public.clients.email
     IS 'Optional too since clients created by and hotel admin does not require email field';
 
--- unique `amenity`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.room_amenity
 (
     id serial,
-    amenity character varying(100) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    amenity character varying(100) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_amenity UNIQUE (amenity)
 );
 
--- unique `room_name`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.room
 (
     id serial,
     hotel_id integer NOT NULL,
-    room_name character varying(20) NOT NULL UNIQUE,
+    room_name character varying(20) NOT NULL,
     night_price numeric NOT NULL,
     capacity integer NOT NULL,
     number_of_beds integer NOT NULL,
-    room_type integer,
     created_at timestamp without time zone DEFAULT now(),
-    PRIMARY KEY (id)
+    room_type integer,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_room_name UNIQUE (room_name)
 );
 
 CREATE TABLE IF NOT EXISTS public.rooms_amenities
 (
-    id serial,
     room_id integer,
     amenity_id integer,
-    PRIMARY KEY (id)
+    CONSTRAINT id PRIMARY KEY (room_id, amenity_id),
+    CONSTRAINT room_id_unique UNIQUE (room_id),
+    CONSTRAINT amenity_id_unique UNIQUE (amenity_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.room_pictures
@@ -119,12 +122,12 @@ CREATE TABLE IF NOT EXISTS public.room_pictures
     PRIMARY KEY (id)
 );
 
--- unique `room_type`, divergence from pgadmin-erd-tool, not suported unique constrains
 CREATE TABLE IF NOT EXISTS public.room_types
 (
     id serial,
-    room_type character varying(30) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
+    room_type character varying(30) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unque_room_type UNIQUE (room_type)
 );
 
 CREATE TABLE IF NOT EXISTS public.booking
@@ -162,6 +165,8 @@ CREATE TABLE IF NOT EXISTS public.room_lock_period
     PRIMARY KEY (id)
 );
 
+
+
 ALTER TABLE IF EXISTS public.admins
     ADD CONSTRAINT user_role FOREIGN KEY (user_role)
     REFERENCES public.user_roles (id) MATCH SIMPLE
@@ -185,12 +190,14 @@ ALTER TABLE IF EXISTS public.room
     ON DELETE NO ACTION
     NOT VALID;
 
+
 ALTER TABLE IF EXISTS public.room
     ADD FOREIGN KEY (room_type)
     REFERENCES public.room_types (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
 
 ALTER TABLE IF EXISTS public.rooms_amenities
     ADD CONSTRAINT room_id_link FOREIGN KEY (room_id)
