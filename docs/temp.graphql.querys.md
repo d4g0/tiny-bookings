@@ -4,6 +4,8 @@
   - [Admins](#admins)
     - [Create Admin](#create-admin)
     - [Delete admin](#delete-admin)
+  - [Hotel](#hotel)
+    - [createHotel](#createhotel)
   - [Rooms](#rooms)
     - [Get A Room](#get-a-room)
     - [CreateRoomType](#createroomtype)
@@ -105,6 +107,42 @@ mutation deleteAdmin{
   }
 }
 ```
+
+
+## Hotel
+### createHotel
+```graphql
+mutation createHotel($input:HotelInput!){
+  createHotel(input:$input){
+		id
+    hotel_name
+    maximun_free_calendar_days
+    check_in_hour_time
+    check_out_hour_time
+    minimal_prev_days_to_cancel
+    iana_time_zone
+  }
+}
+
+{
+  "input":{
+"hotel_name":"Graphy Hotel",
+"maximun_free_calendar_days": 30,
+"minimal_prev_days_to_cancel":5,
+"check_in_hour_time":{
+  "hours": 10,
+  "mins": 0
+},
+"check_out_hour_time":{
+  "hours": 13,
+  "mins": 30
+},
+"iana_time_zone":"America/Lima"
+  }
+}
+```
+
+
 ## Rooms
 
 ### Get A Room
