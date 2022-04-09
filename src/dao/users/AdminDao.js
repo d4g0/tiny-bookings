@@ -1,6 +1,6 @@
 import { prisma } from 'dao/PrismaClient.js'
 import { isValidString } from 'utils'
-import { isInAdminRoles, isValidId, mapAdminResponseDataToAdminUser } from '~/dao/utils'
+import { isInAdminRoles, isValidId } from '~/dao/utils'
 import { getUserRoleId, USER_ROLES } from '../DBConstans'
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from '../Errors'
 import { getUserRoleByKey } from './UserRoleDao'
@@ -349,5 +349,28 @@ export async function getAdmins() {
         })
 
         return mapedAdmins
+    }
+}
+
+function mapAdminResponseDataToAdminUser({ // rename
+    id, //  integer
+    email, // string
+    admin_name, // string
+    admin_description, // string
+    hash_password, // string
+    reset_token,  // string || null
+    created_at,  // string
+    user_roles, // object like { id: 0, user_role: '' } (user_role record from the join)
+}) {
+    return {
+        id,
+        // map user_role `id` to user_role `string` in the join `user_roles` table
+        user_role: user_roles.user_role,
+        email, // string
+        admin_name,
+        admin_description,
+        hash_password,
+        reset_token,
+        created_at: new Date(created_at).toUTCString()
     }
 }

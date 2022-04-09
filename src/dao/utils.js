@@ -21,28 +21,7 @@ import Joi from 'joi';
  * ```
  * 
 */
-export function mapAdminResponseDataToAdminUser({ // rename
-    id, //  integer
-    email, // string
-    admin_name, // string
-    admin_description, // string
-    hash_password, // string
-    reset_token,  // string || null
-    created_at,  // string
-    user_roles, // object like { id: 0, user_role: '' } (user_role record from the join)
-}) {
-    return {
-        id: id,
-        // map user_role `id` to user_role `string` in the join `user_roles` table
-        user_role: user_roles.user_role,
-        email, // string
-        admin_name,
-        admin_description,
-        hash_password,
-        reset_token,
-        created_at: new Date(created_at).toUTCString()
-    }
-}
+
 
 export function isInAdminRoles(user_role) {
     var isInAdminRoles = false;
