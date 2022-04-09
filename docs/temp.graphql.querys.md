@@ -1,7 +1,9 @@
 # GraphQL API Querys
 - [GraphQL API Querys](#graphql-api-querys)
   - [Login](#login)
+  - [Admins](#admins)
   - [Rooms](#rooms)
+    - [Get A Room](#get-a-room)
     - [CreateRoomType](#createroomtype)
     - [DeleteRoomType](#deleteroomtype)
     - [GetRoomType](#getroomtype)
@@ -18,7 +20,7 @@
     - [UpdateARoomIsType](#updatearoomistype)
     - [UpdateNightPrice](#updatenightprice)
     - [updateRoomCapacity](#updateroomcapacity)
-    - [Get A Room](#get-a-room)
+    - [updateNumberOfBeds](#updatenumberofbeds)
 
 ## Login
 
@@ -55,8 +57,66 @@ variables:{
 }
 ```
 
+## Admins
+```graphql
+mutation createAdmin($input:createAdminInput!){
+  createAdmin(input:$input){
+		id
+    user_role
+    email
+    admin_name
+    admin_description
+    hash_password
+    reset_token
+    created_at
+  }
+}
+
+{
+  "input":{
+		"user_role":  "BASIC_ADMIN",
+    "email":      "susy@gmail.com",
+    "admin_name": "susy",
+    "admin_description": "susy likes salsa",
+    "password":  "supper-foo-pass"
+  }
+}
+```
 ## Rooms
 
+### Get A Room
+```graphql
+query {
+  room(room_id: 528){
+    id
+		hotel_id
+		room_name
+		night_price
+		capacity
+		number_of_beds
+		created_at
+    room_type
+    room_types{
+			id
+      room_type
+    }
+    room_pictures{
+      id
+      room_id
+      filename
+    }
+    rooms_amenities{
+      id
+      room_id
+      amenity_id
+      room_amenity {
+        id
+        amenity
+      }
+    }
+  }
+}
+```
 ### CreateRoomType
 ```graphql
 mutation CreateRoomType ($input: RoomTypeInput!){
@@ -289,19 +349,10 @@ mutation updateARoomIsType($input: UpdateRoomIsTypeInput!){
     capacity
     number_of_beds
     room_type
-    room_type_key
-    amenities
-    rooms_amenities {
+    room_types{
       id
-      room_id
-      amenity_id
+      room_type
     }
-    room_pictures {
-      id
-      room_id
-      filename
-    }
-    created_at
   }
 }
 
@@ -321,22 +372,6 @@ mutation updateNightPrice($input:UpdateRoomNightPriceInput!){
     hotel_id
     room_name
     night_price
-    capacity
-    number_of_beds
-    room_type
-    room_type_key
-    amenities
-    rooms_amenities {
-      id
-      room_id
-      amenity_id
-    }
-    room_pictures {
-      id
-      room_id
-      filename
-    }
-    created_at
   }
 }
 
@@ -363,7 +398,7 @@ mutation updateCapacity($input:UpdateRoomCapacityInput!){
 		"new_capacity": 5
   }
 }
-````
+```
 
 ### updateNumberOfBeds
 ```graphql
@@ -382,15 +417,5 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
 }
 ```
 
-### Get A Room
-```graphql
-query {
-  room(room_id:528 ){
-		id
-    hotel_id
-    room_name
-    night_price
-  }
-}
-```
+
 
