@@ -147,7 +147,12 @@
 
 **Hot Sopt:**
 
-GraphQL
+RoomDAO
+Investigate mapRoomRes with out fetch amenities separate
+by fetching nested query of rooms_amenities.room_amenity
+
+Iterate Spec, Dao and Grphql to use the new nested getRoomById
+Variant
 
 
 
