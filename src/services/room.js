@@ -80,8 +80,8 @@ export async function getRoomAmenities() {
 export function createARoomIsAmenity(room_id, amenity_id) {
     return createARoomIsAmenityDao(room_id, amenity_id);
 }
-export function deleteARoomIsAmenity(room_is_amenity_id) {
-    return deleteARoomIsAmenityDao(room_is_amenity_id);
+export function deleteARoomIsAmenity(room_id, amenity_id) {
+    return deleteARoomIsAmenityDao(room_id, amenity_id);
 }
 
 // ---------------

@@ -182,6 +182,10 @@ export const typeDefinitions = gql`
     amenity_id:       Int!
   }
 
+  type DelRoomIsAmenityRes {
+    count:            Int!
+  }
+
   input DeleteARoomIsAmenityInput{
     room_id:               Int!
     amenity_id:            Int!
@@ -300,7 +304,7 @@ export const typeDefinitions = gql`
     updateRoomAmenity(input: RoomAmenityUpdateInput!): RoomAmenity!
     deleteRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     createARoomIsAmenity(input: CreateARoomIsAmenityInput!): RoomIsAmenity!
-    deleteARoomIsAmenity(input: DeleteARoomIsAmenityInput!): RoomIsAmenity!
+    deleteARoomIsAmenity(input: DeleteARoomIsAmenityInput!): DelRoomIsAmenityRes!
     # room
     createRoom(input: CreateRoomInput!): Room!
     deleteRoom(input: DeleteRoomInput!): Room!

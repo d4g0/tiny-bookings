@@ -309,7 +309,7 @@ export async function deleteARoomIsAmenity(room_id, amenity_id) {
 
         })
         // expected { count : 1 }
-        return delRes.count;
+        return delRes;
     } catch (error) {
         throw error
     }

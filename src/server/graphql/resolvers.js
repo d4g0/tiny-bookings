@@ -39,7 +39,8 @@ import {
     updateRoomNumberOfBeds,
     getRoomById,
     getRooms,
-    createARoomIsAmenity
+    createARoomIsAmenity,
+    deleteARoomIsAmenity
 } from "services/room";
 
 export const resolvers = {
@@ -713,6 +714,25 @@ export const resolvers = {
                     try {
                         var roomIsAmenity = await createARoomIsAmenity(room_id, amenity_id);
                         return roomIsAmenity;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        deleteARoomIsAmenity: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        amenity_id
+                    } = args.input;
+                    try {
+                        var delCount = await deleteARoomIsAmenity(room_id, amenity_id);
+                        return delCount;
                     } catch (error) {
                         throw error;
                     }
