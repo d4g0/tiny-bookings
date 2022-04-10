@@ -45,13 +45,14 @@ export async function createRoom({
                 number_of_beds,
             },
             include: {
-                room_pictures: true,
-                room_types: true,
+                room_pictures: true, // always  returns  an array
+                room_types: true,   // null | RoomType: {id, room_type}
                 rooms_amenities: {
                     include: {
                         room_amenity: true
                     }
-                }
+                } // null | 
+                  // rooms_is_amenities array { id, room_id, amenity_id, room_amenity:{ id, amenity } }
             }
         })
 
@@ -360,7 +361,6 @@ export async function getRoomById(room_id) {
                     }
                 }
             }
-
         });
 
         return room;

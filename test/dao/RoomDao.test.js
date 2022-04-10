@@ -42,9 +42,9 @@ describe(
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
                 // clean created roomType
-                await deleteRoomTypeByType(customRoomType.room_type);
+                // await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                await deleteHotelById(customHotel.id); // delete depending room first TODO
+                // await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
@@ -77,7 +77,7 @@ describe(
                         capacity: roomData.capacity
                     })
 
-                    // console.log({ room });
+                    console.log({ room });
 
                     del_result = await deleteRoom(room.id);
                 } catch (error) {
@@ -329,10 +329,13 @@ describe(
                     roomType = null,
                     ROOM_TYPE_KEY = uuid().substring(0, 10),
                     amenity = null,
+                    secondAmenity = null,
                     AMENITY_KEY = uuid().substring(0, 10),
+                    SECOND_AMENITY_KEY = uuid().substring(0, 10),
                     roomPicture = null, FILE_NAME = 'supper-foo-picture',
                     final_room = null,
-                    roomAmenity
+                    roomIsAmenity = null,
+                    secondRoomIsAmenity = null
                     ;
 
                 try {
@@ -350,8 +353,11 @@ describe(
                     await updateARoomIsType(room.id, roomType.id);
                     // amenity
                     amenity = await createRoomAmenity(AMENITY_KEY);
-                    roomAmenity = await createARoomIsAmenity(room.id, amenity.id);
-                    console.log({ roomAmenity })
+                    secondAmenity = await createRoomAmenity(SECOND_AMENITY_KEY);
+                    roomIsAmenity = await createARoomIsAmenity(room.id, amenity.id);
+                    secondRoomIsAmenity = await createARoomIsAmenity(room.id, secondAmenity.id);
+                    
+                    console.log({ roomIsAmenity , secondRoomIsAmenity})
                     // pictures
                     roomPicture = await createARoomPicture(room.id, FILE_NAME);
 
@@ -359,15 +365,15 @@ describe(
 
                     console.log({
                         final_room,
-                        amenities: final_room.amenities,
                         rooms_amenities: final_room.rooms_amenities,
+                        firstRoomIsAmenity:final_room.rooms_amenities[0],
                         room_pictures: final_room.room_pictures
                     })
                     // clean
-                    await deleteARoomIsAmenity(roomAmenity.id)
-                    await deleteARoomPicture(roomPicture.id);
-                    await deleteRoom(room.id);
-                    await deleteRoomTypeByType(roomType.room_type)
+                    // await deleteARoomIsAmenity(roomIsAmenity.room_id, roomIsAmenity.amenity_id)
+                    // await deleteARoomPicture(roomPicture.id);
+                    // await deleteRoom(room.id);
+                    // await deleteRoomTypeByType(roomType.room_type)
                 } catch (error) {
                     console.log(error)
                     dbError = error;
@@ -397,14 +403,13 @@ describe(
                 // amenity
                 // roomAmenity
                 expect(final_room.rooms_amenities[0]).toBeDefined();
-                expect(final_room.rooms_amenities[0].id).toBe(roomAmenity.id);
-                expect(final_room.rooms_amenities[0].amenity_id).toBe(roomAmenity.amenity_id);
-                expect(final_room.rooms_amenities[0].room_id).toBe(roomAmenity.room_id);
+                expect(final_room.rooms_amenities[0].amenity_id).toBe(roomIsAmenity.amenity_id);
+                expect(final_room.rooms_amenities[0].room_id).toBe(roomIsAmenity.room_id);
                 expect(final_room.rooms_amenities[0].room_amenity.id).toBe(amenity.id);
                 expect(final_room.rooms_amenities[0].room_amenity.amenity).toBe(amenity.amenity);
             }
         )
-        
+
     }
 
 )
