@@ -169,7 +169,7 @@ describe(
                 }
 
                 expect(dbError).toBeNull();
-                expect(admins.length).toBeGreaterThan(0);
+                expect(Array.isArray(admins)).toBe(true);
             }
         )
     }
