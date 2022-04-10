@@ -26,6 +26,7 @@
     - [updateRoomCapacity](#updateroomcapacity)
     - [updateNumberOfBeds](#updatenumberofbeds)
     - [CreateARoomIsAmenity](#createaroomisamenity)
+    - [DeleteARoomIsAmenity](#deletearoomisamenity)
 
 ## Login
 
@@ -487,6 +488,22 @@ mutation CreateARoomIsAmenity ($input: CreateARoomIsAmenityInput!){
   createARoomIsAmenity(input:$input){
     room_id
     amenity_id
+  }
+}
+{
+  "input": {
+    "room_id": 175,
+    "amenity_id": 32
+  }
+}
+```
+
+
+### DeleteARoomIsAmenity
+```graphql
+mutation DeleteARoomIsAmenity ($input: DeleteARoomIsAmenityInput!){
+  deleteARoomIsAmenity(input:$input){
+    count
   }
 }
 {
