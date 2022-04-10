@@ -29,6 +29,7 @@ import {
     updateRoomCapacity as updateRoomCapacityDao,
     updateRoomNumberOfBeds as updateRoomNumberOfBedsDao,
     getRoomById as getRoomByIdDao,
+    getRooms as getRoomsDao,
 } from '~/dao/room/RoomDao'
 
 // ---------------
@@ -77,10 +78,10 @@ export async function getRoomAmenities() {
 }
 
 export function createARoomIsAmenity(room_id, amenity_id) {
-    return createARoomIsAmenity(room_id, amenity_id);
+    return createARoomIsAmenityDao(room_id, amenity_id);
 }
 export function deleteARoomIsAmenity(room_is_amenity_id) {
-    return deleteARoomIsAmenity(room_is_amenity_id);
+    return deleteARoomIsAmenityDao(room_is_amenity_id);
 }
 
 // ---------------
@@ -137,4 +138,15 @@ export async function getRoomById(room_id) {
     return getRoomByIdDao(room_id);
 }
 
+export async function getRooms() {
+    return getRoomsDao()
+}
+
+
+// export async function createARoomIsAmenity(room_id, amenity_id){
+//     return createARoomIsAmenityDao(room_id, amenity_id)
+// }
+// export async function deleteARoomIsAmenity(room_is_amenity_id){
+//     return deleteARoomIsAmenityDao(room_is_amenity_id)
+// }
 // getRooms TODO

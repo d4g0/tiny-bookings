@@ -178,18 +178,24 @@ export const typeDefinitions = gql`
 
   # Room Is Amenity (many-to-many)
   type RoomIsAmenity {
-    id:               Int!
     room_id:          Int!
     amenity_id:       Int!
   }
 
-  input deleteARoomIsAmenityInput{
-    id:               Int!
+  input DeleteARoomIsAmenityInput{
+    room_id:               Int!
+    amenity_id:            Int!
   }
 
-  input createARoomIsAmenityInput{
+  input CreateARoomIsAmenityInput{
     room_id:          Int!
     amenity_id:       Int!
+  }
+
+  type RoomIsAmenityWithAmenity {
+    room_id:          Int!
+    amenity_id:       Int!
+    room_amenity:     RoomAmenity!
   }
 
   # Room
@@ -200,13 +206,14 @@ export const typeDefinitions = gql`
     night_price:      Float!
     capacity:         Int!
     number_of_beds:   Int!
-    room_type:        Int
-    room_type_key:    String
-    amenities:        [String]!
-    rooms_amenities:  [RoomIsAmenity]!
-    room_pictures:    [RoomPicture]!
     created_at:       String!
+    room_type:        Int
+    room_types:       RoomType
+    room_pictures:    [RoomPicture]!
+    rooms_amenities:  [RoomIsAmenityWithAmenity]!
   }
+
+  
 
   input CreateRoomInput {
     hotel_id:         Int!
@@ -265,6 +272,7 @@ export const typeDefinitions = gql`
     getRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     getRoomAmenities: [RoomAmenity]!
     room(room_id: Int!): Room!
+    rooms: [Room]!
   }
 
   ##
@@ -291,8 +299,8 @@ export const typeDefinitions = gql`
     createRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     updateRoomAmenity(input: RoomAmenityUpdateInput!): RoomAmenity!
     deleteRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
-    createARoomIsAmenity(input: createARoomIsAmenityInput!): RoomIsAmenity!
-    deleteARoomIsAmenity(input: deleteARoomIsAmenityInput!): RoomIsAmenity!
+    createARoomIsAmenity(input: CreateARoomIsAmenityInput!): RoomIsAmenity!
+    deleteARoomIsAmenity(input: DeleteARoomIsAmenityInput!): RoomIsAmenity!
     # room
     createRoom(input: CreateRoomInput!): Room!
     deleteRoom(input: DeleteRoomInput!): Room!

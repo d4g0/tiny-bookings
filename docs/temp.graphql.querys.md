@@ -25,6 +25,7 @@
     - [UpdateNightPrice](#updatenightprice)
     - [updateRoomCapacity](#updateroomcapacity)
     - [updateNumberOfBeds](#updatenumberofbeds)
+    - [CreateARoomIsAmenity](#createaroomisamenity)
 
 ## Login
 
@@ -178,6 +179,7 @@ query {
   }
 }
 ```
+
 ### CreateRoomType
 ```graphql
 mutation CreateRoomType ($input: RoomTypeInput!){
@@ -341,7 +343,6 @@ mutation CreateARoom($input: CreateRoomInput!){
     capacity
     number_of_beds
     room_type
-    amenities
     rooms_amenities {
       id
       room_id
@@ -480,3 +481,18 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
 
 
 
+### CreateARoomIsAmenity
+```graphql
+mutation CreateARoomIsAmenity ($input: CreateARoomIsAmenityInput!){
+  createARoomIsAmenity(input:$input){
+    room_id
+    amenity_id
+  }
+}
+{
+  "input": {
+    "room_id": 175,
+    "amenity_id": 32
+  }
+}
+```
