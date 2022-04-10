@@ -5,7 +5,7 @@ values ( 1,'dago', 'system creator', 'supper-foo-hash');
 end;
 select * from admins;
 
-
+-- composed primary keys exercise
 begin;
 create table room (
 	id serial primary key,
