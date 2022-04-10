@@ -27,14 +27,6 @@ CREATE TABLE IF NOT EXISTS public.payment_types
     CONSTRAINT unique_payment_types UNIQUE (payment_type)
 );
 
-CREATE TABLE IF NOT EXISTS public.currencies
-(
-    id serial,
-    currency character varying(10) NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT unique_currency UNIQUE (currency)
-);
-
 CREATE TABLE IF NOT EXISTS public.hotel
 (
     id serial,
@@ -54,10 +46,10 @@ CREATE TABLE IF NOT EXISTS public.admins
     user_role integer NOT NULL,
     admin_name character varying(100) NOT NULL,
     admin_description character varying(150),
-    email character varying(80) NOT NULL,
     hash_password text NOT NULL,
     reset_token text,
     created_at timestamp without time zone DEFAULT now(),
+    email character varying(80) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unique_admin_name UNIQUE (admin_name),
     CONSTRAINT unique_admin_email UNIQUE (email)
@@ -121,14 +113,6 @@ CREATE TABLE IF NOT EXISTS public.room_pictures
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.room_types
-(
-    id serial,
-    room_type character varying(30) NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT unque_room_type UNIQUE (room_type)
-);
-
 CREATE TABLE IF NOT EXISTS public.booking
 (
     id serial,
@@ -144,6 +128,13 @@ CREATE TABLE IF NOT EXISTS public.booking
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.currencies
+(
+    id serial,
+    currency character varying(10) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_currency UNIQUE (currency)
+);
 
 CREATE TABLE IF NOT EXISTS public.rooms_bookings
 (
@@ -164,7 +155,13 @@ CREATE TABLE IF NOT EXISTS public.room_lock_period
     PRIMARY KEY (id)
 );
 
-
+CREATE TABLE IF NOT EXISTS public.room_types
+(
+    id serial,
+    room_type character varying(30) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unque_room_type UNIQUE (room_type)
+);
 
 ALTER TABLE IF EXISTS public.admins
     ADD CONSTRAINT user_role FOREIGN KEY (user_role)
