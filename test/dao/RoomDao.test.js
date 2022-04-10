@@ -5,14 +5,13 @@ import { mapTimeToDateTime } from 'dao/utils';
 import { createRoom, deleteRoom, getRoomById, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
-import { createARoomIsAmenity, createRoomAmenity, deleteARoomIsAmenity } from "dao/room/RoomAmenitiesDao";
+import { createARoomIsAmenity, createRoomAmenity, deleteARoomIsAmenity, deleteRoomAmenity } from "dao/room/RoomAmenitiesDao";
 describe(
     'Room Dao',
 
     function roomDaoTest() {
 
         var customHotel;
-        var customRoomType;
         beforeAll(async () => {
 
             try {
@@ -26,11 +25,7 @@ describe(
                     iana_time_zone: 'America/Lima'
                 });
 
-                // create a room type for use it
-                customRoomType = await createRoomType(
-                    // 'supper fussy'
-                    uuid().substring(10)
-                );
+                
 
             } catch (error) {
                 console.log(error);
@@ -41,10 +36,8 @@ describe(
             try {
                 // Pending Clean TODO
                 // make sure there is not dependent room at this point ok
-                // clean created roomType
-                // await deleteRoomTypeByType(customRoomType.room_type);
                 // clean created hotel
-                // await deleteHotelById(customHotel.id); // delete depending room first TODO
+                await deleteHotelById(customHotel.id); // delete depending room first TODO
             } catch (error) {
                 console.log(error);
             }
@@ -370,10 +363,14 @@ describe(
                         room_pictures: final_room.room_pictures
                     })
                     // clean
-                    // await deleteARoomIsAmenity(roomIsAmenity.room_id, roomIsAmenity.amenity_id)
-                    // await deleteARoomPicture(roomPicture.id);
-                    // await deleteRoom(room.id);
-                    // await deleteRoomTypeByType(roomType.room_type)
+                    await deleteARoomIsAmenity(roomIsAmenity.room_id, roomIsAmenity.amenity_id);
+                    await deleteARoomIsAmenity(secondRoomIsAmenity.room_id, secondRoomIsAmenity.amenity_id);
+                    // amenities
+                    await deleteRoomAmenity(final_room.rooms_amenities[0].room_amenity.amenity);
+                    await deleteRoomAmenity(final_room.rooms_amenities[1].room_amenity.amenity);
+                    await deleteARoomPicture(roomPicture.id);
+                    await deleteRoom(room.id);
+                    await deleteRoomTypeByType(roomType.room_type)
                 } catch (error) {
                     console.log(error)
                     dbError = error;
