@@ -51,6 +51,7 @@
 
 #### Operations Roles
 -   role: [all roles]
+    -   defered
     -   reset his password
     -   recover his password by email
 
@@ -122,7 +123,7 @@
                 -   done at 15:04
                 -   extended (timezone) done at 15:43
 
-[]
+[✅]
 -	rooms
     -   start 4 april 21:37
     -   room types 
@@ -141,18 +142,18 @@
             -   create done 7 april at 16:10 brake
             -   delete start 18: 50  done 19:00 
             -   updateRoomName done 19:11
+    -   room is amenities
+        -   done 9 april 22:36
 
 
 
 
 **Hot Sopt:**
 
-RoomDAO
-Investigate mapRoomRes with out fetch amenities separate
-by fetching nested query of rooms_amenities.room_amenity
 
-Iterate Spec, Dao and Grphql to use the new nested getRoomById
-Variant
+
+
+
 
 
 
@@ -164,7 +165,13 @@ refactor room dao
 to have the acctual `room_type`
 and a `room_type_key` with the `room_type` type string
 
+RoomDAO
 
+Investigate mapRoomRes with out fetch amenities separate
+by fetching nested query of rooms_amenities.room_amenity
+
+Iterate Spec, Dao and Grphql to use the new nested getRoomById
+Variant
 
 
 
