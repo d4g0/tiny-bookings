@@ -145,10 +145,9 @@ Create and update Model of room
         "id": 733,
         "room_type": "Triple"
     },
-    "room_pictures": [ { "id": 101, "room_id": 468, "filename": "file" } ],
+    "room_pictures": [ { "id": 101, "room_id": 468, "filename": "file" } ], // might be an empty array
     "rooms_amenities": [
         {
-            "id": 162,
             "room_id": 528,
             "amenity_id": 26,
             "room_amenity": {
@@ -158,6 +157,21 @@ Create and update Model of room
         }
     ] // might be an empty array
   }
+
+  var noDependenciesRoom room : {
+        id: 143,
+        hotel_id: 29,
+        room_name: 'db8d5efd-1',
+        night_price: 10,
+        capacity: 2,
+        number_of_beds: 1,
+        created_at: 2022-04-10T01:32:55.534Z,
+        room_pictures: [],
+        room_type: null,
+        room_types: null,
+        rooms_amenities: []
+  }
+
 
 ```
 
