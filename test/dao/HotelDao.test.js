@@ -9,7 +9,7 @@ import {
     getHotelById,
 } from "dao/HotelDao";
 import { createHotel as createHotelS, updateHotelTimeZone } from "~/services/hotel"
-const { createAdmin, deleteAdminById } = require("dao/UserDao");
+const { createAdmin, deleteAdminById } = require("dao/users/AdminDao");
 const { mapTimeToDateTime } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
 import { NOT_FOUND_RECORD_ERROR_KEY } from "dao/Errors";

@@ -10,7 +10,7 @@ import {
     getHotelById as getHotelByIdDao,
     updateHotelTimeZone as updateHotelTimeZoneDao
 } from "dao/HotelDao";
-import { getAdminById } from "dao/UserDao";
+import { getAdminById } from "dao/users/AdminDao";
 import { isFullAdmin } from "dao/utils";
 
 export async function createHotel({
