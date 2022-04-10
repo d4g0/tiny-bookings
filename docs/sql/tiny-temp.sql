@@ -110,7 +110,6 @@ CREATE TABLE IF NOT EXISTS public.rooms_amenities
     room_id integer,
     amenity_id integer,
     CONSTRAINT id PRIMARY KEY (room_id, amenity_id),
-    CONSTRAINT room_id_unique UNIQUE (room_id),
     CONSTRAINT amenity_id_unique UNIQUE (amenity_id)
 );
 
