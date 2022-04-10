@@ -292,20 +292,24 @@ export async function createARoomIsAmenity(room_id, amenity_id) {
     }
 }
 
-export async function deleteARoomIsAmenity(room_is_amenity_id) {
-    if (!isValidId(room_is_amenity_id)) {
-        throw new Error('Non Valid room_is_amenity_id')
+export async function deleteARoomIsAmenity(room_id, amenity_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid room_id: ' + room_id)
+    }
+    if (!isValidId(amenity_id)) {
+        throw new Error('Non Valid amenity_id: ' + amenity_id)
     }
 
     try {
-        var roomIsAmenity = await prisma.rooms_amenities.delete({
+        var delRes = await prisma.rooms_amenities.deleteMany({
             where: {
-                id: room_is_amenity_id
+                room_id,
+                amenity_id
             },
 
         })
-
-        return roomIsAmenity;
+        // expected { count : 1 }
+        return delRes.count;
     } catch (error) {
         throw error
     }
