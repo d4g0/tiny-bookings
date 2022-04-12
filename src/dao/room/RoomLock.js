@@ -241,3 +241,21 @@ export async function createARoomLockPeriod({
 
 }
 
+
+export async function deleteRoomLockPeriod(room_lock_period_id) {
+    if (!isValidId(room_lock_period_id)) {
+        throw new Error('Non valid room_lock_period_id: ' + room_lock_period_id);
+    }
+
+    try {
+        var delRoomLockPeriod = await prisma.room_lock_period.delete({
+            where: {
+                id: room_lock_period_id
+            }
+        })
+
+        return delRoomLockPeriod;
+    } catch (error) {
+        throw error
+    }
+}

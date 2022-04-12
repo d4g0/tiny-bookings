@@ -1,7 +1,7 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
-import { createARoomLockPeriod } from "dao/room/RoomLock";
+import { createARoomLockPeriod, deleteRoomLockPeriod } from "dao/room/RoomLock";
 import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
 import { v4 as uuid } from 'uuid'
 
@@ -71,7 +71,7 @@ describe(
     function roomTypesDaoTest() {
         // create a room type
         test(
-            "Create a room_lock_period ",
+            "Create and delete room_lock_period ",
             async function () {
 
                 var dbError = null, roomLockPeriod = null;
@@ -90,7 +90,8 @@ describe(
                             new Date(HOTEL.check_out_hour_time)
                         ),
                     });
-                    console.log({ roomLockPeriod });
+                    var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
+                    console.log({ roomLockPeriod, deletedRoomLockPeriod });
                     // clean
                     // await deleteRoomTypeByType(roomTypeData.roomType);
                 } catch (error) {
@@ -99,6 +100,7 @@ describe(
                 }
 
                 expect(dbError).toBe(null);
+                expect(deletedRoomLockPeriod.room_id).toBeDefined()
                 expect(roomLockPeriod.room_id).toBeDefined()
                 expect(roomLockPeriod.start_date).toBeDefined()
                 expect(roomLockPeriod.end_date).toBeDefined()
