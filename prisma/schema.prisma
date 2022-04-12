@@ -14,8 +14,8 @@ model booking {
   payment_type     Int?
   currency         Int?
   total_price      Decimal          @db.Decimal
-  check_in_date    DateTime         @db.Timestamp(6)
-  check_out_date   DateTime         @db.Timestamp(6)
+  start_date       DateTime         @db.Timestamp(6)
+  end_date         DateTime         @db.Timestamp(6)
   number_of_guests Int
   created_at       DateTime?        @default(now()) @db.Timestamp(6)
   booking_states   booking_states?  @relation(fields: [booking_state], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_state_link")

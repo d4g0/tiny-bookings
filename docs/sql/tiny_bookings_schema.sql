@@ -121,8 +121,8 @@ CREATE TABLE IF NOT EXISTS public.booking
     payment_type integer,
     currency integer,
     total_price numeric NOT NULL,
-    check_in_date timestamp without time zone NOT NULL,
-    check_out_date timestamp without time zone NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
     number_of_guests integer NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
     PRIMARY KEY (id)
