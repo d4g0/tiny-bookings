@@ -1,11 +1,13 @@
 // make a utility for get dates in a table from a comands like
 // gendates 1 2 3 4 5
-
+// where params will be days offset from today
 const { DateTime } = require("luxon");
 
-// where params will be days offset from today
+// args parsing
 var args = process.argv.slice(2);
+// mapping to numbers
 var days = mapStrToNumbers(args);
+// print table
 printDates(days);
 
 
