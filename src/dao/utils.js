@@ -1,7 +1,8 @@
 import { isValidString } from "utils";
 import { USER_ROLES } from "~/dao/DBConstans";
 import Joi from 'joi';
-
+import moment from 'moment-timezone';
+import { DateTime } from 'luxon';
 /**
  * Maps a find admin query response data 
  * to a consumable admin user obj
@@ -161,6 +162,25 @@ export function isValidHourTime({ hours = 0, mins = 0 }) {
     return !h_error && !m_error;
 }
 
+export function isValidHourTime2({ hour = 0, minute = 0 }) {
+    // hours from 0 to 23 and min from 0 to 59
+    // to avoid date recalculations
+    const hourSchema = Joi.number().integer().min(0).max(23).required();
+    const minSchema = Joi.number().integer().min(0).max(59).required();
+
+    const { h_error, h_value } = hourSchema.validate(
+        hour,
+        { presence: 'required', convert: false }
+    );
+    const { m_error, m_value } = minSchema.validate(
+        minute,
+        { presence: 'required', convert: false }
+    );
+
+
+    return !h_error && !m_error;
+}
+
 export function isValidTimeZone(iana_time_zone) {
     var tzSchema = Joi.string().trim().required();
     const { error, value } = tzSchema.validate(
@@ -261,6 +281,48 @@ export function isValidUserRoleKey(user_role_key) {
     return !error;
 }
 
+export function isValidRoomLockReason(reason) {
+    var reasonSchema = Joi.string().required().trim().min(5).max(300);
+    const { error, value } = reasonSchema.validate(
+        reason,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
+export function isValidYearMonthDayDate(yearMonthDayDate = { year, month, day }) {
+    var yearSchema = Joi.number().integer().min(2000).max(3000);
+    var monthSchema = Joi.number().integer().min(0).max(11);
+    var daySchema = Joi.number().integer().min(1).max(31);
+    var complyAllSchemas;
+
+    const { y_error, y_value } = yearSchema.validate(
+        yearMonthDayDate.year,
+        { presence: 'required', convert: false }
+    );
+    const { m_error, m_value } = monthSchema.validate(
+        yearMonthDayDate.month,
+        { presence: 'required', convert: false }
+    );
+    const { d_error, d_value } = daySchema.validate(
+        yearMonthDayDate.day,
+        { presence: 'required', convert: false }
+    );
+    complyAllSchemas = !y_error && !m_error && !d_error;
+
+    return complyAllSchemas;
+}
+
+export function isValidIanaTimeZone(timeZone) {
+    var isValidTimeZone;
+    if (typeof timeZone != 'string') {
+        isValidTimeZone = false
+        return isValidTimeZone
+    }
+    var tz = moment.tz.names();
+    isValidTimeZone = tz.includes(timeZone);
+    return isValidTimeZone;
+}
 
 
 // ---------------
@@ -279,3 +341,53 @@ export function mapTimeToDateTime({ hours, mins }) {
     return now;
 }
 
+export function mapYearMonthDayDateToUTC({ year = 1970, month = 0, day = 1 }) {
+    var utcDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+    return utcDate;
+}
+
+export function setUTCHourTime({ date, hour, minute }) {
+    date.setUTCHours(hour, minute, 0, 0);
+    return date;
+}
+
+export function utcDate({
+    year = 0,
+    month = 0,
+    day = 0,
+    hour = 0,
+    minute = 0,
+}) {
+    return new Date(Date.UTC(
+        year, month, day, hour, minute
+    ));
+}
+
+export function getCurrentUTCDayDate() {
+    var dt = DateTime.now();
+    var dayDate = utcDate({
+        year: dt.year,
+        month: dt.month,
+        day: dt.day
+    })
+
+    return dayDate;
+}
+
+/**
+ * Extracs the hour and minute from a 
+ * Date obj and return it as `{ hour, minute}`
+ * @param {Date} date 
+ * @returns 
+ */
+export function mapDateToHourTime(date) {
+
+    if (typeof date.getUTCHours != 'function') {
+        throw Error('Non Valid date object');
+    }
+
+    var hour = date.getUTCHours();
+    var minute = date.getUTCMinutes();
+
+    return { hour, minute }
+}

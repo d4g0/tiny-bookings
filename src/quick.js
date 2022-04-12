@@ -3,6 +3,8 @@ require('dotenv').config()
 const Joi = require('joi');
 var param = process.argv[2] || 'foo@bar.baz';
 var set = require('date-fns/set');
+const moment = require('moment-timezone');
+const { DateTime, Zone } = require('luxon');
 
 function emailCheck() {
     const emailSchema = Joi.string().email();
@@ -145,7 +147,7 @@ function mapTimeToDateTime({ hours, mins, secs = 0 }) {
 }
 
 
-testDate();
+// testDate();
 
 
 function testFnObjParams() {
@@ -187,4 +189,146 @@ function isValidRoomName(room_name) {
     return !error;
 }
 
-testJoi()
+// testJoi()
+
+function quickDate() {
+    var today = makeUTCDate({ year: 1970, month: 0 })
+    // console.log({
+    //     today,
+    //     timeISO: today.toISOString(),
+    //     timeUTC: today.toUTCString(),
+    //     utcH: today.getUTCHours(),
+    //     utcD: today.getUTCDate(),
+
+    // });
+    var tz = moment.tz.names();
+    console.table(tz)
+}
+
+function makeUTCDate({
+    year = 1,
+    month = 1,
+    day = 1,
+    hour = 0,
+    min = 0,
+    sec = 0
+}) {
+    return new Date(Date.UTC(year, month, day, hour, min, sec, 0));
+}
+// quickDate()
+
+function testDateFnsTz() {
+    const { zonedTimeToUtc, utcToZonedTime, format } = require('date-fns-tz')
+
+    // Set the date to "2018-09-01T16:01:36.386Z"
+    const utcDate = zonedTimeToUtc('2018-09-01 18:01:36.386', 'Europe/Berlin')
+
+    // Obtain a Date instance that will render the equivalent Berlin time for the UTC date
+    const date = new Date('2018-09-01T16:01:36.386Z')
+    const timeZone = 'Europe/Berlin'
+    const zonedDate = utcToZonedTime(date, timeZone)
+    // zonedDate could be used to initialize a date picker or display the formatted local date/time
+
+    // Set the output to "1.9.2018 18:01:36.386 GMT+02:00 (CEST)"
+    const pattern = 'd.M.yyyy HH:mm:ss.SSS \'GMT\' XXX (z)'
+    const output = format(zonedDate, pattern, { timeZone: 'Europe/Berlin' })
+}
+
+// testDateFnsTz()
+
+
+function getUTCCurrentDate() {
+    // return new Date().getUTC()
+}
+
+function mapYearMonthDayDateToUTC({ year = 1970, month = 0, day = 1 }) {
+    var utcDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+    return utcDate;
+}
+
+function setUTCHourTime({ date, hours, mins }) {
+    date.setUTCHours(hours, mins, 0, 0);
+    return date;
+}
+
+// validate start date
+// generate a start_date UTC Date obj with provided values
+// init a current UTC Date
+// check start_date Date is greater or equal then current utc_date Date
+
+var start_date = { year: 2022, month: 0, day: 1 };
+var utc_start_date = mapYearMonthDayDateToUTC(start_date);
+var today_utc = DateTime.fromObject({ minute: 0, second: 0, millisecond: 0 }, { zone: 'utc' });
+// console.log({
+//     utc_start_date,
+//     today_utc_String: today_utc.toString()
+// })
+
+function utcDate({
+    year = 0,
+    month = 0,
+    day = 0,
+    hour = 0,
+    minute = 0,
+}) {
+    return new Date(Date.UTC(
+        year, month, day, hour, minute
+    ));
+}
+
+// 'America/New_York'
+// 'Australia/Victoria'
+// 'Israel' 
+
+
+// console.log({
+//     today,
+//     isralDate: isralDate.toISO(),
+//     victoriaDate: victoriaDate.toISO()
+// })
+
+var dt = DateTime.now();
+// console.log(dt.year);
+// console.log(dt.month);
+// console.log(dt.day);
+// console.log(dt.second);
+// console.log(dt.weekday);
+
+function mapYearMonthDayDateToUTC({ year = 1970, month = 0, day = 1 }) {
+    var utcDate = new Date(Date.UTC(year, month, day, 0, 0, 0));
+    return utcDate;
+}
+
+function getCurrentUTCDayDate() {
+    var dt = DateTime.now();
+    var dayDate = utcDate({
+        year: dt.year,
+        month: dt.month,
+        day: dt.day
+    })
+
+    return dayDate;
+}
+// 2022-05-11T00
+var d_utc = mapYearMonthDayDateToUTC({
+    year: 2022,
+    month: 4,
+    day: 12
+})
+
+var c_utc = getCurrentUTCDayDate();
+const MILISECONDS_IN_A_DAY = 86400000;
+var today = new Date();
+var tomorrow = new Date(c_utc.valueOf() + MILISECONDS_IN_A_DAY);
+console.log({
+    c_utc,
+    d_utc,
+    'd_utc > c_utc': d_utc > c_utc,
+    'c_utc > d_utc': c_utc > d_utc,
+    'c_utc == d_utc': c_utc.valueOf() == d_utc.valueOf(),
+    'c_utc - d_utc': c_utc.valueOf() - d_utc.valueOf(),
+    'c_utc - d_utc': d_utc - c_utc,
+    tomorrow,
+    // c_utc_g: '',
+    // c_utc_iso: c_utc.toISOString()
+})

@@ -146,10 +146,23 @@
         -   done 9 april 22:36
 
 []
--   clients
+-   room_locks
+    -   create
+    -   delete
+    -   update
+
+
+
+
+
+
+
+
 **Hot Sopt:**
 
-
+TEST CREATE ROOM LOCK PERIOD
+TEST RUNING Verify result with pgadmin
+Create Check Availability
 
 
 
@@ -209,3 +222,9 @@ https://nodatime.org/TimeZones
 
 Date Convertions and stuff
 `date-fns`
+[`momentjs`]
+https://momentjs.com/timezone/
+[luxon]
+https://moment.github.io/luxon/#/tour
+[day.js]
+https://day.js.org/

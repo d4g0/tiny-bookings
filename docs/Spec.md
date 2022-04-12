@@ -193,4 +193,17 @@ var del_res = {
         room_types: null,
         rooms_amenities: []
 }
-    
+```
+
+## Room Lock Period
+
+```js
+  var roomLockPeriod: {
+        id: 2,
+        room_id: 215,
+        start_date: '2022-05-11T13:30:00.000Z', // date obj
+        end_date: '2022-05-12T12:00:00.000Z',   // date obj
+        reason: 'Reason String',
+        created_at: '2022-04-11T23:41:43.497Z', // date obj
+      }
+```
