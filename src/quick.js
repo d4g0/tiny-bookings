@@ -332,3 +332,16 @@ console.log({
     // c_utc_g: '',
     // c_utc_iso: c_utc.toISOString()
 })
+
+
+
+function isAValidDateObj(date) {
+    var a = { a: 'a' };
+    a.prototype.constructor
+    return date.pro
+}
+
+
+var r = Object.prototype.toString.call(new Date());
+
+console.log({ r })

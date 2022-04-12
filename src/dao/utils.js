@@ -324,6 +324,9 @@ export function isValidIanaTimeZone(timeZone) {
     return isValidTimeZone;
 }
 
+export function isValidDateObject(date){
+    return typeof date?.getMonth == 'function'
+}
 
 // ---------------
 // Mapers 
