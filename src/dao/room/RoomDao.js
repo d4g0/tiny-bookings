@@ -52,7 +52,7 @@ export async function createRoom({
                         room_amenity: true
                     }
                 } // null | 
-                  // rooms_is_amenities array { id, room_id, amenity_id, room_amenity:{ id, amenity } }
+                // rooms_is_amenities array { id, room_id, amenity_id, room_amenity:{ id, amenity } }
             }
         })
 
@@ -385,7 +385,7 @@ export async function getRooms() {
                 }
             }
         });
-        
+
 
         return rooms;
 
