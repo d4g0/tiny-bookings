@@ -3,6 +3,8 @@ import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
 import { createARoomLockPeriod, deleteRoomLockPeriod } from "dao/room/RoomLock";
 import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
+import { date } from "joi";
+import { DateTime } from "luxon";
 import { v4 as uuid } from 'uuid'
 
 // need deps
@@ -59,10 +61,11 @@ afterAll(async () => {
 })
 
 
+const utc_now = DateTime.now().toUTC();
 
 const ROOM_LOCK_PERIOD_DATA = {
-    start_date: { year: 2022, month: 4, day: 11 },
-    end_date: { year: 2022, month: 4, day: 12 },
+    start_date: { year: utc_now.year, month: utc_now.month, day: utc_now.day },
+    end_date: { year: utc_now.year, month: utc_now.month, day: utc_now.day + 1 },
 }
 
 describe(
@@ -90,10 +93,9 @@ describe(
                             new Date(HOTEL.check_out_hour_time)
                         ),
                     });
+                    // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
                     console.log({ roomLockPeriod, deletedRoomLockPeriod });
-                    // clean
-                    // await deleteRoomTypeByType(roomTypeData.roomType);
                 } catch (error) {
                     dbError = error;
                     console.log(error);
