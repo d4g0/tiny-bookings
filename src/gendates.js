@@ -16,7 +16,7 @@ function printDates(days = []) {
     for (let i = 0; i < days.length; i++) {
         var dayDate = todayPlus(days[i]).toString();
         dates.push({
-            offset: i,
+            offset: days[i],
             date: dayDate
         });
     }
