@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS public.rooms_bookings
     booking_id integer,
     PRIMARY KEY (id)
 );
+-- TODO evalutate the posibility of set if not yet room_id unique 
 
 CREATE TABLE IF NOT EXISTS public.room_lock_period
 (

@@ -150,3 +150,44 @@ export async function getRooms() {
 //     return deleteARoomIsAmenityDao(room_is_amenity_id)
 // }
 // getRooms TODO
+
+
+/**
+ * Returns true if the providedd room
+ * it's free in the specified date interval
+ * False other wise
+ * Throws dbErrors
+ */
+ export async function isNotBussyRoom({
+    room_id,
+    start_date,
+    end_date
+}) {
+
+    // validate
+    if (!isValid(room_id)) {
+        throw new Error('Non valid room_id: ' + room_id);
+    }
+    if (!isValidDateObject(start_date)) {
+        throw new Error('Non valid start_date Date Obj');
+    }
+    if (!isValidDateObject(end_date)) {
+        throw new Error('Non valid end_date Date Obj');
+    }
+
+    var room_with_bookings_locks = await prisma.room.findUnique({
+        where: {
+            id: room_id,
+        },
+        include: {
+            room_lock_period: {
+                where:{
+                    start_date : {
+                    
+                    }
+                }
+            },
+            rooms_bookings: true
+        }
+    })
+}

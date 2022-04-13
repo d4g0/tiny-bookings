@@ -159,10 +159,18 @@
 
 
 **Hot Sopt:**
+-   Evaluate PK(room_id, booking_id) for rooms_bookings
+-   Continue Testing plpsql fn `is_room_available_in` in simple exercise
+-   Rewrite fn for `tb` tables, 
+    -   Concider temporal delta(free-days) bounds and other performance optimizations as index on the eventual `room_lock` `tsranges`
+-   Define `postgres.js` query to get availablity 
+    -   for a particular room
+    -   for every room
 
-TEST CREATE ROOM LOCK PERIOD
-TEST RUNING Verify result with pgadmin
+
+
 Create Check Availability
+    
 
 
 

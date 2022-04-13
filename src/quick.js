@@ -344,4 +344,45 @@ function isAValidDateObj(date) {
 
 var r = Object.prototype.toString.call(new Date());
 
-console.log({ r })
+// console.log({ r })
+
+function currentUTC() {
+    return DateTime.now().toUTC();
+}
+
+function todayPlus(days = 0) {
+    var c_utc = currentUTC();
+    var plusDaysDate = DateTime.fromObject({
+        year: c_utc.year,
+        month: c_utc.month,
+        day: c_utc.day + days
+    }, { zone: 'utc' });
+
+    return plusDaysDate;
+}
+
+function todayLess(days = 0) {
+    var c_utc = currentUTC();
+    var plusDaysDate = DateTime.fromObject({
+        year: c_utc.year,
+        month: c_utc.month,
+        day: c_utc.day - days
+    }, { zone: 'utc' });
+
+    return plusDaysDate;
+}
+
+
+var today = currentUTC();
+var tomorrow = todayPlus(3)
+var todayPlus5 = todayPlus(5);
+var todayPlus8 = todayPlus(8);
+var todayLess8 = todayLess(8)
+
+console.table([
+    today,
+    tomorrow,
+    todayPlus5,
+    todayPlus8,
+    todayLess8
+].map(d => d.toString()))
