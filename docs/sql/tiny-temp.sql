@@ -138,10 +138,9 @@ CREATE TABLE IF NOT EXISTS public.currencies
 
 CREATE TABLE IF NOT EXISTS public.rooms_bookings
 (
-    id serial,
-    room_id integer,
-    booking_id integer,
-    PRIMARY KEY (id)
+    room_id integer NOT NULL,
+    booking_id integer NOT NULL,
+    CONSTRAINT unique_room_booking_unit PRIMARY KEY (room_id, booking_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.room_lock_period
@@ -150,8 +149,11 @@ CREATE TABLE IF NOT EXISTS public.room_lock_period
     room_id integer,
     start_date timestamp without time zone NOT NULL,
     end_date timestamp without time zone NOT NULL,
-    reason character varying(300) NOT NULL,
+    reason character varying(300),
     created_at timestamp without time zone DEFAULT now(),
+    during tsrange NOT NULL,
+    is_a_booking boolean NOT NULL DEFAULT false,
+    booking_id integer,
     PRIMARY KEY (id)
 );
 
@@ -270,6 +272,14 @@ ALTER TABLE IF EXISTS public.rooms_bookings
 ALTER TABLE IF EXISTS public.room_lock_period
     ADD CONSTRAINT room_link FOREIGN KEY (room_id)
     REFERENCES public.room (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.room_lock_period
+    ADD CONSTRAINT booking_reference FOREIGN KEY (booking_id)
+    REFERENCES public.booking (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
