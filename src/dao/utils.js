@@ -324,8 +324,42 @@ export function isValidIanaTimeZone(timeZone) {
     return isValidTimeZone;
 }
 
-export function isValidDateObject(date){
+export function isValidDateObject(date) {
     return typeof date?.getMonth == 'function'
+}
+
+
+export async function isValidDateInput(dInput = { year, month, day, hour, minute }) {
+    var yearSchema = Joi.number().integer().min(2000).max(3000);
+    var monthSchema = Joi.number().integer().min(0).max(11);
+    var daySchema = Joi.number().integer().min(1).max(31);
+    var hourSchema = Joi.number().integer().min(0).max(23);
+    var minSchema = Joi.number().integer().min(0).max(59);
+    var complyAllSchemas;
+
+    const { y_error, y_value } = yearSchema.validate(
+        dInput.year,
+        { presence: 'required', convert: false }
+    );
+    const { m_error, m_value } = monthSchema.validate(
+        dInput.month,
+        { presence: 'required', convert: false }
+    );
+    const { d_error, d_value } = daySchema.validate(
+        dInput.day,
+        { presence: 'required', convert: false }
+    );
+    const { h_error, h_value } = hourSchema.validate(
+        dInput.hour,
+        { presence: 'required', convert: false }
+    );
+    const { mi_error, mi_value } = minSchema.validate(
+        dInput.min,
+        { presence: 'required', convert: false }
+    );
+
+    complyAllSchemas = !y_error && !m_error && !d_error && !m_error && !d_error && !h_error && !m_error;
+    return complyAllSchemas;
 }
 
 // ---------------

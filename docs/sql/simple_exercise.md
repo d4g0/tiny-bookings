@@ -1,5 +1,9 @@
 # This exercise was made to  learn about the `tsrange` postgresql feature and craft an precise `availability` query with it
 
+
+## Stack Overflow fn notice
+[How to create a database that shows a calendar of availability for a set of apartments?](!https://stackoverflow.com/questions/24066719/how-to-create-a-database-that-shows-a-calendar-of-availability-for-a-set-of-apar)
+
 ## Model
 room
 	id		serial

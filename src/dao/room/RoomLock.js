@@ -59,17 +59,18 @@
  */
 
 
-import { prisma } from 'dao/PrismaClient.js';
+import sql from '~/dao/postgres';
+
 import {
     isValidId,
     isValidInteger,
     isValidRoomLockReason,
-    isValidYearMonthDayDate,
-    isValidHourTime,
-    isValidHourTime2,
     utcDate,
-    getCurrentUTCDayDate
+    getCurrentUTCDayDate,
+    isValidDateInput
 } from 'dao/utils';
+
+import { AVAILABILITY_ERROR } from 'dao/Errors';
 
 
 
@@ -82,36 +83,15 @@ import {
  * `start_date` !
  * `end_date`   !
  *  hotel_maximun_free_calendar_days
- *  hotel_check_in_time
- *  hotel_check_out_time
- * 
- * Attemps to create a `room_lock_period` record in db
- * 
- * Throws NotFound errors if the room or hotel does not exists
- * Throws Validation errors if `start or end dates`  upbounds or downbounds 
- * the required limits
- * 
- * Algorithm
- * 
- * Validate Params
- * Static validation of 
- *      room_id , 
- *      reason if present, 
- *      start_date, end_date and hotel_calendar_end_date
- *      hotel_check_in_time and hotel_check_out_time
- * * Calculate valid time interval and check if date bounds are inside
- *      Throw if not
- *   Proceed to save if cristal clear
- *   Retunr the saved record
  */
 export async function createARoomLockPeriod({
     room_id,
-    reason = null, // default since it's optional
-    start_date = { year, month, day },
-    end_date = { year, month, day },
+    reason = 'Default Reason', // default since it's optional
+    start_date = { year, month, day, hour, minute },
+    end_date = { year, month, day, hour, minute },
     hotel_calendar_length,
-    hotel_check_in_time = { hour, minute },
-    hotel_check_out_time = { hour, minute },
+    is_a_booking = false,
+    booking_id = null
 }) {
 
     try {
@@ -128,11 +108,11 @@ export async function createARoomLockPeriod({
                 throw new Error('Non valid reason: ' + reason)
             }
 
-            if (!isValidYearMonthDayDate(start_date)) {
+            if (!isValidDateInput(start_date)) {
                 throw new Error('Non valid start_date')
             }
 
-            if (!isValidYearMonthDayDate(end_date)) {
+            if (!isValidDateInput(end_date)) {
                 throw new Error('Non valid end_date')
             }
 
@@ -140,97 +120,116 @@ export async function createARoomLockPeriod({
                 throw new Error('Non valid hotel_calendar_length: ' + hotel_calendar_length);
             }
 
-            if (!isValidHourTime2(hotel_check_in_time)) {
-                throw new Error('Non valid hotel_check_in_time')
-            }
-
-            if (!isValidHourTime2(hotel_check_out_time)) {
-                throw new Error('Non valid hotel_check_out_time')
-            }
-
-            // validate start date
-            // generate a start_date UTC Date obj with provided values
-            // init a current UTC Date
-            // check start_date Date is greater or equal then current utc_date Date
 
 
         }
         validate();
 
-        var utc_start_date, utc_end_date, currentUTCDayDate,
-            utc_start_day_date, utc_end_day_date;
 
-
-
-        utc_start_day_date = utcDate({
+        // generate dates to save
+        var utc_start_date = utcDate({
             year: start_date.year,
             month: start_date.month,
             day: start_date.day,
+            hour: start_date.hour,
+            minute: start_date.minute
         });
-
-
-        utc_end_day_date = utcDate({
+        var utc_end_date = utcDate({
             year: end_date.year,
             month: end_date.month,
             day: end_date.day,
+            hour: end_date.hour,
+            minute: end_date.minute
         });
 
 
-        currentUTCDayDate = getCurrentUTCDayDate();
+        var currentUTCDayDate = getCurrentUTCDayDate();
+
         // check that if there is avalailability for the lock
         // defered for NOW TODO
-        // check if start_date is a future or current date
-        if (!(utc_start_day_date.valueOf() >= currentUTCDayDate.valueOf())) {
-            throw new Error('Start Date has to be a future or current day date')
-        }
-        // check start_date is less then end_date in at least
-        // one minimal_room_service_interval unit 1d
-        const MILISECONDS_IN_A_DAY = 86400000;
-        if (!(utc_end_day_date - utc_start_day_date >= MILISECONDS_IN_A_DAY)) {
-            throw new Error('There is not valid (minimal 1 day) interval beteewn start and end day dates');
+
+        // check start_date is less then end_date 
+        if (utc_start_date > utc_end_date) {
+            throw new Error('The end date has to be greater then the start date');
         }
 
         // check if end it's inside current hotel calendar
         // generate the last hotel calendar day date
         // by suming calendar length days to current day date
+        const MILISECONDS_IN_A_DAY = 86400000;
         const LAST_HOTEL_CALENDAR_DAY_DATE = new Date(currentUTCDayDate.valueOf() + (hotel_calendar_length * MILISECONDS_IN_A_DAY));
 
-        if (!(utc_end_day_date.valueOf() <= LAST_HOTEL_CALENDAR_DAY_DATE.valueOf())) {
+        if (!(utc_end_date.valueOf() <= LAST_HOTEL_CALENDAR_DAY_DATE.valueOf())) {
             throw new Error('End date outbounds the hotel calendar');
         }
 
 
+        // check if is availability for the locking
+        var isAvailable = await isRoomAvailableIn({
+            room_id,
+            delta_search_days: hotel_calendar_length,
+            start_date,
+            end_date
+        })
+        if (!isAvailable[0].is_available) {
+            throw new AVAILABILITY_ERROR('Room Not Available');
+        }
+
+
+
         // all cristal clear lets save
 
-        // generate dates to save
-        utc_start_date = utcDate({
-            year: start_date.year,
-            month: start_date.month,
-            day: start_date.day,
-            hour: hotel_check_in_time.hour,
-            minute: hotel_check_in_time.minute
-        });
-        utc_end_date = utcDate({
-            year: end_date.year,
-            month: end_date.month,
-            day: end_date.day,
-            hour: hotel_check_out_time.hour,
-            minute: hotel_check_out_time.minute
-        });
-
-
+        var res;
+        var during = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
         // save to db
+        // non booking case
+        if (!is_a_booking) {
+            res = await sql`
+            insert into
+                room_lock_period (
+                    room_id, 
+                    start_date, 
+                    end_date, 
+                    reason,
+                    during
+                )
+            values
+                (
+                    ${room_id},
+                    ${utc_start_date.toISOString()},
+                    ${utc_end_date.toISOString()},
+                    ${reason},
+                    ${during}
+                ) RETURNING *;
+            `
+        }
 
-        var room_lock_period = await prisma.room_lock_period.create({
-            data: {
-                room_id,
-                reason,
-                start_date: utc_start_date,
-                end_date: utc_end_date
-            }
-        })
+        // booking case
 
-        return room_lock_period;
+        // room_lock_period = await sql`
+        // insert into
+        //     room_lock_period (
+        //         room_id,
+        //         start_date,
+        //         end_date,
+        //         reason,
+        //         during,
+        //         is_a_booking,
+        //         booking_id
+        //     )
+        // values
+        //     (
+        //         1,
+        //         '2022-04-17T00:00:00.000Z',
+        //         '2022-04-16T00:00:00.000Z',
+        //         'Booked',
+        //         '[2022-04-17T00:00:00.000Z, 2022-04-19T00:00:00.000Z]',
+        //         true,
+        //         1
+        //     );
+        // `
+
+        return res[0];
 
 
 
@@ -248,14 +247,71 @@ export async function deleteRoomLockPeriod(room_lock_period_id) {
     }
 
     try {
-        var delRoomLockPeriod = await prisma.room_lock_period.delete({
-            where: {
-                id: room_lock_period_id
-            }
-        })
+        // var delRoomLockPeriod = await prisma.room_lock_period.delete({
+        //     where: {
+        //         id: room_lock_period_id
+        //     }
+        // })
 
-        return delRoomLockPeriod;
+        var delRes = await sql`
+        delete from room_lock_period rlp where rlp.id = ${room_lock_period_id} returning *
+        `
+        
+
+        return delRes[0];
     } catch (error) {
+        throw error
+    }
+}
+
+
+export async function isRoomAvailableIn({
+    room_id,
+    delta_search_days,
+    start_date = {
+        year,
+        month,
+        day,
+        hour,
+        minute
+    },
+    end_date = {
+        year,
+        month,
+        day,
+        hour,
+        minute
+    }
+}) {
+    var utc_start_date = utcDate({
+        year: start_date.year,
+        month: start_date.month,
+        day: start_date.day,
+        hour: start_date.hour,
+        minute: start_date.minute
+    });
+
+    var utc_end_date = utcDate({
+        year: end_date.year,
+        month: end_date.month,
+        day: end_date.day,
+        hour: end_date.hour,
+        minute: end_date.minute
+    });
+
+    try {
+        var during = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
+        var result = await sql`
+            select is_available from is_room_available_in (
+                ${room_id}, 
+                ${delta_search_days},
+                ${during}
+            );
+        `;
+
+        return result;
+    } catch (error) {
+
         throw error
     }
 }

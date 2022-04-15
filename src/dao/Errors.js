@@ -48,3 +48,12 @@ export class FORGEIN_KEY_ERROR extends Error {
         this.code = FORGEIN_KEY_ERROR_KEY;
     }
 }
+
+
+export const AVAILABILITY_ERROR_KEY = 'NOT AVAILABLE IN THIS DATE RANGE';
+export class AVAILABILITY_ERROR extends Error {
+    constructor(message){
+        super(message);
+        this.code = AVAILABILITY_ERROR_KEY
+    }
+}

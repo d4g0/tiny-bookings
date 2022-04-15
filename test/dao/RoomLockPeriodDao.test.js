@@ -1,4 +1,4 @@
-import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
+import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
 import { createARoomLockPeriod, deleteRoomLockPeriod } from "dao/room/RoomLock";
@@ -45,16 +45,17 @@ beforeAll(async () => {
         })
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        console.log(error.message);
     }
 })
 
 afterAll(async () => {
     try {
         // delete hotel
-        await deleteHotelById(HOTEL.id);
+        // await deleteHotelById(HOTEL.id);
         // hotel
-        await deleteRoom(ROOM.id);
+        // await deleteRoom(ROOM.id);
     } catch (error) {
         console.log(error)
     }
@@ -64,8 +65,20 @@ afterAll(async () => {
 const utc_now = DateTime.now().toUTC();
 
 const ROOM_LOCK_PERIOD_DATA = {
-    start_date: { year: utc_now.year, month: utc_now.month, day: utc_now.day },
-    end_date: { year: utc_now.year, month: utc_now.month, day: utc_now.day + 1 },
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day + 1,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
 }
 
 describe(
@@ -86,16 +99,10 @@ describe(
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
                         hotel_calendar_length: HOTEL.maximun_free_calendar_days,
-                        hotel_check_in_time: mapDateToHourTime(
-                            new Date(HOTEL.check_in_hour_time)
-                        ),
-                        hotel_check_out_time: mapDateToHourTime(
-                            new Date(HOTEL.check_out_hour_time)
-                        ),
                     });
+                    console.log({ roomLockPeriod })
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-                    console.log({ roomLockPeriod, deletedRoomLockPeriod });
                 } catch (error) {
                     dbError = error;
                     console.log(error);
@@ -109,6 +116,44 @@ describe(
                 expect(roomLockPeriod.reason).toBeDefined()
                 expect(roomLockPeriod.created_at).toBeDefined()
 
+            }
+        )
+
+
+        // create a room type
+        test(
+            "Attemp to create a room_lock period in a blocked period ",
+            async function () {
+
+                var dbError = null, roomLockPeriod = null, res2 = null;
+
+                try {
+                    roomLockPeriod = await createARoomLockPeriod({
+                        room_id: ROOM.id,
+                        reason: '[Gardining] We are going to grow some plants in this room',
+                        start_date: ROOM_LOCK_PERIOD_DATA.start_date,
+                        end_date: ROOM_LOCK_PERIOD_DATA.end_date,
+                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                    });
+
+                    res2 = await createARoomLockPeriod({
+                        room_id: ROOM.id,
+                        reason: '[Gardining] We are going to grow some plants in this room',
+                        start_date: ROOM_LOCK_PERIOD_DATA.start_date,
+                        end_date: ROOM_LOCK_PERIOD_DATA.end_date,
+                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                    });
+
+                    // clean
+                    var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
+                    // console.log({ res });
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBeDefined();
+                expect(dbError.code).toBe(AVAILABILITY_ERROR_KEY);
             }
         )
 

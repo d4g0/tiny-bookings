@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public.admins
     admin_description character varying(150),
     hash_password text NOT NULL,
     reset_token text,
-    created_at timestamp without time zone DEFAULT now(),
+    created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     email character varying(80) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unique_admin_name UNIQUE (admin_name),
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS public.clients
     hash_password text,
     email character varying(120),
     reset_token text,
-    created_at timestamp without time zone DEFAULT now(),
+    created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id),
     CONSTRAINT unique_email UNIQUE (email)
 );
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS public.room
     night_price numeric NOT NULL,
     capacity integer NOT NULL,
     number_of_beds integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now(),
+    created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     room_type integer,
     PRIMARY KEY (id),
     CONSTRAINT unique_room_name UNIQUE (room_name)
@@ -101,8 +101,7 @@ CREATE TABLE IF NOT EXISTS public.rooms_amenities
 (
     room_id integer,
     amenity_id integer,
-    CONSTRAINT id PRIMARY KEY (room_id, amenity_id),
-    CONSTRAINT amenity_id_unique UNIQUE (amenity_id)
+    CONSTRAINT id PRIMARY KEY (room_id, amenity_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.room_pictures
@@ -121,10 +120,10 @@ CREATE TABLE IF NOT EXISTS public.booking
     payment_type integer,
     currency integer,
     total_price numeric NOT NULL,
-    start_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone NOT NULL,
+    start_date timestamp(0) without time zone NOT NULL,
+    end_date timestamp(0) without time zone NOT NULL,
     number_of_guests integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now(),
+    created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id)
 );
 
@@ -147,10 +146,10 @@ CREATE TABLE IF NOT EXISTS public.room_lock_period
 (
     id serial,
     room_id integer,
-    start_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone NOT NULL,
+    start_date timestamp(0) without time zone NOT NULL,
+    end_date timestamp(0) without time zone NOT NULL,
     reason character varying(300),
-    created_at timestamp without time zone DEFAULT now(),
+    created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     during tsrange NOT NULL,
     is_a_booking boolean NOT NULL DEFAULT false,
     booking_id integer,
