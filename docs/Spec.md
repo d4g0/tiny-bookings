@@ -199,11 +199,14 @@ var del_res = {
 
 ```js
   var roomLockPeriod: {
-        id: 2,
-        room_id: 215,
-        start_date: '2022-05-11T13:30:00.000Z', // date obj
-        end_date: '2022-05-12T12:00:00.000Z',   // date obj
-        reason: 'Reason String',
-        created_at: '2022-04-11T23:41:43.497Z', // date obj
-      }
+        id: 11,
+        room_id: 23,
+        start_date: '2022-05-16T03:53:00.000Z',
+        end_date: '2022-05-17T03:53:00.000Z',
+        reason: '[Gardining] We are going to grow some plants in this room',
+        created_at:'2022-04-16T03:53:56.000Z',
+        during: '["2022-05-15 23:53:00","2022-05-16 23:53:00"]',
+        is_a_booking: false,
+        booking_id: null
+  }
 ```
