@@ -247,17 +247,10 @@ export async function deleteRoomLockPeriod(room_lock_period_id) {
     }
 
     try {
-        // var delRoomLockPeriod = await prisma.room_lock_period.delete({
-        //     where: {
-        //         id: room_lock_period_id
-        //     }
-        // })
 
         var delRes = await sql`
         delete from room_lock_period rlp where rlp.id = ${room_lock_period_id} returning *
         `
-        
-
         return delRes[0];
     } catch (error) {
         throw error

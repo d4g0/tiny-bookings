@@ -159,7 +159,7 @@
 
 
 **Hot Sopt:**
--   Evaluate PK(room_id, booking_id) for rooms_bookings
+
 
 -   [done] Iterate `tb` tables to use `tsranges`
 -   Define `create-room-lock`  sql query
@@ -178,8 +178,10 @@
     -   for every room
 
 
+Done
+-   Evaluate PK(room_id, booking_id) for rooms_bookings
+-   Create Check Availability
 
-Create Check Availability
     
 
 

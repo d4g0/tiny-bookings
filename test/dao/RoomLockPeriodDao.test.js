@@ -52,10 +52,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
     try {
-        // delete hotel
-        // await deleteHotelById(HOTEL.id);
+        // delete room
+        await deleteRoom(ROOM.id);
         // hotel
-        // await deleteRoom(ROOM.id);
+        await deleteHotelById(HOTEL.id);
     } catch (error) {
         console.log(error)
     }
@@ -100,9 +100,9 @@ describe(
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
                         hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
-                    console.log({ roomLockPeriod })
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
+                    console.log({ roomLockPeriod , deletedRoomLockPeriod})
                 } catch (error) {
                     dbError = error;
                     console.log(error);
@@ -130,7 +130,7 @@ describe(
                 try {
                     roomLockPeriod = await createARoomLockPeriod({
                         room_id: ROOM.id,
-                        reason: '[Gardining] We are going to grow some plants in this room',
+                        reason: 'create 2 with same dates',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
                         hotel_calendar_length: HOTEL.maximun_free_calendar_days,
@@ -144,10 +144,10 @@ describe(
                         hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
 
+                } catch (error) {
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-                    // console.log({ res });
-                } catch (error) {
+                    console.log({ roomLockPeriod, res2 });
                     dbError = error;
                     console.log(error);
                 }
