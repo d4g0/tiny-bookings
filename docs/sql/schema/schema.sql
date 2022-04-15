@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS public.booking
 (
     id serial,
     client_id integer,
+    hotel_id integer NOT NULL,
     booking_state integer,
     payment_type integer,
     currency integer,
@@ -279,6 +280,13 @@ ALTER TABLE IF EXISTS public.room_lock_period
 ALTER TABLE IF EXISTS public.room_lock_period
     ADD CONSTRAINT booking_reference FOREIGN KEY (booking_id)
     REFERENCES public.booking (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+ALTER TABLE IF EXISTS public.booking
+    ADD CONSTRAINT booking_hotel_ownership FOREIGN KEY (hotel_id)
+    REFERENCES public.hotel (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
