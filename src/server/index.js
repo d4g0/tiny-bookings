@@ -26,7 +26,7 @@ async function setupGraphQl() {
 
 // app logs
 // TODO define
-
+var server;
 export function spinUpServer() {
     setupGraphQl();
 
@@ -34,5 +34,9 @@ export function spinUpServer() {
     if (process.env.NODE_ENV != 'production') {
         app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
     }
-    app.listen(API_PORT, () => { console.log('app listening at port:' + API_PORT) })
+    server = app.listen(API_PORT, () => { console.log('app listening at port:' + API_PORT) })
+}
+
+export  async function closeServer() {
+    return server.close();
 }

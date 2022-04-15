@@ -1,6 +1,10 @@
 import { connect, disconnect } from 'dao/PrismaClient.js'
 import { initUserRoles } from 'dao/users/UserRoleDao';
-import { spinUpServer } from '~/server'
+import { spinUpServer, closeServer } from '~/server'
+import sql from '~/dao/postgres';
+import prexit from 'prexit'
+
+
 async function main() {
 
     // connect to db
@@ -11,11 +15,14 @@ async function main() {
     spinUpServer();
 }
 
-main()
-    .catch((e) => {
-        throw e
-    })
-    .finally(async () => {
-        // disconnect from db
-        await disconnect()
-    })
+main().catch((e) => {
+    console.log(e)
+    throw e
+})
+
+
+prexit(async () => {
+    await sql.end({ timeout: 5 })
+    await disconnect()
+    await closeServer();
+})
