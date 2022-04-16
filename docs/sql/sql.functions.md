@@ -41,7 +41,7 @@ select is_available from is_room_available_in (1, 30, '[2022-04-15T00:00:00.000Z
 ```
 
 
-### Create tsrange string
+### Create tsrange string (Not Used)
 ```sql
 create or replace function make_tsrange_str(start_date timestamp, end_date timestamp, out tsrange_str text) as $$
 	begin
@@ -55,7 +55,7 @@ Language plpgsql;
 select make_tsrange_str('2022-04-15T00:00:00.000Z','2022-04-16T00:00:00.000Z')
 ```
 
-### Availability variant
+### Availability variant (Not Used)
 ```sql
 create or replace function is_room_available_in_2( 
 	room_id_filter integer,
