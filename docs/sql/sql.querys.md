@@ -98,14 +98,14 @@ insert into
 	)
 values
 	(
-		1,
-		'2022-04-17T00:00:00.000Z',
-		'2022-04-16T00:00:00.000Z',
+		20,
+		'2022-04-17 00:00:00',
+		'2022-04-19 00:00:00',
 		'Booked',
-		'[2022-04-17T00:00:00.000Z, 2022-04-19T00:00:00.000Z]',
+		'[2022-04-17 00:00:00, 2022-04-19 00:00:00]',
 		true,
 		1
-	);
+	) RETURNING *;
 ```
  
 ## Create a client
@@ -113,7 +113,7 @@ values
 insert into
 	clients (user_role, client_name, client_last_name)
 values
-	(3, 'Flow', 'Jhensen');
+	(3, 'Flow', 'Jhensen') RETURNING *;
 ```
  
 ## Create a booking state
@@ -121,7 +121,7 @@ values
 insert into
 	booking_states (booking_state)
 values
-	('Paid');
+	('Paid') RETURNING *;
 ```
  
 ## Create a payment type
@@ -129,7 +129,7 @@ values
 insert into
 	payment_types (payment_type)
 values
-	('Cash');
+	('Cash') RETURNING *;
 ```
  
 ## Create a currency
@@ -137,33 +137,35 @@ values
 insert into
 	currencies (currency)
 values
-	('USD');
+	('USD') RETURNING *;
 ```
  
 ## Create a booking
 ```sql
 insert into
-	booking (
-		client_id,
-		booking_state,
-		payment_type,
-		currency,
-		total_price,
-		start_date,
-		end_date,
-		number_of_guests
-	)
+    booking (
+        client_id,
+        hotel_id,
+        booking_state,
+        payment_type,
+        currency,
+        total_price,
+        start_date,
+        end_date,
+        number_of_guests
+    )
 values
-	(
-		1,
-		1,
-		1,
-		1,
-		60,
-		'2022-04-17T00:00:00.000Z',
-		'2022-04-19T00:00:00.000Z',
-		2
-	); 
+    (
+        1,
+        1,
+        1,
+        1,
+        1,
+        60,
+        '2022-04-17T00:00:00.000Z',
+        '2022-04-19T00:00:00.000Z',
+        2
+    ) RETURNING *;
 ```
  
 ## Create a rooms_bookings record
@@ -171,5 +173,5 @@ values
 insert into
 	rooms_bookings (room_id, booking_id)
 values
-	(229, 1);
+	(229, 1) RETURNING *;
 ```
