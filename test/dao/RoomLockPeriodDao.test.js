@@ -1,6 +1,7 @@
 import { createBooking, deleteBooking } from "dao/booking/BookingDao";
 import { createABookingState, deleteABookingState } from "dao/booking/BookingStateDao";
 import { createAPaymentType, deleteAPaymentType } from "dao/booking/PaymentTypeDao";
+import { createARoomBooking, deleteARoomBooking } from "dao/booking/RoomsBookingsDao";
 import { getUserRoleId, USER_ROLES } from "dao/DBConstans";
 import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
@@ -184,7 +185,7 @@ describe(
 
 
         test(
-            "Create and delete room_lock_period for a booking ",
+            "Create and delete room_lock_period + deps for a booking ",
             async function () {
 
                 var dbError = null,
@@ -194,7 +195,9 @@ describe(
                     client = null,
                     bookingState = null,
                     paymentType = null,
-                    deletedRoomLockPeriod = null;
+                    deletedRoomLockPeriod = null,
+                    room_booking_record = null
+                    ;
 
                 try {
                     // create room lock for booking deps
@@ -231,15 +234,18 @@ describe(
                         booking_id: booking.id
                     });
 
+                    room_booking_record = await createARoomBooking(ROOM.id, booking.id);
                     console.log({
                         client,
                         bookingState,
                         paymentType,
                         booking,
-                        roomLockPeriod
+                        roomLockPeriod,
+                        room_booking_record
                     })
 
                     // clean
+                    await deleteARoomBooking(ROOM.id, booking.id);
                     deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id);
                     await deleteBooking(booking.id);
                     await deleteAPaymentType(paymentType.payment_type)
