@@ -231,3 +231,8 @@ var client = {
 var bookingState = { id: 3, booking_state: '8b25b9be-5' }
 
 ```
+
+## Payment Type
+```js
+var paymentType= { id: 4, payment_type: 'c5c6c4df-7' }
+```
