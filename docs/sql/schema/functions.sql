@@ -1,4 +1,4 @@
-BEGIN:
+BEGIN;
 
 create or replace function is_room_available_in( 
 	room_id_filter integer,

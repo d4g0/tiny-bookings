@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS public.clients
     client_last_name character varying(60) NOT NULL,
     hash_password text,
     email character varying(120),
+    is_email_verified boolean NOT NULL DEFAULT false,
     reset_token text,
     created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id),

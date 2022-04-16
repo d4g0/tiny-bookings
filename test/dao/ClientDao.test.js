@@ -44,6 +44,7 @@ describe(
                 expect(client.client_last_name).toBeDefined()
                 expect(client.hash_password).toBeNull();
                 expect(client.email).toBeNull();
+                expect(client.is_email_verified).toBe(false);
                 expect(client.reset_token).toBeNull();
                 expect(client.created_at).toBeDefined();
 

@@ -210,3 +210,18 @@ var del_res = {
         booking_id: null
   }
 ```
+
+## Client
+```js
+var client = {
+        id: 2,
+        user_role: 3,
+        client_name: 'ac19d0e6-8',
+        client_last_name: 'ab84179e-d',
+        hash_password: null,
+        email: null,
+        is_email_verified: false,
+        reset_token: null,
+        created_at: '2022-04-16T04:00:00.000Z'
+      }
+```
