@@ -3,8 +3,6 @@ import { getUserRoleId, USER_ROLES } from 'dao/DBConstans';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { v4 as uuid } from 'uuid'
 
-// need deps
-// a hotel and a room
 
 
 
