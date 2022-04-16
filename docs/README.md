@@ -165,14 +165,22 @@
 -   Define `create-room-lock`  sql query
     -   `non booking`
     -   `booking`
+-   **[ON THIS]**
+-   Create Booking and deps start(15 april 19:36)
+    -   client_id (create and client) (done)
+        -   Pending finish other client fns
+    -   booking_state (done at 20:30)
+    -   payment_type done
+    -   currency (will be defered)
 
 -   [Done] Continue Testing plpsql fn `is_room_available_in` in simple exercise
--   Rewrite fn for `tb` tables, 
+-   [Done] Rewrite fn for `tb` tables, 
     -   Concider temporal delta(free-days) bounds and other performance optimizations as index on the eventual `room_lock` `tsranges`
     -   Define test data
         -   test availability
 -   Write a `available_rooms_in` that returns a record of rooms in the available date range
     -   tests it
+    -   define it's indexes
 -   Define `postgres.js` query to get availablity 
     -   for a particular room
     -   for every room

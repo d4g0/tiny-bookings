@@ -236,3 +236,20 @@ var bookingState = { id: 3, booking_state: '8b25b9be-5' }
 ```js
 var paymentType= { id: 4, payment_type: 'c5c6c4df-7' }
 ```
+
+## Booking
+```js
+var booking = {
+        id: 6,
+        client_id: 6,
+        hotel_id: 3,
+        booking_state: 6,
+        payment_type: 7,
+        currency: null,
+        total_price: '50',
+        start_date: '2022-05-16T08:51:00.000Z',
+        end_date: '2022-05-17T08:51:00.000Z',
+        number_of_guests: '2',
+        created_at: '2022-04-16T08:51:21.000Z'
+      }
+```

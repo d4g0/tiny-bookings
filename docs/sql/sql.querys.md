@@ -34,7 +34,7 @@ values
 		'13:30',
 		'12:00',
 		'America/Lima'
-	);
+	) returning *;
 ```
 ## Create a room_amenity
 ```sql
