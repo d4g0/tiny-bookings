@@ -1,7 +1,7 @@
 import { connect, disconnect } from 'dao/PrismaClient.js'
 import { initUserRoles } from 'dao/users/UserRoleDao';
 import { spinUpServer, closeServer } from '~/server'
-import sql from '~/dao/postgres';
+import sql from 'db/postgres';
 import prexit from 'prexit'
 
 
