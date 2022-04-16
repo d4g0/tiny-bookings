@@ -225,3 +225,9 @@ var client = {
         created_at: '2022-04-16T04:00:00.000Z'
       }
 ```
+
+## Booking State
+```js
+var bookingState = { id: 3, booking_state: '8b25b9be-5' }
+
+```
