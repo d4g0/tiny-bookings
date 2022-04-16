@@ -72,6 +72,15 @@ export function isValidUserName(user_name) {
     return !error;
 }
 
+export function isValidClientName(user_name) {
+    const userNameSchema = Joi.string().min(1).max(60).required();
+    const { error, value } = userNameSchema.validate(
+        user_name,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
 export function isValidAdminDescription(admin_description) {
     const adminDescriptionSchema = Joi.string().min(4).max(150).required();
     const { error, value } = adminDescriptionSchema.validate(
@@ -329,7 +338,7 @@ export function isValidDateObject(date) {
 }
 
 
-export async function isValidDateInput(dInput = { year, month, day, hour, minute }) {
+export function isValidDateInput(dInput = { year, month, day, hour, minute }) {
     var yearSchema = Joi.number().integer().min(2000).max(3000);
     var monthSchema = Joi.number().integer().min(0).max(11);
     var daySchema = Joi.number().integer().min(1).max(31);
@@ -361,6 +370,27 @@ export async function isValidDateInput(dInput = { year, month, day, hour, minute
     complyAllSchemas = !y_error && !m_error && !d_error && !m_error && !d_error && !h_error && !m_error;
     return complyAllSchemas;
 }
+
+
+export function isValidBookingState(booking_state) {
+    var stateSchema = Joi.string().required().trim().min(2).max(40);
+    const { error, value } = stateSchema.validate(
+        booking_state,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
+
+export function isValidPaymentType(payment_type) {
+    var paymentSchema = Joi.string().required().trim().min(2).max(60);
+    const { error, value } = paymentSchema.validate(
+        payment_type,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
 
 // ---------------
 // Mapers 
