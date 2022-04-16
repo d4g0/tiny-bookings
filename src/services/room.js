@@ -18,7 +18,10 @@ import {
     deleteARoomIsAmenity as deleteARoomIsAmenityDao,
 } from '~/dao/room/RoomAmenitiesDao'
 // room pictures
-
+import {
+    createARoomPicture as createARoomPictureDao,
+    deleteARoomPicture as deleteARoomPictureDao
+} from '~/dao/room/RoomPicturesDao'
 // room
 import {
     createRoom as createRoomDao,
@@ -87,7 +90,13 @@ export function deleteARoomIsAmenity(room_id, amenity_id) {
 // ---------------
 // Room Pictures 
 // ---------------
+export async function createARoomPicture(room_id){
+    return createARoomPictureDao(filename)
+}
 
+export async function deleteARoomPicture(room_picture_id){
+    return deleteARoomPictureDao(room_picture_id)
+}
 
 
 // ---------------
@@ -140,54 +149,4 @@ export async function getRoomById(room_id) {
 
 export async function getRooms() {
     return getRoomsDao()
-}
-
-
-// export async function createARoomIsAmenity(room_id, amenity_id){
-//     return createARoomIsAmenityDao(room_id, amenity_id)
-// }
-// export async function deleteARoomIsAmenity(room_is_amenity_id){
-//     return deleteARoomIsAmenityDao(room_is_amenity_id)
-// }
-// getRooms TODO
-
-
-/**
- * Returns true if the providedd room
- * it's free in the specified date interval
- * False other wise
- * Throws dbErrors
- */
- export async function isNotBussyRoom({
-    room_id,
-    start_date,
-    end_date
-}) {
-
-    // validate
-    if (!isValid(room_id)) {
-        throw new Error('Non valid room_id: ' + room_id);
-    }
-    if (!isValidDateObject(start_date)) {
-        throw new Error('Non valid start_date Date Obj');
-    }
-    if (!isValidDateObject(end_date)) {
-        throw new Error('Non valid end_date Date Obj');
-    }
-
-    var room_with_bookings_locks = await prisma.room.findUnique({
-        where: {
-            id: room_id,
-        },
-        include: {
-            room_lock_period: {
-                where:{
-                    start_date : {
-                    
-                    }
-                }
-            },
-            rooms_bookings: true
-        }
-    })
 }
