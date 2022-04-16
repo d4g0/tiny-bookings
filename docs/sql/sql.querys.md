@@ -1,6 +1,7 @@
 #   SQL Querys 👌️
 
 - [SQL Querys 👌️](#sql-querys-️)
+	- [Create an Admin](#create-an-admin)
 	- [Create a Hotel](#create-a-hotel)
 	- [Create a room_amenity](#create-a-room_amenity)
 	- [Create a rooms_amenitys record](#create-a-rooms_amenitys-record)
@@ -15,6 +16,25 @@
 	- [Create a booking](#create-a-booking)
 	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
 
+
+## Create an Admin
+```sql
+insert into 
+	admins (
+		user_role,
+		admin_name,
+		admin_description,
+		email,
+		hash_password
+	)
+values (
+	1,
+	'dago',
+	'system creator',
+	'dago@gmail.com',
+	'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu'
+) RETURNING *;
+```
 ## Create a Hotel
 ```sql
 insert into
