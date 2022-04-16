@@ -1,65 +1,13 @@
 /**
-
-
     A `room_lock_period` is a period of time where a specific room it's not available to booking.
     Optionally this might happen for a certain `reason`, if not provided should be marked with
     a default `Blocked` reason.
     
-    A `room_service_interval` is an interval of time wish start in a 
-    specific day with the check_in_hour_time of the hotel, 
-    and finish in a later day with the check_out_hour_time of the hotel.
-
-    The `minimal_room_service_interval` it's the minimal unit of time where a room it's able 
-    to provide service, it's composed of:
-    start_date [day + check_in_hour_time] 
-    a night [in beteewn] and 
-    the end_date [ [start_date.day + 1] + check_out_hour_time ]
-
-    The `maximal_room_service_interval` it's the maxmiun interval of `room_serice_intervals`
-    calculated dynamically bounded for
-    start: current minimal_room_service_interval start 
-            (present day fixed) [today : check_int_hour_time]
-    end: latest minimal_room_service_interval end 
-            (fixed by the hotel free calendar days) [last_calendar_day : check_out_hour_time]
-
-    Since the hour_time of the start and end dates of the lock_period are fixed by hotel 
-    definition they will be mapped to a `room_service_iterval` bounds
-    
-
-
-    `start_date` day
-    Has to be equal or greater then the present day date
-    Has to be less then the the `end_date` day
-    
-    `end_date` day
-    has to be less then or equal to the maximun_room_service_interval is end bound date day
-    
-    
-    and not greater then the day where calendar days stops aka: 
-    the computed date interval of the current date and the room it's maximun hotel_check_out_date 
-    computed with the hotel_check_out_time and maximun free calendar days.
-    
-    
-    A room_lock is delimitation start and end date can be updated, as long as 
-    they comply the same bounds of their definition above.
-
-
     The dates are required to be in `UTC` time
-
-
-
-
-
-
-    // map check in dates hour time from hotel local time to utc
-
-
-
- * 
  */
 
 
-import sql from '~/dao/postgres';
+import sql from 'db/postgres';
 
 import {
     isValidId,
@@ -120,6 +68,9 @@ export async function createARoomLockPeriod({
                 throw new Error('Non valid hotel_calendar_length: ' + hotel_calendar_length);
             }
 
+            if (booking_id && !isValidId(booking_id)) {
+                throw new Error('Non valid booking id')
+            }
 
 
         }
@@ -206,33 +157,32 @@ export async function createARoomLockPeriod({
 
         // booking case
 
-        // room_lock_period = await sql`
-        // insert into
-        //     room_lock_period (
-        //         room_id,
-        //         start_date,
-        //         end_date,
-        //         reason,
-        //         during,
-        //         is_a_booking,
-        //         booking_id
-        //     )
-        // values
-        //     (
-        //         1,
-        //         '2022-04-17T00:00:00.000Z',
-        //         '2022-04-16T00:00:00.000Z',
-        //         'Booked',
-        //         '[2022-04-17T00:00:00.000Z, 2022-04-19T00:00:00.000Z]',
-        //         true,
-        //         1
-        //     );
-        // `
+        else {
+            res = await sql`
+            insert into
+                room_lock_period (
+                    room_id,
+                    start_date,
+                    end_date,
+                    reason,
+                    during,
+                    is_a_booking,
+                    booking_id
+                )
+            values
+                (
+                    ${room_id},
+                    ${utc_start_date.toISOString()},
+                    ${utc_end_date.toISOString()},
+                    ${reason},
+                    ${during},
+                    ${true},
+                    ${booking_id}
+                ) RETURNING *;
+            `
+        }
 
         return res[0];
-
-
-
 
     } catch (error) {
         throw error
