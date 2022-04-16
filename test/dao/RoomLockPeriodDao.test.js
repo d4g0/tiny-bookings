@@ -1,7 +1,12 @@
+import { createBooking, deleteBooking } from "dao/booking/BookingDao";
+import { createABookingState, deleteABookingState } from "dao/booking/BookingStateDao";
+import { createAPaymentType, deleteAPaymentType } from "dao/booking/PaymentTypeDao";
+import { getUserRoleId, USER_ROLES } from "dao/DBConstans";
 import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
 import { createARoomLockPeriod, deleteRoomLockPeriod } from "dao/room/RoomLock";
+import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
 import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
 import { date } from "joi";
 import { DateTime } from "luxon";
@@ -76,6 +81,24 @@ const ROOM_LOCK_PERIOD_DATA = {
         year: utc_now.year,
         month: utc_now.month,
         day: utc_now.day + 1,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+}
+
+
+const PERIOD_DATA = {
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day + 3,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day + 4,
         hour: utc_now.hour,
         minute: utc_now.minute
     },
@@ -160,36 +183,84 @@ describe(
 
 
 
-        // test(
-        //     "Create and delete room_lock_period for a booking ",
-        //     async function () {
+        test(
+            "Create and delete room_lock_period for a booking ",
+            async function () {
 
-        //         var dbError = null, roomLockPeriod = null, booking = null;
+                var dbError = null,
+                    roomLockPeriod = null,
+                    booking = null,
+                    bookingState = null,
+                    client = null,
+                    bookingState = null,
+                    paymentType = null,
+                    deletedRoomLockPeriod = null;
 
-        //         try {
-        //             roomLockPeriod = await createARoomLockPeriod({
-        //                 room_id: ROOM.id,
-        //                 reason: '[Gardining] We are going to grow some plants in this room',
-        //                 start_date: ROOM_LOCK_PERIOD_DATA.start_date,
-        //                 end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-        //                 hotel_calendar_length: HOTEL.maximun_free_calendar_days,
-        //             });
-        //             // clean
-        //             var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-        //             console.log({ roomLockPeriod, deletedRoomLockPeriod })
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
+                try {
+                    // create room lock for booking deps
+                    client = await createNonUserClient({
+                        user_role: getUserRoleId(USER_ROLES.CLIENT.user_role),
+                        client_name: uuid().substring(0, 10),
+                        client_last_name: uuid().substring(0, 10),
+                    })
 
-        //         expect(dbError).toBe(null);
-        //         expect(deletedRoomLockPeriod.room_id).toBeDefined()
-        //         expect(roomLockPeriod.room_id).toBeDefined()
-        //         expect(roomLockPeriod.start_date).toBeDefined()
-        //         expect(roomLockPeriod.end_date).toBeDefined()
-        //         expect(roomLockPeriod.reason).toBeDefined()
-        //         expect(roomLockPeriod.created_at).toBeDefined()
+                    bookingState = await createABookingState(uuid().substring(0, 10));
+                    paymentType = await createAPaymentType(uuid().substring(0, 10));
 
-        //     }
-        // )
+
+                    booking = await createBooking({
+                        client_id: client.id,
+                        hotel_id: HOTEL.id,
+                        booking_state_id: bookingState.id,
+                        payment_type_id: paymentType.id,
+                        total_price: 50,
+                        start_date: PERIOD_DATA.start_date,
+                        end_date: PERIOD_DATA.end_date,
+                        number_of_guests: 2
+                    });
+
+
+
+                    roomLockPeriod = await createARoomLockPeriod({
+                        room_id: ROOM.id,
+                        reason: 'Gardening',
+                        start_date: PERIOD_DATA.start_date,
+                        end_date: PERIOD_DATA.end_date,
+                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                        is_a_booking: true,
+                        booking_id: booking.id
+                    });
+
+                    console.log({
+                        client,
+                        bookingState,
+                        paymentType,
+                        booking,
+                        roomLockPeriod
+                    })
+
+                    // clean
+                    deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id);
+                    await deleteBooking(booking.id);
+                    await deleteAPaymentType(paymentType.payment_type)
+                    await deleteABookingState(bookingState.booking_state)
+                    await deleteClient(client.id);
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBe(null);
+                expect(deletedRoomLockPeriod.room_id).toBeDefined()
+                expect(roomLockPeriod.room_id).toBeDefined()
+                expect(roomLockPeriod.start_date).toBeDefined()
+                expect(roomLockPeriod.end_date).toBeDefined()
+                expect(roomLockPeriod.reason).toBeDefined()
+                expect(roomLockPeriod.is_a_booking).toBe(true);
+                expect(roomLockPeriod.booking_id).toBeDefined();
+                expect(roomLockPeriod.during).toBeDefined();
+                expect(roomLockPeriod.created_at).toBeDefined()
+            }
+        )
     })
