@@ -85,7 +85,7 @@ describe(
     'Room Lock Period Dao',
 
     function roomTypesDaoTest() {
-        // create a room type
+        // create a room lock
         test(
             "Create and delete room_lock_period ",
             async function () {
@@ -102,7 +102,7 @@ describe(
                     });
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-                    console.log({ roomLockPeriod , deletedRoomLockPeriod})
+                    console.log({ roomLockPeriod, deletedRoomLockPeriod })
                 } catch (error) {
                     dbError = error;
                     console.log(error);
@@ -120,7 +120,7 @@ describe(
         )
 
 
-        // create a room type
+        // bloked period error check
         test(
             "Attemp to create a room_lock period in a blocked period ",
             async function () {
@@ -160,37 +160,36 @@ describe(
 
 
 
-        // get a room type  by type
-
-        // get roomTypes getRoomTypes
         // test(
-        //     "Get RoomLock Periods",
+        //     "Create and delete room_lock_period for a booking ",
         //     async function () {
 
-        //         var dbError = null, 
-        //         // roomType = null, roomType2 = null, roomTypes = null;
+        //         var dbError = null, roomLockPeriod = null, booking = null;
 
-        //         // try {
-        //         //     roomType = await createRoomType(uuid().substring(0, 10));
-        //         //     roomType2 = await createRoomType(uuid().substring(0, 10));
+        //         try {
+        //             roomLockPeriod = await createARoomLockPeriod({
+        //                 room_id: ROOM.id,
+        //                 reason: '[Gardining] We are going to grow some plants in this room',
+        //                 start_date: ROOM_LOCK_PERIOD_DATA.start_date,
+        //                 end_date: ROOM_LOCK_PERIOD_DATA.end_date,
+        //                 hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+        //             });
+        //             // clean
+        //             var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
+        //             console.log({ roomLockPeriod, deletedRoomLockPeriod })
+        //         } catch (error) {
+        //             dbError = error;
+        //             console.log(error);
+        //         }
 
-        //         // } catch (error) {
-        //         //     dbError = error;
-        //         //     console.log(error);
-        //         // }
+        //         expect(dbError).toBe(null);
+        //         expect(deletedRoomLockPeriod.room_id).toBeDefined()
+        //         expect(roomLockPeriod.room_id).toBeDefined()
+        //         expect(roomLockPeriod.start_date).toBeDefined()
+        //         expect(roomLockPeriod.end_date).toBeDefined()
+        //         expect(roomLockPeriod.reason).toBeDefined()
+        //         expect(roomLockPeriod.created_at).toBeDefined()
 
-        //         // expect(dbError).toBe(null);
-        //         // expect(roomTypes.length).toBeGreaterThanOrEqual(2); // you might have other roomTypes in db ok
-        //     }
-        // )
-
-        // update roomType
-        // test(
-        //     "Update a room lock period",
-        //     async function () {
-        //         // var dbError = null,
-        //         // expect(dbError).toBe(null);
-        //         // expect(roomType.id).toBe(u_roomType.id);
         //     }
         // )
     })
