@@ -114,7 +114,11 @@ describe(
             "Create and delete room_lock_period ",
             async function () {
 
-                var dbError = null, roomLockPeriod = null;
+                var dbError = null, roomLockPeriod = null, f_end_date = null;
+                console.log({
+                    start_date: ROOM_LOCK_PERIOD_DATA.start_date,
+                    end_date: ROOM_LOCK_PERIOD_DATA.end_date,
+                });
 
                 try {
                     roomLockPeriod = await createARoomLockPeriod({
@@ -126,6 +130,7 @@ describe(
                     });
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
+                    f_end_date = DateTime.fromSQL(roomLockPeriod.end_date, {zone:'utc'});
                     console.log({ roomLockPeriod, deletedRoomLockPeriod })
                 } catch (error) {
                     dbError = error;
@@ -133,7 +138,12 @@ describe(
                 }
 
                 expect(dbError).toBe(null);
+                // date validaton
+                
                 expect(deletedRoomLockPeriod.room_id).toBeDefined()
+                expect(f_end_date.day).toBe(ROOM_LOCK_PERIOD_DATA.end_date.day);
+                expect(f_end_date.hour).toBe(ROOM_LOCK_PERIOD_DATA.end_date.hour);
+                expect(f_end_date.minute).toBe(ROOM_LOCK_PERIOD_DATA.end_date.minute);
                 expect(roomLockPeriod.room_id).toBeDefined()
                 expect(roomLockPeriod.start_date).toBeDefined()
                 expect(roomLockPeriod.end_date).toBeDefined()
