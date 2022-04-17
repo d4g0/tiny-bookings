@@ -10,6 +10,7 @@ datasource db {
 model booking {
   id               Int                @id @default(autoincrement())
   client_id        Int?
+  hotel_id         Int
   booking_state    Int?
   payment_type     Int?
   currency         Int?
@@ -21,19 +22,21 @@ model booking {
   booking_states   booking_states?    @relation(fields: [booking_state], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_state_link")
   clients          clients?           @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_link")
   currencies       currencies?        @relation(fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_link")
+  hotel            hotel              @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_hotel_ownership")
   payment_types    payment_types?     @relation(fields: [payment_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type_link")
   room_lock_period room_lock_period[]
   rooms_bookings   rooms_bookings[]
 }
 
 model hotel {
-  id                          Int      @id @default(autoincrement())
-  hotel_name                  String   @unique(map: "unique_hotel_name") @db.VarChar(100)
-  maximun_free_calendar_days  Int      @default(30)
-  check_in_hour_time          DateTime @db.Time(6)
-  check_out_hour_time         DateTime @db.Time(6)
-  minimal_prev_days_to_cancel Int      @default(5)
-  iana_time_zone              String   @db.VarChar(60)
+  id                          Int       @id @default(autoincrement())
+  hotel_name                  String    @unique(map: "unique_hotel_name") @db.VarChar(100)
+  maximun_free_calendar_days  Int       @default(30)
+  check_in_hour_time          DateTime  @db.Time(6)
+  check_out_hour_time         DateTime  @db.Time(6)
+  minimal_prev_days_to_cancel Int       @default(5)
+  iana_time_zone              String    @db.VarChar(60)
+  booking                     booking[]
   room                        room[]
 }
 
@@ -84,16 +87,17 @@ model admins {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model clients {
-  id               Int        @id @default(autoincrement())
-  user_role        Int
-  client_name      String     @db.VarChar(60)
-  client_last_name String     @db.VarChar(60)
-  hash_password    String?
-  email            String?    @unique(map: "unique_email") @db.VarChar(120)
-  reset_token      String?
-  created_at       DateTime?  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
-  user_roles       user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
-  booking          booking[]
+  id                Int        @id @default(autoincrement())
+  user_role         Int
+  client_name       String     @db.VarChar(60)
+  client_last_name  String     @db.VarChar(60)
+  hash_password     String?
+  email             String?    @unique(map: "unique_email") @db.VarChar(120)
+  is_email_verified Boolean    @default(false)
+  reset_token       String?
+  created_at        DateTime?  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
+  user_roles        user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
+  booking           booking[]
 }
 
 model room_amenity {

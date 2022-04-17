@@ -1,6 +1,6 @@
 
 [dago][full-admin]
-tocarralero@gmail.com
+dago@gmail.com
 supper-foo-pass
 
 
