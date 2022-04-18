@@ -329,6 +329,7 @@ export const typeDefinitions = gql`
     rooms: [Room]!
     # room locks
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
+    getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!
   }
 
   ##
