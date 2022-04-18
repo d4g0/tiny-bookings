@@ -1,5 +1,6 @@
-const { connect } = require('../../src/dao/PrismaClient')
-const { initUserRoles } = require('../../src/dao/users/UserRoleDao.js')
+const { connect } = require('../../src/dao/PrismaClient');
+const { initUserRoles } = require('../../src/dao/users/UserRoleDao.js');
+require('dotenv').config();
 module.exports = async function setup() {
     try {
         await connect();

@@ -1,5 +1,4 @@
-import postgres from 'postgres'
-import { DateTime } from 'luxon'
+const postgres = require('postgres');
 
 const sql = postgres({
     max: parseInt(process.env.PG_MAX_CONNECTIONS) || 2,
@@ -17,11 +16,7 @@ const sql = postgres({
         }
     }
 });
-// process.env.DATABASE_URL
-// will use psql environment variables
 
-export default sql
 
-export async function disconnectPostgres() {
-    return await sql.end({ timeout: 3 });
-}
+module.exports = sql
+// export default sql avoided here for sql.end Type Error function when teardown the testing
