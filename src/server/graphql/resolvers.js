@@ -42,7 +42,7 @@ import {
     createARoomIsAmenity,
     deleteARoomIsAmenity
 } from "services/room";
-import { createARoomLockPeriod, getRoomLocks } from "services/room_locks";
+import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
 
 export const resolvers = {
 
@@ -216,6 +216,37 @@ export const resolvers = {
                             start_date_filter,
                             end_date_filter,
                             page,
+                        });
+
+                        return result;
+
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        getARoomIsLocks: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                        room_id_filter
+                    } = args.input;
+                    try {
+
+
+
+                        var result = await getARoomIsLocks({
+                            start_date_filter,
+                            end_date_filter,
+                            page,
+                            room_id_filter
                         });
 
                         return result;

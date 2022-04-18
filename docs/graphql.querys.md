@@ -28,6 +28,7 @@
     - [CreateARoomIsAmenity](#createaroomisamenity)
     - [DeleteARoomIsAmenity](#deletearoomisamenity)
     - [GetRoomLocks](#getroomlocks)
+    - [GetARoomIsLocks](#getaroomislocks)
 
 ## Login
 
@@ -553,6 +554,47 @@ query getRoomLocks($input: GetRoomLocksInput!){
       "minute": 0
     },
     "page": 1
+  }
+}
+```
+
+
+### GetARoomIsLocks
+```graphql
+query getARoomIsLocks($input: GetARoomIsLocksInput!){
+  getARoomIsLocks(input:$input){
+    results{
+      id
+      room_id
+      start_date
+      end_date
+      reason
+      is_a_booking
+      booking_id
+      created_at
+    }
+    count
+  }
+}
+
+{
+  "input": {
+    "start_date_filter": {
+      "year": 2022,
+      "month": 3,
+      "day": 18,
+      "hour": 0,
+      "minute": 0
+    },
+    "end_date_filter":  {
+            "year": 2022,
+      "month": 5,
+      "day": 25,
+      "hour": 0,
+      "minute": 0
+    },
+    "page": 1,
+    "room_id_filter": 91
   }
 }
 ```
