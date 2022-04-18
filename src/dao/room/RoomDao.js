@@ -55,7 +55,7 @@ export async function createRoom({
                 // rooms_is_amenities array { id, room_id, amenity_id, room_amenity:{ id, amenity } }
             }
         })
-
+        room.created_at = room.created_at.toISOString();
         return room;
 
     } catch (error) {
@@ -122,6 +122,7 @@ export async function deleteRoom(room_id) {
             },
         })
 
+        
         return delRes;
 
     } catch (error) {
@@ -171,7 +172,7 @@ export async function updateRoomName(room_id, room_name) {
                 }
             }
         })
-
+        room.created_at = room.created_at.toISOString();
         return room;
 
     } catch (error) {
@@ -220,7 +221,7 @@ export async function updateARoomIsType(room_id, room_type_id) {
             }
         })
 
-
+        room.created_at = room.created_at.toISOString();
         return room;
 
     } catch (error) {
@@ -263,7 +264,7 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
                 }
             }
         })
-
+        room.created_at = room.created_at.toISOString();
         return room;
     } catch (error) {
         throw error;
@@ -296,6 +297,7 @@ export async function updateRoomCapacity(room_id, new_capacity) {
                 }
             }
         })
+        room.created_at = room.created_at.toISOString();
         return room
     } catch (error) {
         throw error;
@@ -329,7 +331,7 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
                 }
             }
         })
-
+        room.created_at = room.created_at.toISOString();
         return room
     } catch (error) {
         throw error;
@@ -362,7 +364,7 @@ export async function getRoomById(room_id) {
                 }
             }
         });
-
+        room.created_at = room.created_at.toISOString();
         return room;
 
     } catch (error) {
