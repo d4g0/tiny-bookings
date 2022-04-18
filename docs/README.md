@@ -61,15 +61,18 @@
     -   lis their bookings
 
 -   role: `basic-admin`
-    -	edit rooms availability (locking rooms for a time)
+    -	edit rooms availability 
+        - creating room locks
+        - deleting room locks
     -	edit rooms data
         -   create, delete and edit room types
         -   create, delete and edit room amenities
         -   create, delete and edit room pictures
     -	create bookings
     	-	create clients (for bookings)
-    -	cancel bookings
+    -	cancel bookings (delete)
     -	list bookings
+    -   list room locks
     -	list clients
 
 
@@ -88,19 +91,16 @@
 
 [✅]
 -   create admin users
-    -   check if admin with `id` exists
-    -   check if has the role `full-admin`
-    -   then
-        -   basic
-        -   create new `basic-admin` with
-            -   name
-            -   email
-            -   password
-        -   full
-        -   create new `full-admin` with
-            -   name
-            -   email
-            -   password
+    -   basic
+    -   create new `basic-admin` with
+        -   name
+        -   email
+        -   password
+    -   full
+    -   create new `full-admin` with
+        -   name
+        -   email
+        -   password
 [✅]
 -   list admins
 
@@ -145,11 +145,28 @@
     -   room is amenities
         -   done 9 april 22:36
 
-[]
+[✅]
 -   room_locks
-    -   create
-    -   delete
-    -   update
+    -   (dao) done 16 april 1:55
+        -   create
+        -   delete
+    -   (graphql)
+        -   create [done 18 paril at 00:20]
+            -   non booking
+            -   for booking 
+    -   get room locks [done 18 paril at 00:40]
+        -   (dao)   
+        -   (graphql)   
+
+[]
+-   bookings
+    -   define booking states
+        -   Pending
+        -   Paid
+        -   Canceled
+    -  (dao)  done 16 april 1:55
+       -  rooms_bookings records of the many to many
+       -  clients for bookings (dao) done 16 april 1:55  
 
 
 
@@ -158,14 +175,14 @@
 
 
 
-**Hot Sopt:**
+**Hot Sopt Tasks:**
 
 
 -   [done] Iterate `tb` tables to use `tsranges`
 -   Define `create-room-lock`  sql query
     -   `non booking`
     -   `booking`
--   **[ON THIS]**
+-   [Done] 1:55
 -   Create Booking and deps start(15 april 19:36)
     -   client_id (create and client) (done)
         -   Pending finish other client fns
@@ -191,13 +208,6 @@ Done
 -   Create Check Availability
 
     
-
-
-
-
-
-
-
 
 
 [done]
