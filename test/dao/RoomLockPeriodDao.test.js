@@ -6,7 +6,7 @@ import { getUserRoleId, USER_ROLES } from "dao/DBConstans";
 import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
-import { createARoomLockPeriod, deleteRoomLockPeriod } from "dao/room/RoomLock";
+import { createARoomLockPeriod, deleteRoomLockPeriod, getRoomLocks } from "dao/room/RoomLock";
 import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
 import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
 import { date } from "joi";
@@ -105,6 +105,24 @@ const PERIOD_DATA = {
     },
 }
 
+
+const BIGGEST_PERIOD_DATA = {
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day - 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month,
+        day: utc_now.day + 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+}
+
 describe(
     'Room Lock Period Dao',
 
@@ -130,8 +148,8 @@ describe(
                     });
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-                    f_end_date = DateTime.fromSQL(roomLockPeriod.end_date, {zone:'utc'});
-                    console.log({ roomLockPeriod, deletedRoomLockPeriod })
+                    f_end_date = DateTime.fromSQL(roomLockPeriod.end_date, { zone: 'utc' });
+                    // console.log({ roomLockPeriod, deletedRoomLockPeriod })
                 } catch (error) {
                     dbError = error;
                     console.log(error);
@@ -139,7 +157,7 @@ describe(
 
                 expect(dbError).toBe(null);
                 // date validaton
-                
+
                 expect(deletedRoomLockPeriod.room_id).toBeDefined()
                 expect(f_end_date.day).toBe(ROOM_LOCK_PERIOD_DATA.end_date.day);
                 expect(f_end_date.hour).toBe(ROOM_LOCK_PERIOD_DATA.end_date.hour);
@@ -181,9 +199,9 @@ describe(
                 } catch (error) {
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
-                    console.log({ roomLockPeriod, res2 });
+                    // console.log({ roomLockPeriod, res2 });
                     dbError = error;
-                    console.log(error);
+                    // console.log(error);
                 }
 
                 expect(dbError).toBeDefined();
@@ -193,7 +211,7 @@ describe(
 
 
 
-
+        // room lock period for booking
         test(
             "Create and delete room_lock_period + deps for a booking ",
             async function () {
@@ -245,14 +263,14 @@ describe(
                     });
 
                     room_booking_record = await createARoomBooking(ROOM.id, booking.id);
-                    console.log({
-                        client,
-                        bookingState,
-                        paymentType,
-                        booking,
-                        roomLockPeriod,
-                        room_booking_record
-                    })
+                    // console.log({
+                    //     client,
+                    //     bookingState,
+                    //     paymentType,
+                    //     booking,
+                    //     roomLockPeriod,
+                    //     room_booking_record
+                    // })
 
                     // clean
                     await deleteARoomBooking(ROOM.id, booking.id);
@@ -277,6 +295,63 @@ describe(
                 expect(roomLockPeriod.booking_id).toBeDefined();
                 expect(roomLockPeriod.during).toBeDefined();
                 expect(roomLockPeriod.created_at).toBeDefined()
+            }
+        )
+
+        test(
+            "Get room_locks_periods",
+            async function () {
+
+                var dbError = null, f_results = null, f_count = null;
+
+                try {
+
+                    // create some locks to fetch
+                    var rl1 = await createARoomLockPeriod({
+                        room_id: ROOM.id,
+                        reason: '[Gardining] We are going to grow some plants in this room',
+                        start_date: ROOM_LOCK_PERIOD_DATA.start_date,
+                        end_date: ROOM_LOCK_PERIOD_DATA.end_date,
+                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                    });
+
+                    var rl2 = await createARoomLockPeriod({
+                        room_id: ROOM.id,
+                        reason: '[Gardining] We are going to grow some plants in this room',
+                        start_date: PERIOD_DATA.start_date,
+                        end_date: PERIOD_DATA.end_date,
+                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                    });
+                    // clean
+
+
+                    // fetch results
+                    var { results, count } = await getRoomLocks({
+                        start_date_filter: BIGGEST_PERIOD_DATA.start_date,
+                        end_date_filter: BIGGEST_PERIOD_DATA.end_date,
+                        page: 2
+                    });
+
+                    f_results = results;
+                    f_count = count;
+
+                    console.log({
+                        f_results,
+                        f_count
+                    })
+
+                    // clean
+                    await deleteRoomLockPeriod(rl1.id)
+                    await deleteRoomLockPeriod(rl2.id)
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBe(null);
+                expect(f_results).toBeDefined();
+                expect(f_results.length).toBeDefined();
+                expect(f_count).toBeDefined();
             }
         )
     })

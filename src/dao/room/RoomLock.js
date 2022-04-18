@@ -15,7 +15,8 @@ import {
     isValidRoomLockReason,
     utcDate,
     getCurrentUTCDayDate,
-    isValidDateInput
+    isValidDateInput,
+    isValidPositiveInteger
 } from 'dao/utils';
 
 import { AVAILABILITY_ERROR } from 'dao/Errors';
@@ -132,6 +133,9 @@ export async function createARoomLockPeriod({
 
         var res;
         var during = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
+
+
+
         // save to db
         // non booking case
         if (!is_a_booking) {
@@ -257,4 +261,82 @@ export async function isRoomAvailableIn({
 
         throw error
     }
+}
+
+
+export async function getRoomLocks({
+    start_date_filter = { year, month, day, hour, minute },
+    end_date_filter = { year, month, day, hour, minute },
+    page = 1, // 1 start based count
+}) {
+
+    // validation
+    if (!isValidDateInput(start_date_filter)) {
+        throw new Error('Non valid start_date_filter')
+    }
+    if (!isValidDateInput(end_date_filter)) {
+        throw new Error('Non valid end_date_filter')
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected')
+    }
+
+    const LIMIT = 50;
+    const OFFSET = (page - 1) * LIMIT;
+
+    var utc_start_date_filter = utcDate({
+        year: start_date_filter.year,
+        month: start_date_filter.month,
+        day: start_date_filter.day,
+        hour: start_date_filter.hour,
+        minute: start_date_filter.minute
+    });
+    var utc_end_date_filter = utcDate({
+        year: end_date_filter.year,
+        month: end_date_filter.month,
+        day: end_date_filter.day,
+        hour: end_date_filter.hour,
+        minute: end_date_filter.minute
+    });
+
+    try {
+
+        var room_locks_res = await sql`
+        select 
+            * 
+        from 
+            room_lock_period rlp 
+        where 
+            rlp.start_date > ${utc_start_date_filter.toISOString()}
+        and
+            rlp.start_date < ${utc_end_date_filter.toISOString()}
+        LIMIT ${LIMIT} OFFSET ${OFFSET} ;
+        `
+
+        var countRes = await sql`
+        select 
+            count(*) 
+        from 
+            room_lock_period rlp 
+        where 
+            rlp.start_date > ${utc_start_date_filter.toISOString()}
+        and
+            rlp.start_date < ${utc_end_date_filter.toISOString()}
+        `
+
+        var results = room_locks_res
+        var count = +countRes[0].count
+
+        return {
+            results,
+            count
+        }
+
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function getARoomLocks() {
+
 }
