@@ -6,7 +6,7 @@ import { getUserRoleId, USER_ROLES } from "dao/DBConstans";
 import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
-import { createARoomLockPeriod, deleteRoomLockPeriod, getARoomLocks, getRoomLocks } from "dao/room/RoomLock";
+import { createARoomLockPeriod, deleteRoomLockPeriod, getARoomIsLocks, getRoomLocks } from "dao/room/RoomLock";
 import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
 import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
 import { date } from "joi";
@@ -385,7 +385,7 @@ describe(
 
 
                     // fetch results
-                    var { results, count } = await getARoomLocks({
+                    var { results, count } = await getARoomIsLocks({
                         start_date_filter: BIGGEST_PERIOD_DATA.start_date,
                         end_date_filter: BIGGEST_PERIOD_DATA.end_date,
                         page: 1,

@@ -338,7 +338,7 @@ export async function getRoomLocks({
     }
 }
 
-export async function getARoomLocks({
+export async function getARoomIsLocks({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
