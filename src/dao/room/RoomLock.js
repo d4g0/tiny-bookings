@@ -213,7 +213,7 @@ export async function deleteRoomLockPeriod(room_lock_period_id) {
 }
 
 
-export async function isRoomAvailableIn({
+async function isRoomAvailableIn({
     room_id,
     delta_search_days,
     start_date = {
