@@ -42,6 +42,7 @@ import {
     createARoomIsAmenity,
     deleteARoomIsAmenity
 } from "services/room";
+import { createARoomLockPeriod, getRoomLocks } from "services/room_locks";
 
 export const resolvers = {
 
@@ -196,6 +197,36 @@ export const resolvers = {
                 throw error;
             }
         },
+
+        // room locks
+        getRoomLocks: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                    } = args.input;
+                    try {
+
+
+
+                        var result = await getRoomLocks({
+                            start_date_filter,
+                            end_date_filter,
+                            page,
+                        });
+
+                        return result;
+
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
 
     },
 
@@ -733,6 +764,45 @@ export const resolvers = {
                     try {
                         var delCount = await deleteARoomIsAmenity(room_id, amenity_id);
                         return delCount;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+        // room lock period
+        createARoomLockPeriod: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        reason,
+                        start_date,
+                        end_date,
+                        hotel_calendar_length,
+                        is_a_booking,
+                        booking_id,
+                    } = args.input;
+                    try {
+
+                        var s_reason = null;
+                        if (reason) {
+                            s_reason = xss(s_reason);
+                        }
+
+                        var roomLock = await createARoomLockPeriod({
+                            room_id,
+                            reason,
+                            start_date,
+                            end_date,
+                            hotel_calendar_length,
+                            is_a_booking,
+                            booking_id,
+                        });
+
+                        return roomLock;
                     } catch (error) {
                         throw error;
                     }

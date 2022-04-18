@@ -218,7 +218,7 @@ export const typeDefinitions = gql`
   }
 
   
-
+  # inputs
   input CreateRoomInput {
     hotel_id:         Int!
     room_name:        String!
@@ -256,6 +256,56 @@ export const typeDefinitions = gql`
     new_number_of_beds:     Int!
   }
 
+  # Room Lock Period
+  type RoomLockPeriod {
+    id:                   Int!
+    room_id:              Int!
+    start_date:           String!
+    end_date:             String!
+    reason:               String!
+    created_at:           String!
+    is_a_booking:         Boolean!
+    during:               String!
+    booking_id:           Int
+  }
+
+  type RoomLocksResult {
+    results:              [RoomLockPeriod]!
+    count:                Int!
+  }
+  
+  # inputs
+  input createRoomLockInput {
+    room_id:                Int!
+    reason:                 String
+    start_date:             DateObject!
+    end_date:               DateObject! 
+    hotel_calendar_length:  Int!
+    is_a_booking:           Boolean!
+    booking_id:             Int
+  }
+
+  input DateObject {
+    year:                   Int!
+    month:                  Int!
+    day:                    Int!
+    hour:                   Int!
+    minute:                 Int!
+  }
+
+  input GetRoomLocksInput {
+    start_date_filter:      DateObject!  
+    end_date_filter:        DateObject!
+    page:                   Int!
+  }
+
+  input GetARoomIsLocksInput {
+    start_date_filter:      DateObject!  
+    end_date_filter:        DateObject!
+    page:                   Int!
+    room_id_filter:         Int!
+    
+  }
 
   ##
   # Query
@@ -277,6 +327,8 @@ export const typeDefinitions = gql`
     getRoomAmenities: [RoomAmenity]!
     room(room_id: Int!): Room!
     rooms: [Room]!
+    # room locks
+    getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
   }
 
   ##
@@ -294,7 +346,9 @@ export const typeDefinitions = gql`
     updateHotelCheckIn(input: UpdateHotelCheckIn!): Hotel!
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
+    ##
     # rooms
+    ##
     # roomType
     createRoomType(input: RoomTypeInput!): RoomType!
     deleteRoomType(input: RoomTypeInput!): RoomType!
@@ -313,6 +367,8 @@ export const typeDefinitions = gql`
     updateRoomNightPrice(input: UpdateRoomNightPriceInput!): Room!
     updateRoomCapacity(input: UpdateRoomCapacityInput!): Room!
     updateRoomNumberOfBeds(input: UpdateRoomNumberOfBedsInput!): Room!
+    # room lock period
+    createARoomLockPeriod(input: createRoomLockInput!): RoomLockPeriod!
   }
 
 
