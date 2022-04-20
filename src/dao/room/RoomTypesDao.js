@@ -1,5 +1,5 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from 'dao/Errors';
-import { prisma } from 'dao/PrismaClient.js';
+import { prisma } from 'db/PrismaClient.js';
 import { isValidRoomType } from 'dao/utils';
 
 

@@ -1,4 +1,4 @@
-import { prisma } from "~/dao/PrismaClient";
+import { prisma } from "db/PrismaClient";
 import { isValidId } from "dao/utils";
 import { isValidString } from "utils";
 

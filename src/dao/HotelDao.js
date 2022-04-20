@@ -1,4 +1,4 @@
-import { prisma } from 'dao/PrismaClient.js'
+import { prisma } from 'db/PrismaClient.js'
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
 import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, isValidTimeZone } from './utils'
 

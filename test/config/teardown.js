@@ -1,4 +1,4 @@
-const { disconnect } = require('../../src/dao/PrismaClient.js');
+const { disconnect } = require('../../src/db/PrismaClient.js');
 const sql = require('../../src/db/postgres.js');
 module.exports = async function teardown() {
     try {

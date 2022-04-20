@@ -3,7 +3,7 @@
  */
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
-import { prisma } from 'dao/PrismaClient.js';
+import { prisma } from 'db/PrismaClient.js';
 import { isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName } from "dao/utils";
 import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
 

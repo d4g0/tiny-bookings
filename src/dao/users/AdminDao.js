@@ -1,4 +1,4 @@
-import { prisma } from 'dao/PrismaClient.js'
+import { prisma } from 'db/PrismaClient.js'
 import { isValidString } from 'utils'
 import { isInAdminRoles, isValidId } from '~/dao/utils'
 import { getUserRoleId, USER_ROLES } from '../DBConstans'

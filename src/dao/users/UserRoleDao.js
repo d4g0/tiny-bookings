@@ -1,4 +1,4 @@
-import { prisma } from "~/dao/PrismaClient";
+import { prisma } from "db/PrismaClient";
 import { isValidUserRoleKey } from "dao/utils";
 import { setUserRoleId, USER_ROLES } from "dao/DBConstans";
 

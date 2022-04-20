@@ -1,6 +1,6 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { areValidAmenitiesIds, isValidId, isValidRoomAmenity } from "dao/utils";
-import { prisma } from 'dao/PrismaClient.js';
+import { prisma } from 'db/PrismaClient.js';
 
 
 

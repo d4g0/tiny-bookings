@@ -115,3 +115,9 @@ export async function deleteBooking(booking_id) {
         throw error
     }
 }
+
+export async function updateBookingState(booking_id, new_booking_state){
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid booking_id')
+    }
+}

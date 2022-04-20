@@ -166,7 +166,8 @@
         -   Canceled
     -  (dao)  done 16 april 1:55
        -  rooms_bookings records of the many to many
-       -  clients for bookings (dao) done 16 april 1:55  
+       -  clients for bookings (dao) done 16 april 1:55
+    -   bookings state constanst start 19 april 19:57
 
 
 
@@ -179,7 +180,7 @@
 
 
 -   [done] Iterate `tb` tables to use `tsranges`
--   Define `create-room-lock`  sql query
+-   [done] Define `create-room-lock`  sql query
     -   `non booking`
     -   `booking`
 -   [Done] 1:55
@@ -225,8 +226,15 @@ Variant
 
 
 
-
-
+[Defered]
+Iterate `tb-schema` tables and the code to use
+Enums instead of tables in tables:
+-   booking_states
+-   payment_types
+-   currencies
+    -   user_roles
+    -   room_types
+    -   room_amenity
 
 
 
