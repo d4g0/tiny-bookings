@@ -307,6 +307,15 @@ export const typeDefinitions = gql`
     
   }
 
+  # Payment Types
+
+  type PaymentType {
+    id:                     Int!
+    payment_type:           String!
+  }
+
+
+
   ##
   # Query
   ##
@@ -330,6 +339,8 @@ export const typeDefinitions = gql`
     # room locks
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
     getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!
+    # payment types
+    getPaymentTypes: [PaymentType]!
   }
 
   ##

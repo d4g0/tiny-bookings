@@ -29,6 +29,7 @@
     - [DeleteARoomIsAmenity](#deletearoomisamenity)
     - [GetRoomLocks](#getroomlocks)
     - [GetARoomIsLocks](#getaroomislocks)
+  - [Get Payment Types](#get-payment-types)
 
 ## Login
 
@@ -595,6 +596,16 @@ query getARoomIsLocks($input: GetARoomIsLocksInput!){
     },
     "page": 1,
     "room_id_filter": 91
+  }
+}
+```
+
+## Get Payment Types
+```graphql
+query {
+  getPaymentTypes{
+		id
+    payment_type
   }
 }
 ```

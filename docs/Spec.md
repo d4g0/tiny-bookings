@@ -253,3 +253,11 @@ var booking = {
         created_at: '2022-04-16T08:51:21.000Z'
       }
 ```
+
+## Payment Type
+```js
+  var paymentType = {
+        "id": 4,
+        "payment_type": "CASH"
+  }
+```

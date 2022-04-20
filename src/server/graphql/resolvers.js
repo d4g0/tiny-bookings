@@ -43,6 +43,7 @@ import {
     deleteARoomIsAmenity
 } from "services/room";
 import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
+import { getPaymentTypes } from "dao/booking/PaymentTypeDao";
 
 export const resolvers = {
 
@@ -259,6 +260,19 @@ export const resolvers = {
             )
         ),
 
+
+        // ---------------
+        // Payment Types 
+        // ---------------
+
+        getPaymentTypes: async (root, args, ctx) => {
+            try {
+                var pts = await getPaymentTypes();
+                return pts;
+            } catch (error) {
+                throw error
+            }
+        }
     },
 
     Mutation: {
