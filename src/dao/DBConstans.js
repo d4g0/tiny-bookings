@@ -3,7 +3,7 @@
 // TODO
 // Dprecate the use of the `id` field
 
-import { isValidId } from "./utils";
+import { isValidId, isValidPaymentType } from "./utils";
 
 /**
  * User Roles
@@ -72,7 +72,9 @@ export const BOOKING_STATES = {
     }
 }
 export const BOOKING_STATES_LIST = [
-    'PAID', 'CANCEL', 'PAYMENT_PENDING'
+    BOOKING_STATES.PAID.key,
+    BOOKING_STATES.CANCEL.key,
+    BOOKING_STATES.PAYMENT_PENDING.key,
 ]
 
 export function setBookingStateId(booking_state, id) {
@@ -86,12 +88,51 @@ export function setBookingStateId(booking_state, id) {
     BOOKING_STATES[booking_state].id = id;
 }
 
-export async function getBookingStateId(booking_state){
+export async function getBookingStateId(booking_state) {
     var id = BOOKING_STATES[booking_state].id;
 
-    if(!id){
+    if (!id) {
         throw new Error('Non valid booking_state')
     }
 
     return id
+}
+
+
+// ---------------
+// Payment Types 
+// ---------------
+
+export const PAYMENT_TYPES = {
+    CASH: {
+        key: 'CASH',
+        id: null
+    }
+}
+export const PAYMENT_TYPES_LIST = [PAYMENT_TYPES.CASH.key];
+export function setPaymentTypeId(payment_type_key, id) {
+    if (!isValidId(id)) {
+        throw new Error('Non valid id for payemnt type');
+    }
+    if (!isValidPaymentType(payment_type_key)) {
+        throw new Error('Non valid payment_type_key')
+    }
+
+    if (!PAYMENT_TYPES_LIST.includes(payment_type_key)) {
+        throw new Error('Non present payment_type_key in payment types')
+    }
+
+    PAYMENT_TYPES[payment_type_key].id = id
+}
+
+export function getPaymentTypeId(payment_type_key) {
+    if (!isValidPaymentType(payment_type_key)) {
+        throw new Error('Non valid payment_type_key')
+    }
+
+    if (!PAYMENT_TYPES_LIST.includes(payment_type_key)) {
+        throw new Error('Non present payment_type_key in payment types')
+    }
+
+    return PAYMENT_TYPES[payment_type_key].id;
 }

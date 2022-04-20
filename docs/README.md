@@ -167,7 +167,8 @@
     -  (dao)  done 16 april 1:55
        -  rooms_bookings records of the many to many
        -  clients for bookings (dao) done 16 april 1:55
-    -   bookings state constanst start 19 april 19:57
+    -   bookings state constanst start 19 april 19:57 done 21:00
+    -   payment types done 22:00
 
 
 

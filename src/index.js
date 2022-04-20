@@ -4,6 +4,7 @@ const { initBookingStates } = require('dao/booking/BookingStateDao');
 import { spinUpServer, closeServer } from '~/server'
 import sql from 'db/postgres';
 import prexit from 'prexit'
+import { initPaymentTypes } from 'dao/booking/PaymentTypeDao';
 
 
 async function main() {
@@ -13,6 +14,7 @@ async function main() {
     // seeding db
     await initUserRoles();
     await initBookingStates();
+    await initPaymentTypes();
     // spin up the server
     spinUpServer();
 }
