@@ -90,3 +90,16 @@ async function getBookingStateByKey(booking_state_key) {
     var bookingState = bSRes.length > 0 ? bSRes[0] : null;
     return bookingState;
 }
+
+
+export async function getBookingStates() {
+    try {
+        var bs = await sql`
+            select * from booking_states;
+        `
+
+        return bs;
+    } catch (error) {
+        throw error
+    }
+}

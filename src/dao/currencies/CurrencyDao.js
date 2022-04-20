@@ -52,3 +52,15 @@ export async function initCurrencies() {
         throw error;
     }
 }
+
+export async function getCurrencies() {
+    try {
+        var currencies = await sql`
+            select * from currencies
+        `
+
+        return currencies;
+    } catch (error) {
+        throw error
+    }
+}

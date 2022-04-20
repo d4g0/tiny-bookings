@@ -77,3 +77,16 @@ async function getPaymentTypeByKey(payment_type_key) {
     var bookingState = bSRes.length > 0 ? bSRes[0] : null;
     return bookingState;
 }
+
+
+export async function getPaymentTypes() {
+    try {
+        var pt = await sql`
+            select * from payment_types;
+        `
+
+        return pt;
+    } catch (error) {
+        throw error
+    }
+}
