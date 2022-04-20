@@ -1,5 +1,6 @@
 import { connect, disconnect } from 'db/PrismaClient.js'
 import { initUserRoles } from 'dao/users/UserRoleDao';
+const { initBookingStates } = require('dao/booking/BookingStateDao');
 import { spinUpServer, closeServer } from '~/server'
 import sql from 'db/postgres';
 import prexit from 'prexit'
@@ -9,8 +10,9 @@ async function main() {
 
     // connect to db
     await connect();
-    // init db
+    // seeding db
     await initUserRoles();
+    await initBookingStates();
     // spin up the server
     spinUpServer();
 }

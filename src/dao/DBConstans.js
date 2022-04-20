@@ -5,6 +5,9 @@
 
 import { isValidId } from "./utils";
 
+/**
+ * User Roles
+ */
 // will be dinamyc as is db state dependent
 export const USER_ROLES = {
     'FULL_ADMIN': {
@@ -50,3 +53,45 @@ export const USER_ROLES_LIST = [
     USER_ROLES.BASIC_ADMIN,
     USER_ROLES.CLIENT
 ]
+
+/**
+ * Booking States
+ */
+export const BOOKING_STATES = {
+    PAID: {
+        key: 'PAID',
+        id: null,
+    },
+    CANCEL: {
+        key: 'CANCEL',
+        id: null,
+    },
+    PAYMENT_PENDING: {
+        key: 'PAYMENT_PENDING',
+        id: null
+    }
+}
+export const BOOKING_STATES_LIST = [
+    'PAID', 'CANCEL', 'PAYMENT_PENDING'
+]
+
+export function setBookingStateId(booking_state, id) {
+    if (!isValidId(id)) {
+        throw new Error('Non valid id');
+    }
+    if (!BOOKING_STATES_LIST.includes(booking_state)) {
+        throw new Error('Non valid booking_state')
+    }
+
+    BOOKING_STATES[booking_state].id = id;
+}
+
+export async function getBookingStateId(booking_state){
+    var id = BOOKING_STATES[booking_state].id;
+
+    if(!id){
+        throw new Error('Non valid booking_state')
+    }
+
+    return id
+}

@@ -1,21 +1,13 @@
 
-var input = { year: 2022, month: 4, day: 18, hour: 5, minute: 43 };
-var date = utcDate(input);
+require('dotenv').config()
+const sql = require('./db/postgres.js')
 
-console.log({
-    input,
-    date: date.toISOString()
-})
+async function test() {
+    var bsRes = await sql`
+        select * from booking_states bs where bs.booking_state = 'non-exisisting-booking-state'
+    `
 
-
-function utcDate({
-    year = 0,
-    month = 0,
-    day = 0,
-    hour = 0,
-    minute = 0,
-}) {
-    return new Date(Date.UTC(
-        year, month, day, hour, minute
-    ));
+    console.log({ bsRes });
 }
+
+test()
