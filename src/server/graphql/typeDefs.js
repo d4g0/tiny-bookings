@@ -314,9 +314,17 @@ export const typeDefinitions = gql`
     payment_type:           String!
   }
 
+  # Booking State
   type BookingState {
     id:                     Int!
     booking_state:          String!
+  }
+
+
+  # Currencies
+  type Currencies {
+    id:                     Int!
+    currency:               String!
   }
 
 
@@ -348,6 +356,8 @@ export const typeDefinitions = gql`
     getPaymentTypes: [PaymentType]!
     # booking states
     getBookingStates: [BookingState]!
+    # currencies
+    getCurrencies: [Currencies]!
   }
 
   ##

@@ -31,6 +31,7 @@
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
   - [Booking State](#booking-state)
+  - [Currency](#currency)
 
 ## Login
 
@@ -617,6 +618,17 @@ query {
   getBookingStates{
 		id
     booking_state
+  }
+}
+```
+
+
+## Currency
+```graphql
+query {
+  getCurrencies{
+		id
+    currency
   }
 }
 ```

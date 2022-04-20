@@ -45,6 +45,7 @@ import {
 import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
 import { getPaymentTypes } from "dao/booking/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
+import { getCurrencies } from "dao/currencies/CurrencyDao";
 
 export const resolvers = {
 
@@ -279,6 +280,15 @@ export const resolvers = {
             try {
                 var bs = await getBookingStates();
                 return bs;
+            } catch (error) {
+                throw error
+            }
+        },
+
+        getCurrencies: async (root, args, ctx) => {
+            try {
+                var currencies = await getCurrencies();
+                return currencies;
             } catch (error) {
                 throw error
             }

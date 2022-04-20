@@ -269,3 +269,11 @@ var booking = {
         "booking_state": "PAYMENT_PENDING"
   }
 ```
+
+## Currency
+```js
+    var currency = {
+            "id": 3,
+            "currency": "USD"
+    }
+```
