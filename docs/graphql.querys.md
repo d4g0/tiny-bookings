@@ -30,6 +30,7 @@
     - [GetRoomLocks](#getroomlocks)
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
+  - [Booking State](#booking-state)
 
 ## Login
 
@@ -606,6 +607,16 @@ query {
   getPaymentTypes{
 		id
     payment_type
+  }
+}
+```
+
+## Booking State
+```graphql
+query {
+  getBookingStates{
+		id
+    booking_state
   }
 }
 ```

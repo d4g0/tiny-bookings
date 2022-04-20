@@ -314,6 +314,11 @@ export const typeDefinitions = gql`
     payment_type:           String!
   }
 
+  type BookingState {
+    id:                     Int!
+    booking_state:          String!
+  }
+
 
 
   ##
@@ -341,6 +346,8 @@ export const typeDefinitions = gql`
     getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!
     # payment types
     getPaymentTypes: [PaymentType]!
+    # booking states
+    getBookingStates: [BookingState]!
   }
 
   ##

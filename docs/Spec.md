@@ -261,3 +261,11 @@ var booking = {
         "payment_type": "CASH"
   }
 ```
+
+## Booking State
+```js
+  var bookingState = {
+        "id": 9,
+        "booking_state": "PAYMENT_PENDING"
+  }
+```
