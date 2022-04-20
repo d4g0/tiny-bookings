@@ -5,6 +5,7 @@ import { spinUpServer, closeServer } from '~/server'
 import sql from 'db/postgres';
 import prexit from 'prexit'
 import { initPaymentTypes } from 'dao/booking/PaymentTypeDao';
+import { initCurrencies } from 'dao/currencies/CurrencyDao';
 
 
 async function main() {
@@ -15,6 +16,7 @@ async function main() {
     await initUserRoles();
     await initBookingStates();
     await initPaymentTypes();
+    await initCurrencies();
     // spin up the server
     spinUpServer();
 }

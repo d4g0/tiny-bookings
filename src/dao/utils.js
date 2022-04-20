@@ -392,6 +392,15 @@ export function isValidPaymentType(payment_type) {
 }
 
 
+export function isValidCurrnecy(currency_key) {
+    var currnecySchema = Joi.string().required().trim().min(2).max(10);
+    const { error, value } = currnecySchema.validate(
+        currency_key,
+        { presence: 'required', convert: false }
+    );
+    return !error;
+}
+
 // ---------------
 // Mapers 
 // ---------------

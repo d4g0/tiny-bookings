@@ -10,6 +10,7 @@
         - [`full-admin`](#full-admin)
   - [Notes](#notes)
     - [Availability](#availability)
+  - [NEW Features ideas](#new-features-ideas)
 
 ## Requirement Map
 
@@ -169,6 +170,7 @@
        -  clients for bookings (dao) done 16 april 1:55
     -   bookings state constanst start 19 april 19:57 done 21:00
     -   payment types done 22:00
+    -   currencies done 22:23
 
 
 
@@ -275,3 +277,8 @@ https://momentjs.com/timezone/
 https://moment.github.io/luxon/#/tour
 [day.js]
 https://day.js.org/
+
+
+
+## NEW Features ideas
+-   payment records

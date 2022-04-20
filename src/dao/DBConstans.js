@@ -3,7 +3,7 @@
 // TODO
 // Dprecate the use of the `id` field
 
-import { isValidId, isValidPaymentType } from "./utils";
+import { isValidCurrnecy, isValidId, isValidPaymentType } from "./utils";
 
 /**
  * User Roles
@@ -135,4 +135,47 @@ export function getPaymentTypeId(payment_type_key) {
     }
 
     return PAYMENT_TYPES[payment_type_key].id;
+}
+
+
+// ---------------
+// Currency 
+// ---------------
+
+export const CURRENCIES = {
+    USD: {
+        key: 'USD',
+        id: null
+    }
+}
+
+export const CURRENCIES_LIST = [
+    CURRENCIES.USD.key
+]
+
+export function setCurrencyId(currency_key, id) {
+    if (!isValidCurrnecy(currency_key)) {
+        throw new Error('Non valid currency_key')
+    }
+
+    if (!isValidId(id)) {
+        throw new Error('Non valid id')
+    }
+
+    if (!CURRENCIES_LIST.includes(currency_key)) {
+        throw new Error('Non valid currency_key');
+    }
+
+    CURRENCIES[currency_key].id = id
+}
+
+export function getCurrencyId(currency_key) {
+    if (!isValidCurrnecy(currency_key)) {
+        throw new Error('Non valid currency_key')
+    }
+    if (!CURRENCIES_LIST.includes(currency_key)) {
+        throw new Error('Non valid currency_key');
+    }
+
+    return CURRENCIES[currency_key].id;
 }
