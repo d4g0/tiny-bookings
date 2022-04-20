@@ -161,18 +161,18 @@
 
 []
 -   bookings
-    -   define booking states
-        -   Pending
-        -   Paid
-        -   Canceled
+    -   define booking states done
     -  (dao)  done 16 april 1:55
        -  rooms_bookings records of the many to many
        -  clients for bookings (dao) done 16 april 1:55
        -  bookings state constanst start 19 april 19:57 done 21:00
        -  payment types done 22:00
        -  currencies done 22:23
-    -   (graphql)
-        -   
+    -   (graphql) 
+        - bookings, payment, currencies done 23:10
+    -   iterate booking schema to include cancel hanlding 
+        -   start 20 april 00:15 done 2 min
+        -   [done 00:53] create a payment table for the case some how a client pays for a booking and then it can be booked
 
 
 

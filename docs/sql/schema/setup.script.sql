@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS public.booking
     start_date timestamp(0) without time zone NOT NULL,
     end_date timestamp(0) without time zone NOT NULL,
     number_of_guests integer NOT NULL,
+    is_cancel boolean DEFAULT false,
     created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id)
 );
@@ -164,6 +165,16 @@ CREATE TABLE IF NOT EXISTS public.room_types
     room_type character varying(30) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unque_room_type UNIQUE (room_type)
+);
+
+CREATE TABLE IF NOT EXISTS public.client_payments
+(
+    id serial NOT NULL,
+    client_id integer NOT NULL,
+    amount numeric(12, 2) NOT NULL,
+    booking_reference integer,
+    effectuated_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS public.admins
@@ -293,13 +304,29 @@ ALTER TABLE IF EXISTS public.booking
     NOT VALID;
 
 
--- INDEXES
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT client_payer_reference FOREIGN KEY (client_id)
+    REFERENCES public.clients (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT booking_of_payment FOREIGN KEY (booking_reference)
+    REFERENCES public.booking (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;    
+
+
+--  INDEXES
 CREATE INDEX admin_email_idx on admins USING BTREE (email);
 CREATE INDEX client_email_idx on clients USING BTREE (email);
 CREATE INDEX booking_start_date_idx on booking USING BTREE (start_date);
 CREATE INDEX lock_period_start_date_idx on room_lock_period USING BTREE (start_date);
 CREATE INDEX lock_period_during_idx ON room_lock_period USING GIST (during);
-
+CREATE INDEX client_payments_effectuated_at_idx on client_payments USING BTREE (effectuated_at);
 
 -- FUNCTIONS
 create or replace function is_room_available_in( 
@@ -333,5 +360,4 @@ end loop;
 END;
 $$
 LANGUAGE plpgsql;
-
 END;

@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS public.booking
     start_date timestamp(0) without time zone NOT NULL,
     end_date timestamp(0) without time zone NOT NULL,
     number_of_guests integer NOT NULL,
+    is_cancel boolean DEFAULT false,
     created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id)
 );
@@ -164,6 +165,16 @@ CREATE TABLE IF NOT EXISTS public.room_types
     room_type character varying(30) NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unque_room_type UNIQUE (room_type)
+);
+
+CREATE TABLE IF NOT EXISTS public.client_payments
+(
+    id serial NOT NULL,
+    client_id integer NOT NULL,
+    amount numeric(12, 2) NOT NULL,
+    booking_reference integer,
+    effectuated_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS public.admins
@@ -291,5 +302,21 @@ ALTER TABLE IF EXISTS public.booking
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT client_payer_reference FOREIGN KEY (client_id)
+    REFERENCES public.clients (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT booking_of_payment FOREIGN KEY (booking_reference)
+    REFERENCES public.booking (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;    
 
 END;
