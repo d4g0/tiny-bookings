@@ -168,8 +168,6 @@ insert into
         client_id,
         hotel_id,
         booking_state,
-        payment_type,
-        currency,
         total_price,
         start_date,
         end_date,
@@ -177,8 +175,6 @@ insert into
     )
 values
     (
-        1,
-        1,
         1,
         1,
         1,
