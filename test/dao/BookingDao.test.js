@@ -1,8 +1,8 @@
 
-import { createBooking, deleteBooking } from 'dao/booking/BookingDao';
-import { createABookingState, deleteABookingState } from 'dao/booking/BookingStateDao';
+import { createBooking, deleteBooking, updateBookingState } from 'dao/booking/BookingDao';
+import { createABookingState, deleteABookingState, getBookingStateByKey } from 'dao/booking/BookingStateDao';
 import { createAPaymentType, deleteAPaymentType } from 'dao/payments/PaymentTypeDao';
-import { getUserRoleId, USER_ROLES } from 'dao/DBConstans';
+import { BOOKING_STATES, getUserRoleId, USER_ROLES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
 import { createRoom, deleteRoom } from 'dao/room/RoomDao';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
@@ -86,13 +86,13 @@ describe(
     'Booking State Dao',
 
     function () {
-        // create a room lock
+        // create a booking
         test(
-            "Create and delete a booking ",
+            "Create, update state and delete  a booking ",
             async function () {
 
                 var dbError = null, booking = null, client = null,
-                    bookingState = null, paymentType = null;
+                    bookingState = null, paymentType = null, cancelState = null, updatedBooking = null;
                 ;
 
 
@@ -116,8 +116,15 @@ describe(
                         end_date: PERIOD_DATA.end_date,
                         number_of_guests: 2,
                     });
+                    
+
+                    cancelState = await getBookingStateByKey(BOOKING_STATES.CANCEL.key);
+                    
+                    updatedBooking = await updateBookingState(booking.id, cancelState.id);
+
                     console.log({
                         booking,
+                        updatedBooking
                     });
                     // clean
 
@@ -133,6 +140,8 @@ describe(
 
                 expect(dbError).toBe(null);
                 expect(booking.id).toBeDefined();
+                expect(updatedBooking.id).toBe(booking.id);
+                expect(updatedBooking.booking_state).toBe(cancelState.id);
             }
         )
 

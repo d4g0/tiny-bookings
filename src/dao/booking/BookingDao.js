@@ -1,4 +1,4 @@
-import { isValidBookingState, isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice, utcDate } from 'dao/utils';
+import { isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice, utcDate } from 'dao/utils';
 import sql from 'db/postgres';
 
 /**
@@ -26,7 +26,7 @@ export async function createBooking({
             if (!isValidId(booking_state_id)) {
                 throw new Error('Non valid booking_state_id')
             }
-            
+
             if (!isValidPrice(total_price)) {
                 throw new Error('Non valid total_price')
             }
@@ -110,9 +110,28 @@ export async function deleteBooking(booking_id) {
     }
 }
 
-export async function updateBookingState(booking_id, new_booking_state){
+export async function updateBookingState(booking_id, new_booking_state) {
     if (!isValidId(booking_id)) {
         throw new Error('Non valid booking_id')
+    }
+
+    if (!isValidId(new_booking_state)) {
+        throw new Error('Non valid new_booking_state')
+    }
+
+    try {
+        var updateRes = await sql`
+        update  
+            booking  
+        set booking_state = ${new_booking_state} 
+        where id = ${booking_id} 
+        returning *
+        `
+        var updatedBooking = updateRes[0];
+        updatedBooking.total_price = +updatedBooking.total_price;
+        return updatedBooking;
+    } catch (error) {
+        throw error;
     }
 }
 
