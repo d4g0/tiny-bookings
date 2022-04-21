@@ -21,7 +21,12 @@ Operation wish handle a lot of records
     -   fields
         -   start_date
         -   during
-
+        -   booking_id
+-   list client payments
+    -   tables
+        -   client_payments
+    -   fields
+        -   effectuated_at
 
 ## Indexes
 
@@ -52,3 +57,16 @@ during
 ```sql
 CREATE INDEX lock_period_during_idx ON room_lock_period USING GIST (during);
 ```
+
+booking_id
+```sql
+CREATE INDEX lock_period_booking_idx ON room_lock_period USING BTREE (booking_id);
+```
+
+## Client Payments
+effectuated_at
+```sql
+CREATE INDEX client_payments_effectuated_at_idx on client_payments USING BTREE (effectuated_at);
+```
+
+##
