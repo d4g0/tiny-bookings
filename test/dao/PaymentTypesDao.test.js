@@ -9,9 +9,9 @@ import { v4 as uuid } from 'uuid'
 
 
 describe(
-    'Booking State Dao',
+    'Payment Types Dao',
 
-    function roomTypesDaoTest() {
+    function () {
         // create a room lock
         test(
             "Create and delete a booking state ",
