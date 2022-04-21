@@ -1,3 +1,4 @@
+import { deleteRoomBookingsByBookingId } from 'dao/booking/RoomsBookingsDao';
 import { getCurrencyByKey } from 'dao/currencies/CurrencyDao';
 import { CURRENCIES, PAYMENT_TYPES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
@@ -111,6 +112,7 @@ describe(
             `Create a booking as admin 
             + getRoomLocksByBookingId
             + delRoomLocksByBookingId
+            + delRoomBookingsByBookingId
             
             `,
             async function () {
@@ -119,6 +121,7 @@ describe(
                 var t_results = null;
                 var roomLocks = null;
                 var delRoomLocks = null;
+                var delRoomBookings = null;
                 try {
 
                     usd = await getCurrencyByKey(CURRENCIES.USD.key);
@@ -142,8 +145,10 @@ describe(
                     t_error = error;
                     t_results = results;
 
-                    roomLocks = await getRoomLocksByBookingId(results.booking.id)
-                    delRoomLocks = await deleteRoomLocksByBookingId(results.booking.id);
+                    var booking = results.booking;
+                    roomLocks = await getRoomLocksByBookingId(booking.id)
+                    delRoomLocks = await deleteRoomLocksByBookingId(booking.id);
+                    delRoomBookings = await deleteRoomBookingsByBookingId(booking.id);
 
                     console.log('---- completed -----')
                     console.log({ completed });
@@ -153,6 +158,10 @@ describe(
                     console.log(results)
                     console.log('---- roomLocks -----')
                     console.log(roomLocks)
+                    console.log('---- delRoomBookings -----')
+                    console.log(delRoomBookings)
+
+
                 } catch (error) {
                     dbError = error;
                     console.log(error)
@@ -180,6 +189,9 @@ describe(
                 // del room locks by booking id
                 expect(delRoomLocks.length).toBe(2);
                 expect(roomLocks[0]).toStrictEqual(delRoomLocks[0]);
+                // del room bookings by id
+                expect(delRoomBookings.length).toBe(2);
+                expect(delRoomBookings[0]).toStrictEqual(results.roomBookings[0]);
             }
         )
 

@@ -193,6 +193,7 @@
         -   restart april 21 16:41
             -   create RoomLocks/getRoomLocksByBookingId done 16:57
             -   create RoomLocks/deleteRoomLocksByBookingId start :59 done :05
+            -   delete RoomBookings start :07 done :13
 
 
 

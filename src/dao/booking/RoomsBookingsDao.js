@@ -46,3 +46,20 @@ export async function deleteARoomBooking(room_id, booking_id) {
         throw error;
     }
 }
+
+export async function deleteRoomBookingsByBookingId(booking_id){
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid booking_id');
+    }
+
+    try {
+        var delRBS = await sql`
+        delete from 
+            rooms_bookings rb 
+        where rb.booking_id = ${booking_id} RETURNING *;
+        `
+        return delRBS;
+    } catch (error) {
+        throw error;
+    }
+}
