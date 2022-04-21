@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid'
 describe(
     'Client Dao',
 
-    function roomTypesDaoTest() {
+    function () {
         // create a room lock
         test(
             "Create and delete a non user client ",
