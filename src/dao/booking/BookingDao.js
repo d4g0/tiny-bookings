@@ -4,13 +4,11 @@ import sql from 'db/postgres';
 /**
  * TODO Implement a service that handle 
  * all dependencies creations availability verification a so fort
- * @param {*} param0 
  */
 export async function createBooking({
     client_id,
     hotel_id,
     booking_state_id,
-    payment_type_id,
     total_price,
     start_date = { year, month, day, hour, minute },
     end_date = { year, month, day, hour, minute },
@@ -117,3 +115,4 @@ export async function updateBookingState(booking_id, new_booking_state){
         throw new Error('Non valid booking_id')
     }
 }
+

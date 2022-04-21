@@ -158,7 +158,7 @@ Create and update Model of room
     ] // might be an empty array
   }
 
-  var noDependenciesRoom room : {
+  var noDependenciesRoom room = {
         id: 143,
         hotel_id: 29,
         room_name: 'db8d5efd-1',
@@ -290,6 +290,73 @@ Might have or not a booking id reference
         currency: 1,
         effectuated_at: '2022-04-21 02:56:16'
       }
+
+
+```
+
+## Create A Booking as Admin
+Success Response sample
+```js
+
+var res = {
+      client: {
+        id: 47,
+        user_role: 3,
+        client_name: '02ac9685-b',
+        client_last_name: '26a0ea05-a',
+        hash_password: null,
+        email: null,
+        is_email_verified: false,
+        reset_token: null,
+        created_at: '2022-04-21 06:29:54'
+      },
+      booking: {
+        id: 25,
+        client_id: 47,
+        hotel_id: 38,
+        booking_state: 1,
+        total_price: 300,
+        start_date: '2022-05-21 06:29:00',
+        end_date: '2022-05-22 06:29:00',
+        number_of_guests: 4,
+        is_cancel: false,
+        created_at: '2022-04-21 06:29:54'
+      },
+      clientPayment: {
+        id: 36,
+        client_id: 47,
+        amount: '300.00',
+        booking_reference: 25,
+        payment_type: 1,
+        currency: 1,
+        effectuated_at: '2022-04-21 06:29:54'
+      },
+      roomLocks: [
+        {
+          id: 28,
+          room_id: 50,
+          start_date: '2022-05-21 06:29:00',
+          end_date: '2022-05-22 06:29:00',
+          reason: 'Booked',
+          created_at: '2022-04-21 06:29:54',
+          during: '["2022-05-21 06:29:00","2022-05-22 06:29:00"]',
+          is_a_booking: true,
+          booking_id: 25
+        },
+        {
+          id: 29,
+          room_id: 51,
+          start_date: '2022-05-21 06:29:00',
+          end_date: '2022-05-22 06:29:00',
+          reason: 'Booked',
+          created_at: '2022-04-21 06:29:54',
+          during: '["2022-05-21 06:29:00","2022-05-22 06:29:00"]',
+          is_a_booking: true,
+          booking_id: 25
+        }
+      ],
+      roomBookings: [ { room_id: 50, booking_id: 25 }, { room_id: 51, booking_id: 25 } ]
+    }
 
 
 ```

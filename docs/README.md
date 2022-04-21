@@ -156,7 +156,7 @@
         -   create [done 18 paril at 00:20]
             -   non booking
             -   for booking 
-    -   get room locks [done 18 paril at 00:40]
+    -   get room locks [done 18 april at 00:40]
         -   (dao)   
         -   (graphql)   
 
