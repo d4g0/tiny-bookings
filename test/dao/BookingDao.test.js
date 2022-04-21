@@ -1,7 +1,7 @@
 
 import { createBooking, deleteBooking } from 'dao/booking/BookingDao';
 import { createABookingState, deleteABookingState } from 'dao/booking/BookingStateDao';
-import { createAPaymentType, deleteAPaymentType } from 'dao/booking/PaymentTypeDao';
+import { createAPaymentType, deleteAPaymentType } from 'dao/payments/PaymentTypeDao';
 import { getUserRoleId, USER_ROLES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
 import { createRoom, deleteRoom } from 'dao/room/RoomDao';
@@ -106,14 +106,11 @@ describe(
                     })
 
                     bookingState = await createABookingState(uuid().substring(0, 10));
-                    paymentType = await createAPaymentType(uuid().substring(0, 10));
-
 
                     booking = await createBooking({
                         client_id: client.id,
                         hotel_id: HOTEL.id,
                         booking_state_id: bookingState.id,
-                        payment_type_id: paymentType.id,
                         total_price: 50,
                         start_date: PERIOD_DATA.start_date,
                         end_date: PERIOD_DATA.end_date,
@@ -125,7 +122,6 @@ describe(
                     // clean
 
                     await deleteBooking(booking.id);
-                    await deleteAPaymentType(paymentType.payment_type)
                     await deleteABookingState(bookingState.booking_state)
                     await deleteClient(client.id);
 

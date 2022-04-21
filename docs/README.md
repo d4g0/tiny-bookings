@@ -169,10 +169,17 @@
        -  payment types done 22:00
        -  currencies done 22:23
     -   (graphql) 
-        - bookings, payment, currencies done 23:10
+        - bookings, payment_types, currencies done 23:10
     -   iterate booking schema to include cancel hanlding 
         -   start 20 april 00:15 done 2 min
         -   [done 00:53] create a payment table for the case some how a client pays for a booking and then it can be booked
+    -   (dao) client payments
+    -   refactor bookings start 20 april 22:55 done :58
+        -   remove 
+            -   currency
+            -   payment_type
+        -   dao
+        -   graphql
 
 
 

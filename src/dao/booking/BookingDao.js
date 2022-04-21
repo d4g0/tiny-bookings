@@ -28,9 +28,7 @@ export async function createBooking({
             if (!isValidId(booking_state_id)) {
                 throw new Error('Non valid booking_state_id')
             }
-            if (!isValidId(payment_type_id)) {
-                throw new Error('Non valid payment_type_id')
-            }
+            
             if (!isValidPrice(total_price)) {
                 throw new Error('Non valid total_price')
             }
@@ -74,7 +72,6 @@ export async function createBooking({
                     client_id,
                     hotel_id,
                     booking_state,
-                    payment_type,
                     total_price,
                     start_date,
                     end_date,
@@ -85,7 +82,6 @@ export async function createBooking({
                     ${client_id},
                     ${hotel_id},
                     ${booking_state_id},
-                    ${payment_type_id},
                     ${total_price},
                     ${utc_start_date.toISOString()},
                     ${utc_end_date.toISOString()},

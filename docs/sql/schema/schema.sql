@@ -119,8 +119,6 @@ CREATE TABLE IF NOT EXISTS public.booking
     client_id integer,
     hotel_id integer NOT NULL,
     booking_state integer,
-    payment_type integer,
-    currency integer,
     total_price numeric NOT NULL,
     start_date timestamp(0) without time zone NOT NULL,
     end_date timestamp(0) without time zone NOT NULL,
@@ -173,149 +171,11 @@ CREATE TABLE IF NOT EXISTS public.client_payments
     client_id integer NOT NULL,
     amount numeric(12, 2) NOT NULL,
     booking_reference integer,
+    payment_type integer NOT NULL,
+    currency integer NOT NULL,
     effectuated_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS public.admins
-    ADD CONSTRAINT user_role FOREIGN KEY (user_role)
-    REFERENCES public.user_roles (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
 
-
-ALTER TABLE IF EXISTS public.clients
-    ADD CONSTRAINT user_role FOREIGN KEY (user_role)
-    REFERENCES public.user_roles (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.room
-    ADD CONSTRAINT hotel_id FOREIGN KEY (hotel_id)
-    REFERENCES public.hotel (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.room
-    ADD FOREIGN KEY (room_type)
-    REFERENCES public.room_types (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.rooms_amenities
-    ADD CONSTRAINT room_id_link FOREIGN KEY (room_id)
-    REFERENCES public.room (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.rooms_amenities
-    ADD CONSTRAINT amenity_id_link FOREIGN KEY (amenity_id)
-    REFERENCES public.room_amenity (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.room_pictures
-    ADD CONSTRAINT room_link FOREIGN KEY (room_id)
-    REFERENCES public.room (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT client_link FOREIGN KEY (client_id)
-    REFERENCES public.clients (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT booking_state_link FOREIGN KEY (booking_state)
-    REFERENCES public.booking_states (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT payment_type_link FOREIGN KEY (payment_type)
-    REFERENCES public.payment_types (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT currency_link FOREIGN KEY (currency)
-    REFERENCES public.currencies (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.rooms_bookings
-    ADD CONSTRAINT booking_link FOREIGN KEY (booking_id)
-    REFERENCES public.booking (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.rooms_bookings
-    ADD CONSTRAINT room_link FOREIGN KEY (room_id)
-    REFERENCES public.room (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.room_lock_period
-    ADD CONSTRAINT room_link FOREIGN KEY (room_id)
-    REFERENCES public.room (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.room_lock_period
-    ADD CONSTRAINT booking_reference FOREIGN KEY (booking_id)
-    REFERENCES public.booking (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT booking_hotel_ownership FOREIGN KEY (hotel_id)
-    REFERENCES public.hotel (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.client_payments
-    ADD CONSTRAINT client_payer_reference FOREIGN KEY (client_id)
-    REFERENCES public.clients (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.client_payments
-    ADD CONSTRAINT booking_of_payment FOREIGN KEY (booking_reference)
-    REFERENCES public.booking (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;    
 END;

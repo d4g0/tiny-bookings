@@ -1,6 +1,6 @@
 import { createBooking, deleteBooking } from "dao/booking/BookingDao";
 import { createABookingState, deleteABookingState } from "dao/booking/BookingStateDao";
-import { createAPaymentType, deleteAPaymentType } from "dao/booking/PaymentTypeDao";
+import { createAPaymentType, deleteAPaymentType } from "dao/payments/PaymentTypeDao";
 import { createARoomBooking, deleteARoomBooking } from "dao/booking/RoomsBookingsDao";
 import { getUserRoleId, USER_ROLES } from "dao/DBConstans";
 import { AVAILABILITY_ERROR_KEY, DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";

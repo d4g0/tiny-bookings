@@ -1,5 +1,5 @@
 
-import { createAPaymentType, deleteAPaymentType } from 'dao/booking/PaymentTypeDao';
+import { createAPaymentType, deleteAPaymentType } from 'dao/payments/PaymentTypeDao';
 import { v4 as uuid } from 'uuid'
 
 

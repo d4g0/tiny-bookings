@@ -244,7 +244,6 @@ var booking = {
         client_id: 6,
         hotel_id: 3,
         booking_state: 6,
-        payment_type: 7,
         currency: null,
         total_price: '50',
         start_date: '2022-05-16T08:51:00.000Z',
