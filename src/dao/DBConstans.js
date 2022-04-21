@@ -66,15 +66,11 @@ export const BOOKING_STATES = {
         key: 'CANCEL',
         id: null,
     },
-    PAYMENT_PENDING: {
-        key: 'PAYMENT_PENDING',
-        id: null
-    }
+    
 }
 export const BOOKING_STATES_LIST = [
     BOOKING_STATES.PAID.key,
     BOOKING_STATES.CANCEL.key,
-    BOOKING_STATES.PAYMENT_PENDING.key,
 ]
 
 export function setBookingStateId(booking_state, id) {

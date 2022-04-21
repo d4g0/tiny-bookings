@@ -66,12 +66,7 @@ export async function initBookingStates() {
         setBookingStateId(cancelState.booking_state, cancelState.id);
 
 
-        // payment pending state
-        var paymentPState = await getBookingStateByKey(BOOKING_STATES.PAYMENT_PENDING.key);
-        if (!paymentPState) {
-            paymentPState = await createABookingState(BOOKING_STATES.PAYMENT_PENDING.key);
-        }
-        setBookingStateId(paymentPState.booking_state, paymentPState.id);
+        
 
     } catch (error) {
         throw error
