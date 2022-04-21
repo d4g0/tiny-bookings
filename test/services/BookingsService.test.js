@@ -8,7 +8,7 @@ import { createRoom, deleteRoom } from 'dao/room/RoomDao';
 import { deleteRoomLocksByBookingId, getRoomLocksByBookingId } from 'dao/room/RoomLock';
 import { mapTimeToDateTime } from 'dao/utils';
 import { DateTime } from 'luxon';
-import { createABookingAsAdmin } from 'services/bookings';
+import { cancelBookingAsAdmin, createABookingAsAdmin } from 'services/bookings';
 import { v4 as uuid } from 'uuid'
 
 
@@ -19,7 +19,7 @@ beforeAll(async () => {
         // create hotel
         var hotelData = {
             hotel_name: uuid().substring(0, 10),
-            maximun_free_calendar_days: 30,
+            maximun_free_calendar_days: 90,
             check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
             check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
             minimal_prev_days_to_cancel: 5,
@@ -92,6 +92,23 @@ const PERIOD_DATA = {
     end_date: {
         year: utc_now.year,
         month: utc_now.month,
+        day: utc_now.day + 1,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+}
+
+const PERIOD_DATA_2 = {
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month + 1,
+        day: utc_now.day,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month + 1,
         day: utc_now.day + 1,
         hour: utc_now.hour,
         minute: utc_now.minute
@@ -199,7 +216,65 @@ describe(
                 expect(delClientPayment).toBeDefined();
                 expect(delClientPayment).toStrictEqual(results.clientPayment);
             }
-        )
+        ),
+
+            test(
+                "Cancel A booking",
+                async function () {
+                    var dbError = null, booking = null, canceledBooking = null;
+
+                    try {
+
+                        var usd = await getCurrencyByKey(CURRENCIES.USD.key);
+                        var cash = await getPaymentTypeByKey(PAYMENT_TYPES.CASH.key);
+
+                        var { completed, error, results } = await createABookingAsAdmin({
+                            start_date: PERIOD_DATA_2.start_date,
+                            end_date: PERIOD_DATA_2.end_date,
+                            rooms_ids: [ROOM.id, ROOM_2.id],
+                            hotel_id: HOTEL.id,
+                            hotel_calendar_length: HOTEL.maximun_free_calendar_days,
+                            client_name: CLIENT_DATA.client_name,
+                            client_last_name: CLIENT_DATA.client_last_name,
+                            currency_id: usd.id,
+                            number_of_guests: 4,
+                            payment_type_id: cash.id,
+                            total_price: 300
+                        })
+
+                        if (!completed) {
+                            throw error;
+                        }
+
+                        booking = results.booking;
+
+                        {
+                            var { completed, results, error } = await cancelBookingAsAdmin(booking.id);
+                            if (!completed) {
+                                throw error;
+                            }
+
+                            canceledBooking = results.booking;
+                        }
+
+                        console.log({
+                            booking,
+                            canceledBooking
+                        })
+
+
+
+                    } catch (error) {
+                        dbError = error;
+                        console.log(error);
+                    }
+
+                    expect(dbError).toBeNull();
+                    expect(booking.id).toBe(canceledBooking.id);
+                    expect(canceledBooking.is_cancel).toBe(true);
+
+                }
+            )
 
     }
 )

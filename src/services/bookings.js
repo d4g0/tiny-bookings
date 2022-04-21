@@ -11,12 +11,12 @@
  * 
  */
 
-import { createBooking, deleteBooking } from "dao/booking/BookingDao";
+import { createBooking, deleteBooking, updateBookingAsCancel } from "dao/booking/BookingDao";
 import { getBookingStateByKey } from "dao/booking/BookingStateDao";
-import { createARoomBooking, deleteARoomBooking } from "dao/booking/RoomsBookingsDao";
+import { createARoomBooking, deleteARoomBooking, deleteRoomBookingsByBookingId } from "dao/booking/RoomsBookingsDao";
 import { BOOKING_STATES, USER_ROLES } from "dao/DBConstans";
-import { createAPaymentWithBooking, deleteAPayment } from "dao/payments/PaymentsDao";
-import { createARoomLockPeriod, deleteRoomLockPeriod, isRoomAvailableIn } from "dao/room/RoomLock";
+import { createAPaymentWithBooking, deleteAPayment, deletePaymentByBookingId } from "dao/payments/PaymentsDao";
+import { createARoomLockPeriod, deleteRoomLockPeriod, deleteRoomLocksByBookingId, isRoomAvailableIn } from "dao/room/RoomLock";
 import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
 import { getUserRoleByKey } from "dao/users/UserRoleDao";
 import { isValidClientName, isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice } from "dao/utils";
@@ -267,4 +267,49 @@ export async function createABookingAsAdmin({
         }
     }
 
+}
+
+export async function cancelBookingAsAdmin(booking_id) {
+
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid Booking Id')
+    }
+
+    // end result
+    var completed = false;
+    var results = {};
+    try {
+        // clean booking dependency chain
+
+        // room locks
+        //  deleteRoomLocksByBookingId
+        await deleteRoomLocksByBookingId(booking_id);
+
+        // room bookings
+        // deleteRoomBookings by booking id
+        await deleteRoomBookingsByBookingId(booking_id);
+
+        // client payment
+        // delete client payment  by booking id
+        await deletePaymentByBookingId(booking_id);
+
+        // set the booked state as cancel
+        // updateBooking
+        var canceledState = await getBookingStateByKey(BOOKING_STATES.CANCEL.key);
+        var updatedBooking = await updateBookingAsCancel(booking_id, canceledState.id);
+        results.booking = updatedBooking
+        completed = true;
+        return {
+            completed,
+            results,
+            error: null,
+        }
+
+    } catch (error) {
+        return {
+            completed,
+            results,
+            error,
+        }
+    }
 }

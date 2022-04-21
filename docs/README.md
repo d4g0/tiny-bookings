@@ -189,12 +189,16 @@
         -   dao done 21 april 2:40
         -   graphql
     -   Cancel Booking 
-        -   start 2:41 brake at 3:12
-        -   restart april 21 16:41
-            -   create RoomLocks/getRoomLocksByBookingId done 16:57
-            -   create RoomLocks/deleteRoomLocksByBookingId start :59 done :05
-            -   delete RoomBookings start :07 done :13
-            -   delete client payments done :30
+        -   dao done 21 april 18:15
+            -   start 2:41 brake at 3:12
+            -   restart april 21 16:41
+                -   create RoomLocks/getRoomLocksByBookingId done 16:57
+                -   create RoomLocks/deleteRoomLocksByBookingId start :59 done :05
+                -   delete RoomBookings start :07 done :13
+                -   delete client payments done :30
+                -   update bookingState :51
+                -   updateBookingAsCancel done 18:15
+                -   
 
 
 
