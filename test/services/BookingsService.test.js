@@ -3,7 +3,7 @@ import { CURRENCIES, PAYMENT_TYPES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createRoom, deleteRoom } from 'dao/room/RoomDao';
-import { getRoomLocksByBookingId } from 'dao/room/RoomLock';
+import { deleteRoomLocksByBookingId, getRoomLocksByBookingId } from 'dao/room/RoomLock';
 import { mapTimeToDateTime } from 'dao/utils';
 import { DateTime } from 'luxon';
 import { createABookingAsAdmin } from 'services/bookings';
@@ -108,12 +108,17 @@ describe(
     function () {
 
         test(
-            "Create a booking as admin + getRoomLocksById",
+            `Create a booking as admin 
+            + getRoomLocksByBookingId
+            + delRoomLocksByBookingId
+            
+            `,
             async function () {
                 var dbError = null, t_completed = false, t_error = null;
                 var usd = null, cash = null;
                 var t_results = null;
                 var roomLocks = null;
+                var delRoomLocks = null;
                 try {
 
                     usd = await getCurrencyByKey(CURRENCIES.USD.key);
@@ -138,7 +143,7 @@ describe(
                     t_results = results;
 
                     roomLocks = await getRoomLocksByBookingId(results.booking.id)
-
+                    delRoomLocks = await deleteRoomLocksByBookingId(results.booking.id);
 
                     console.log('---- completed -----')
                     console.log({ completed });
@@ -172,6 +177,9 @@ describe(
                 expect(rl.during).toBeDefined();
                 expect(rl.is_a_booking).toBe(true);
                 expect(rl.booking_id).toBeDefined();
+                // del room locks by booking id
+                expect(delRoomLocks.length).toBe(2);
+                expect(roomLocks[0]).toStrictEqual(delRoomLocks[0]);
             }
         )
 
