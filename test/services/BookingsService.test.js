@@ -2,6 +2,7 @@ import { deleteRoomBookingsByBookingId } from 'dao/booking/RoomsBookingsDao';
 import { getCurrencyByKey } from 'dao/currencies/CurrencyDao';
 import { CURRENCIES, PAYMENT_TYPES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
+import { deletePaymentByBookingId } from 'dao/payments/PaymentsDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createRoom, deleteRoom } from 'dao/room/RoomDao';
 import { deleteRoomLocksByBookingId, getRoomLocksByBookingId } from 'dao/room/RoomLock';
@@ -113,7 +114,7 @@ describe(
             + getRoomLocksByBookingId
             + delRoomLocksByBookingId
             + delRoomBookingsByBookingId
-            
+            + deletePaymentByBookingId
             `,
             async function () {
                 var dbError = null, t_completed = false, t_error = null;
@@ -122,6 +123,7 @@ describe(
                 var roomLocks = null;
                 var delRoomLocks = null;
                 var delRoomBookings = null;
+                var delClientPayment = null;
                 try {
 
                     usd = await getCurrencyByKey(CURRENCIES.USD.key);
@@ -149,7 +151,7 @@ describe(
                     roomLocks = await getRoomLocksByBookingId(booking.id)
                     delRoomLocks = await deleteRoomLocksByBookingId(booking.id);
                     delRoomBookings = await deleteRoomBookingsByBookingId(booking.id);
-
+                    delClientPayment = await deletePaymentByBookingId(booking.id)
                     console.log('---- completed -----')
                     console.log({ completed });
                     console.log('---- error -----')
@@ -160,6 +162,8 @@ describe(
                     console.log(roomLocks)
                     console.log('---- delRoomBookings -----')
                     console.log(delRoomBookings)
+                    console.log('---- delClientPayment -----')
+                    console.log(delClientPayment)
 
 
                 } catch (error) {
@@ -192,6 +196,8 @@ describe(
                 // del room bookings by id
                 expect(delRoomBookings.length).toBe(2);
                 expect(delRoomBookings[0]).toStrictEqual(results.roomBookings[0]);
+                expect(delClientPayment).toBeDefined();
+                expect(delClientPayment).toStrictEqual(results.clientPayment);
             }
         )
 

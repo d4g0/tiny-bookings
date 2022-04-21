@@ -194,6 +194,7 @@
             -   create RoomLocks/getRoomLocksByBookingId done 16:57
             -   create RoomLocks/deleteRoomLocksByBookingId start :59 done :05
             -   delete RoomBookings start :07 done :13
+            -   delete client payments done :30
 
 
 

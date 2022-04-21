@@ -207,3 +207,18 @@ export async function deleteAPayment(payment_id) {
         throw error
     }
 }
+
+export async function deletePaymentByBookingId(booking_id){
+    if(!isValidId(booking_id)){
+        throw new Error('Non valid booking_id')
+    }
+
+    try {
+        var delClientPayments = await sql`
+        delete from client_payments cp where cp.booking_reference = ${booking_id} RETURNING *
+        `
+        return delClientPayments[0];
+    } catch (error) {
+        throw error;
+    }
+}
