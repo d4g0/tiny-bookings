@@ -2,7 +2,6 @@
 -- Please log an issue at https://redmine.postgresql.org/projects/pgadmin4/issues/new if you find any bugs, including reproduction steps.
 BEGIN;
 
-
 CREATE TABLE IF NOT EXISTS public.user_roles
 (
     id serial,
@@ -119,8 +118,6 @@ CREATE TABLE IF NOT EXISTS public.booking
     client_id integer,
     hotel_id integer NOT NULL,
     booking_state integer,
-    payment_type integer,
-    currency integer,
     total_price numeric NOT NULL,
     start_date timestamp(0) without time zone NOT NULL,
     end_date timestamp(0) without time zone NOT NULL,
@@ -173,6 +170,8 @@ CREATE TABLE IF NOT EXISTS public.client_payments
     client_id integer NOT NULL,
     amount numeric(12, 2) NOT NULL,
     booking_reference integer,
+    payment_type integer NOT NULL,
+    currency integer NOT NULL,
     effectuated_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     PRIMARY KEY (id)
 );
@@ -249,22 +248,6 @@ ALTER TABLE IF EXISTS public.booking
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT payment_type_link FOREIGN KEY (payment_type)
-    REFERENCES public.payment_types (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.booking
-    ADD CONSTRAINT currency_link FOREIGN KEY (currency)
-    REFERENCES public.currencies (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
 ALTER TABLE IF EXISTS public.rooms_bookings
     ADD CONSTRAINT booking_link FOREIGN KEY (booking_id)
     REFERENCES public.booking (id) MATCH SIMPLE
@@ -318,6 +301,21 @@ ALTER TABLE IF EXISTS public.client_payments
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;    
+
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT payment_type_link FOREIGN KEY (payment_type)
+    REFERENCES public.payment_types (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;    
+
+
+ALTER TABLE IF EXISTS public.client_payments
+    ADD CONSTRAINT payment_currency_link FOREIGN KEY (currency)
+    REFERENCES public.currencies (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
 
 
 --  INDEXES
