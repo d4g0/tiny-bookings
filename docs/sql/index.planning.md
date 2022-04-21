@@ -27,6 +27,11 @@ Operation wish handle a lot of records
         -   client_payments
     -   fields
         -   effectuated_at
+-   delete a client payment by booking id (when canceling a booking)
+    -   tables
+        -   client_payments
+    -   fields
+        -   booking_reference
 
 ## Indexes
 
@@ -67,6 +72,11 @@ CREATE INDEX lock_period_booking_idx ON room_lock_period USING BTREE (booking_id
 effectuated_at
 ```sql
 CREATE INDEX client_payments_effectuated_at_idx on client_payments USING BTREE (effectuated_at);
+```
+
+booking_reference
+```sql
+CREATE INDEX client_payments_booking_reference_idx on client_payments USING BTREE (booking_reference);
 ```
 
 ##
