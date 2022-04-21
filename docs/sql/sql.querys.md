@@ -15,6 +15,7 @@
 	- [Create a currency](#create-a-currency)
 	- [Create a booking](#create-a-booking)
 	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
+	- [Get Client Payments](#get-client-payments)
 
 
 ## Create an Admin
@@ -194,4 +195,21 @@ insert into
 	rooms_bookings (room_id, booking_id)
 values
 	(229, 1) RETURNING *;
+```
+
+
+## Get Client Payments
+```sql
+
+select 
+	*
+from 
+	client_payments cp
+where 
+	cp.effectuated_at < '2022-05-21 02:12:03'
+and 
+	cp.effectuated_at > '2022-02-21 02:12:03'
+order by cp.effectuated_at
+limit 50 offset 0
+
 ```

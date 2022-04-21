@@ -327,7 +327,27 @@ export const typeDefinitions = gql`
     currency:               String!
   }
 
+  # Client Payment
+  type ClientPayment {
+    id:                     Int!
+    client_id:              Int!
+    amount:                 Float!
+    booking_reference:      Int
+    payment_type:           Int!
+    currency:               Int!
+    effectuated_at:         String!
+  }
 
+  type ClientPaymentsResult{
+    results:                [ClientPayment]!
+    count:                  Int!
+  }
+
+  input GetClientPaymentsInput {
+    start_date_filter:      DateObject!  
+    end_date_filter:        DateObject!
+    page:                   Int!
+  }
 
   ##
   # Query
@@ -358,6 +378,8 @@ export const typeDefinitions = gql`
     getBookingStates: [BookingState]!
     # currencies
     getCurrencies: [Currencies]!
+    # client payments
+    getClientPayments(input: GetClientPaymentsInput!): ClientPaymentsResult!
   }
 
   ##

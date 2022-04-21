@@ -32,6 +32,7 @@
   - [Get Payment Types](#get-payment-types)
   - [Booking State](#booking-state)
   - [Currency](#currency)
+  - [Get Client Payments](#get-client-payments)
 
 ## Login
 
@@ -631,4 +632,45 @@ query {
     currency
   }
 }
+```
+
+
+## Get Client Payments
+```graphql
+query getClientPayments($input: GetClientPaymentsInput!){
+  getClientPayments(input:$input){
+    results {
+      id
+      client_id
+      amount
+      booking_reference
+      payment_type
+      currency
+      effectuated_at
+    }
+    count
+  }
+}
+
+
+{
+  "input": {
+    "start_date_filter": {
+      "year": 2022,
+      "month": 3,
+      "day": 18,
+      "hour": 0,
+      "minute": 0
+    },
+    "end_date_filter":  {
+            "year": 2022,
+      "month": 5,
+      "day": 25,
+      "hour": 0,
+      "minute": 0
+    },
+    "page": 1
+  }
+}
+
 ```

@@ -75,6 +75,7 @@
     -	list bookings
     -   list room locks
     -	list clients
+    -   list payments
 
 
 -   role: `full-admin`
@@ -182,7 +183,14 @@
             -   create start 22:02 done 23:11
                 -   whit and without booking reference
             -   getPayments done 00:06 10-min max
+            -   (graphql)
+                -   getPayments start 00:08 done 00:25
 
+
+
+
+
+Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation
 
 
 

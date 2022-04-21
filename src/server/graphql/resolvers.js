@@ -46,6 +46,7 @@ import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/r
 import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
+import { getPayments } from "dao/payments/PaymentsDao";
 
 export const resolvers = {
 
@@ -293,6 +294,34 @@ export const resolvers = {
                 throw error
             }
         },
+
+        getClientPayments: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                    } = args.input;
+
+                    try {
+
+                        var result = await getPayments({
+                            start_date_filter,
+                            end_date_filter,
+                            page,
+                        });
+                        return result;
+                    } catch (error) {
+                        throw error
+                    }
+
+
+                    return createdAdmin;
+                }
+            )
+        ),
     },
 
     Mutation: {
