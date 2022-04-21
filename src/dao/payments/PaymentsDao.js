@@ -9,7 +9,7 @@
  * 
  */
 
-import { isValidId, isValidPrice } from "dao/utils";
+import { isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice, utcDate } from "dao/utils";
 import sql from "db/postgres";
 
 export async function createAPaymentWithNoBooking({
@@ -113,4 +113,79 @@ export async function createAPaymentWithBooking({
         throw error;
     }
 
+}
+
+
+export async function getPayments({
+    start_date_filter = { year, month, day, hour, minute },
+    end_date_filter = { year, month, day, hour, minute },
+    page = 1, // 1 start based count
+}) {
+
+    // validation
+    if (!isValidDateInput(start_date_filter)) {
+        throw new Error('Non valid start_date_filter')
+    }
+    if (!isValidDateInput(end_date_filter)) {
+        throw new Error('Non valid end_date_filter')
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected')
+    }
+
+    const LIMIT = 50;
+    const OFFSET = (page - 1) * LIMIT;
+
+    var utc_start_date_filter = utcDate({
+        year: start_date_filter.year,
+        month: start_date_filter.month,
+        day: start_date_filter.day,
+        hour: start_date_filter.hour,
+        minute: start_date_filter.minute
+    });
+    var utc_end_date_filter = utcDate({
+        year: end_date_filter.year,
+        month: end_date_filter.month,
+        day: end_date_filter.day,
+        hour: end_date_filter.hour,
+        minute: end_date_filter.minute
+    });
+
+
+    try {
+
+        var paymentsRes = await sql`
+            select 
+                *
+            from 
+                client_payments cp
+            where 
+                cp.effectuated_at < ${utc_end_date_filter.toISOString()}
+            and 
+                cp.effectuated_at > ${utc_start_date_filter.toISOString()}
+            order by cp.effectuated_at
+            limit ${LIMIT} offset ${OFFSET};
+        `;
+
+        var countRes = await sql`
+            select 
+                count(*)
+            from 
+                client_payments cp
+            where 
+                cp.effectuated_at < ${utc_end_date_filter.toISOString()}
+            and 
+                cp.effectuated_at > ${utc_start_date_filter.toISOString()}
+        `;
+
+        var results = paymentsRes;
+        var count = +countRes[0].count;
+
+        return {
+            results,
+            count
+        }
+    } catch (error) {
+        throw error
+    }
 }

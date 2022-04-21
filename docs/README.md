@@ -181,8 +181,7 @@
         -   (dao)
             -   create start 22:02 done 23:11
                 -   whit and without booking reference
-            -   getPayment
-            -   getPayments
+            -   getPayments done 00:06 10-min max
 
 
 

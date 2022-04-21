@@ -2,9 +2,9 @@
 import { createBooking } from 'dao/booking/BookingDao';
 import { getBookingStateByKey } from 'dao/booking/BookingStateDao';
 import { getCurrencyByKey } from 'dao/currencies/CurrencyDao';
-import { BOOKING_STATES, CURRENCIES,  getUserRoleId, PAYMENT_TYPES, USER_ROLES } from 'dao/DBConstans';
+import { BOOKING_STATES, CURRENCIES, getUserRoleId, PAYMENT_TYPES, USER_ROLES } from 'dao/DBConstans';
 import { createHotel } from 'dao/HotelDao';
-import { createAPaymentWithBooking, createAPaymentWithNoBooking } from 'dao/payments/PaymentsDao';
+import { createAPaymentWithBooking, createAPaymentWithNoBooking, getPayments } from 'dao/payments/PaymentsDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { mapTimeToDateTime } from 'dao/utils';
@@ -55,6 +55,23 @@ const PERIOD_DATA = {
     },
 }
 
+
+const BIGGEST_PERIOD_DATA = {
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month - 3 > 0 ? utc_now.month - 3 : 0,
+        day: utc_now.day - 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month + 3 > 11 ? 11 : utc_now.month + 3,
+        day: utc_now.day + 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+}
 
 
 
@@ -135,6 +152,34 @@ describe(
             }
         )
 
+
+        test(
+            "Get Client Payments",
+            async function () {
+                var dbError = null, cp_results, cp_count;
+
+
+                try {
+                    var { results, count } = await getPayments({
+                        start_date_filter: BIGGEST_PERIOD_DATA.start_date,
+                        end_date_filter: BIGGEST_PERIOD_DATA.end_date,
+                        page: 1
+                    });
+
+                    console.log({ results, count });
+                    cp_results = results;
+                    cp_count = count;
+                } catch (error) {
+                    console.log(error);
+                    dbError = error;
+                }
+
+                expect(dbError).toBeNull();
+                expect(cp_results.length).toBeDefined()
+                expect(cp_count).toBeDefined()
+
+            }
+        )
 
 
     })
