@@ -185,6 +185,13 @@
             -   getPayments done 00:06 10-min max
             -   (graphql)
                 -   getPayments start 00:08 done 00:25
+    -   Create Booking as admin 
+        -   dao done 21 april 2:40
+        -   graphql
+    -   Cancel Booking 
+        -   start 2:41 brake at 3:12
+        -   restart april 21 16:41
+            -   create RoomLocks/getRoomLocksByBookingId done 16:57
 
 
 
@@ -198,6 +205,9 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 
 **Hot Sopt Tasks:**
+
+Cancel Booking
+    
 
 Add Electronic type to payment_types
 

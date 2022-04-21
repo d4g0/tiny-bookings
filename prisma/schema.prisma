@@ -12,20 +12,20 @@ model booking {
   client_id        Int?
   hotel_id         Int
   booking_state    Int?
-  payment_type     Int?
-  currency         Int?
   total_price      Decimal            @db.Decimal
   start_date       DateTime           @db.Timestamp(0)
   end_date         DateTime           @db.Timestamp(0)
   number_of_guests Int
+  is_cancel        Boolean?           @default(false)
   created_at       DateTime?          @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
   booking_states   booking_states?    @relation(fields: [booking_state], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_state_link")
   clients          clients?           @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_link")
-  currencies       currencies?        @relation(fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_link")
   hotel            hotel              @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_hotel_ownership")
-  payment_types    payment_types?     @relation(fields: [payment_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type_link")
+  client_payments  client_payments[]
   room_lock_period room_lock_period[]
   rooms_bookings   rooms_bookings[]
+
+  @@index([start_date])
 }
 
 model hotel {
@@ -83,21 +83,26 @@ model admins {
   created_at        DateTime?  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
   email             String     @unique(map: "unique_admin_email") @db.VarChar(80)
   user_roles        user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
+
+  @@index([email], map: "admin_email_idx")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model clients {
-  id                Int        @id @default(autoincrement())
+  id                Int               @id @default(autoincrement())
   user_role         Int
-  client_name       String     @db.VarChar(60)
-  client_last_name  String     @db.VarChar(60)
+  client_name       String            @db.VarChar(60)
+  client_last_name  String            @db.VarChar(60)
   hash_password     String?
-  email             String?    @unique(map: "unique_email") @db.VarChar(120)
-  is_email_verified Boolean    @default(false)
+  email             String?           @unique(map: "unique_email") @db.VarChar(120)
+  is_email_verified Boolean           @default(false)
   reset_token       String?
-  created_at        DateTime?  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
-  user_roles        user_roles @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
+  created_at        DateTime?         @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
+  user_roles        user_roles        @relation(fields: [user_role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_role")
   booking           booking[]
+  client_payments   client_payments[]
+
+  @@index([email], map: "client_email_idx")
 }
 
 model room_amenity {
@@ -129,15 +134,15 @@ model booking_states {
 }
 
 model currencies {
-  id       Int       @id @default(autoincrement())
-  currency String    @unique(map: "unique_currency") @db.VarChar(10)
-  booking  booking[]
+  id              Int               @id @default(autoincrement())
+  currency        String            @unique(map: "unique_currency") @db.VarChar(10)
+  client_payments client_payments[]
 }
 
 model payment_types {
-  id           Int       @id @default(autoincrement())
-  payment_type String    @unique(map: "unique_payment_types") @db.VarChar(60)
-  booking      booking[]
+  id              Int               @id @default(autoincrement())
+  payment_type    String            @unique(map: "unique_payment_types") @db.VarChar(60)
+  client_payments client_payments[]
 }
 
 model room_lock_period {
@@ -152,10 +157,29 @@ model room_lock_period {
   booking_id   Int?
   booking      booking?               @relation(fields: [booking_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_reference")
   room         room?                  @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "room_link")
+
+  @@index([during], map: "lock_period_during_idx")
+  @@index([start_date], map: "lock_period_start_date_idx")
 }
 
 model room_types {
   id        Int    @id @default(autoincrement())
   room_type String @unique(map: "unque_room_type") @db.VarChar(30)
   room      room[]
+}
+
+model client_payments {
+  id                Int           @id @default(autoincrement())
+  client_id         Int
+  amount            Decimal       @db.Decimal(12, 2)
+  booking_reference Int?
+  payment_type      Int
+  currency          Int
+  effectuated_at    DateTime?     @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamp(0)
+  booking           booking?      @relation(fields: [booking_reference], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "booking_of_payment")
+  clients           clients       @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_payer_reference")
+  currencies        currencies    @relation(fields: [currency], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_currency_link")
+  payment_types     payment_types @relation(fields: [payment_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "payment_type_link")
+
+  @@index([effectuated_at])
 }

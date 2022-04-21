@@ -419,3 +419,32 @@ export async function getARoomIsLocks({
         throw error
     }
 }
+
+
+export async function deleteRoomLocksByBookingId(booking_id) {
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid Booking Id')
+    }
+
+    try {
+        var delCount;
+    } catch (error) {
+
+    }
+}
+
+export async function getRoomLocksByBookingId(booking_id) {
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid booking id')
+    }
+
+    try {
+        var roomLocks = await sql`
+            select  * from room_lock_period rlp where rlp.booking_id = ${booking_id};
+        `
+
+        return roomLocks;
+    } catch (error) {
+        throw error;
+    }
+}

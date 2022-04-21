@@ -3,6 +3,7 @@ import { CURRENCIES, PAYMENT_TYPES } from 'dao/DBConstans';
 import { createHotel, deleteHotelById } from 'dao/HotelDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createRoom, deleteRoom } from 'dao/room/RoomDao';
+import { getRoomLocksByBookingId } from 'dao/room/RoomLock';
 import { mapTimeToDateTime } from 'dao/utils';
 import { DateTime } from 'luxon';
 import { createABookingAsAdmin } from 'services/bookings';
@@ -107,11 +108,12 @@ describe(
     function () {
 
         test(
-            "Create a booking as admin",
+            "Create a booking as admin + getRoomLocksById",
             async function () {
                 var dbError = null, t_completed = false, t_error = null;
                 var usd = null, cash = null;
                 var t_results = null;
+                var roomLocks = null;
                 try {
 
                     usd = await getCurrencyByKey(CURRENCIES.USD.key);
@@ -135,12 +137,17 @@ describe(
                     t_error = error;
                     t_results = results;
 
+                    roomLocks = await getRoomLocksByBookingId(results.booking.id)
+
+
                     console.log('---- completed -----')
                     console.log({ completed });
                     console.log('---- error -----')
                     console.log(error)
                     console.log('---- results -----')
                     console.log(results)
+                    console.log('---- roomLocks -----')
+                    console.log(roomLocks)
                 } catch (error) {
                     dbError = error;
                     console.log(error)
@@ -153,7 +160,18 @@ describe(
                 expect(t_results.clientPayment.id).toBeDefined();
                 expect(t_results.roomLocks.length).toBe(2);
                 expect(t_results.roomBookings.length).toBe(2);
-                
+                // room locks fetch
+                expect(roomLocks.length).toBe(2);
+                var rl = roomLocks[0];
+                expect(rl.id).toBeDefined();
+                expect(rl.room_id).toBeDefined();
+                expect(rl.start_date).toBeDefined();
+                expect(rl.end_date).toBeDefined();
+                expect(rl.reason).toBeDefined();
+                expect(rl.created_at).toBeDefined();
+                expect(rl.during).toBeDefined();
+                expect(rl.is_a_booking).toBe(true);
+                expect(rl.booking_id).toBeDefined();
             }
         )
 
