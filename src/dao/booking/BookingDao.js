@@ -135,3 +135,28 @@ export async function updateBookingState(booking_id, new_booking_state) {
     }
 }
 
+export async function updateBookingAsCancel(booking_id, cancel_state_id) {
+    if (!isValidId(booking_id)) {
+        throw new Error('Non valid booking_id')
+    }
+
+    if (!isValidId(cancel_state_id)) {
+        throw new Error('Non valid cancel_state_id')
+    }
+
+    try {
+        var updateRes = await sql`
+        update  
+            booking  
+        set booking_state = ${cancel_state_id}, is_cancel = true 
+        where id = ${booking_id} 
+        returning *
+        `
+        var updatedBooking = updateRes[0];
+        updatedBooking.total_price = +updatedBooking.total_price;
+        return updatedBooking;
+    } catch (error) {
+        throw error;
+    }
+}
+
