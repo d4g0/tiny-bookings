@@ -189,3 +189,21 @@ export async function getPayments({
         throw error
     }
 }
+
+export async function deleteAPayment(payment_id) {
+
+
+    try {
+        if (!isValidId(payment_id)) {
+            throw new Error('Non valid payment id')
+        }
+
+        var delRes = await sql`
+            delete from client_payments cp where cp.id = ${payment_id} RETURNING *
+        `
+        var delPayment = delRes[0];
+        return delPayment;
+    } catch (error) {
+        throw error
+    }
+}

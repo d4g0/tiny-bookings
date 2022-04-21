@@ -4,7 +4,7 @@ import { getBookingStateByKey } from 'dao/booking/BookingStateDao';
 import { getCurrencyByKey } from 'dao/currencies/CurrencyDao';
 import { BOOKING_STATES, CURRENCIES, getUserRoleId, PAYMENT_TYPES, USER_ROLES } from 'dao/DBConstans';
 import { createHotel } from 'dao/HotelDao';
-import { createAPaymentWithBooking, createAPaymentWithNoBooking, getPayments } from 'dao/payments/PaymentsDao';
+import { createAPaymentWithBooking, createAPaymentWithNoBooking, deleteAPayment, getPayments } from 'dao/payments/PaymentsDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { mapTimeToDateTime } from 'dao/utils';
@@ -80,7 +80,7 @@ describe(
     'Client Payments Dao',
 
     function () {
-        // create a room lock
+        // create payments and delete
         test(
             "Create and delete a client payment with and with out booking ",
             async function () {
@@ -90,7 +90,8 @@ describe(
                     cpB = null,
                     cashPaymentType = null,
                     usd = null,
-                    booking = null
+                    booking = null,
+                    delPayment = null
                     ;
                 const PRICE = 300.50;
                 try {
@@ -132,6 +133,8 @@ describe(
                         booking_id: booking.id
                     });
 
+                    delPayment = await deleteAPayment(cp.id);
+
 
                     console.log({ cp, cpB })
 
@@ -149,6 +152,7 @@ describe(
                 expect(cp.payment_type).toBeDefined();
                 expect(cp.effectuated_at).toBeDefined();
                 expect(cpB.booking_reference).toBeDefined()
+                expect(delPayment.id).toBe(cp.id);
             }
         )
 
