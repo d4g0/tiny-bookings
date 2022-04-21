@@ -85,7 +85,7 @@ const PERIOD_DATA = {
 describe(
     'Booking State Dao',
 
-    function roomTypesDaoTest() {
+    function () {
         // create a room lock
         test(
             "Create and delete a booking ",

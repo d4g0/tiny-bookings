@@ -55,7 +55,8 @@ export async function initPaymentTypes() {
         if (!cash) {
             cash = await createAPaymentType(PAYMENT_TYPES.CASH.key);
         }
-        setPaymentTypeId(cash.payment_type, cash.id);
+
+        setPaymentTypeId(cash.payment_type, cash.id);        
 
 
     } catch (error) {
@@ -64,7 +65,7 @@ export async function initPaymentTypes() {
 }
 
 
-async function getPaymentTypeByKey(payment_type_key) {
+export async function getPaymentTypeByKey(payment_type_key) {
 
     if (!isValidPaymentType(payment_type_key)) {
         throw new Error('Non valid payment_type_key')

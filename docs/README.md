@@ -173,14 +173,16 @@
     -   iterate booking schema to include cancel hanlding 
         -   start 20 april 00:15 done 2 min
         -   [done 00:53] create a payment table for the case some how a client pays for a booking and then it can be booked
-    -   (dao) client payments
     -   refactor bookings start 20 april 22:55 done :58
         -   remove 
             -   currency
             -   payment_type
-        -   dao
-        -   graphql
-
+    -   client payments
+        -   (dao)
+            -   create start 22:02 done 23:11
+                -   whit and without booking reference
+            -   getPayment
+            -   getPayments
 
 
 
@@ -190,6 +192,9 @@
 
 **Hot Sopt Tasks:**
 
+Add Electronic type to payment_types
+
+Delete id in db constants, use just the keys or investigate why some where correct version scope is lost
 
 -   [done] Iterate `tb` tables to use `tsranges`
 -   [done] Define `create-room-lock`  sql query

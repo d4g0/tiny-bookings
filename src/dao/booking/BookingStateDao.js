@@ -78,7 +78,7 @@ export async function initBookingStates() {
     }
 }
 
-async function getBookingStateByKey(booking_state_key) {
+export async function getBookingStateByKey(booking_state_key) {
     if (!isValidBookingState(booking_state_key)) {
         throw new Error('Non valid booking_state_key')
     }

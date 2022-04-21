@@ -276,3 +276,20 @@ var booking = {
             "currency": "USD"
     }
 ```
+
+## Client Payment
+Might have or not a booking id reference
+
+```js
+    var clientPayment = {
+        id: 3,
+        client_id: 12,
+        amount: '200.50',
+        booking_reference: null,
+        payment_type: 1,
+        currency: 1,
+        effectuated_at: '2022-04-21 02:56:16'
+      }
+
+
+```
