@@ -43,7 +43,7 @@ import {
     deleteARoomIsAmenity
 } from "services/room";
 import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
-import { getPaymentTypes } from "dao/booking/PaymentTypeDao";
+import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
 
