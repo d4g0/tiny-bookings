@@ -5,7 +5,7 @@ import { typeDefinitions } from 'server/graphql/typeDefs';
 import {
   getUserFromToken,
   getTokenFromReq,
-  createAdminToken
+  createUserToken
 } from '~/server/graphql/auth'
 
 
@@ -19,7 +19,7 @@ const server = new ApolloServer({
 
     const token = getTokenFromReq(req);
     const user = getUserFromToken(token);
-    return { user, createAdminToken }
+    return { user, createUserToken }
   },
   // formatError(error) {
   //   return error;

@@ -32,20 +32,18 @@ export function getTokenFromReq(req) {
 
 }
 
-export function createAdminToken({
+
+
+// pending createCLientToken()
+
+export function createUserToken({
     id,
-    user_role,
-    email,
-    admin_name,
-    created_at,
+    user_role
 }) {
     return jwt.sign(
         {
             id,
-            user_role,
-            email,
-            admin_name,
-            created_at,
+            user_role
         },
         SECRET,
         {
@@ -54,8 +52,6 @@ export function createAdminToken({
         }
     );
 }
-
-// pending createCLientToken()
 
 
 
