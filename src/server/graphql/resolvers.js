@@ -47,7 +47,7 @@ import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
-import { createABookingAsAdmin } from "services/bookings";
+import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 
 export const resolvers = {
 
@@ -947,13 +947,37 @@ export const resolvers = {
                             number_of_guests
                         });
 
-                        if(!completed){
+                        if (!completed) {
                             throw error;
                         }
 
                         var booking = results.booking;
 
                         return booking;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+        // cancel booking
+        cancelBooking: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        bookingId
+                    } = args;
+                    try {
+
+                        var { completed, results, error } = await cancelBookingAsAdmin(bookingId);
+                        if (!completed) {
+                            throw error;
+                        }
+
+                        var canceledBooking = results.booking;
+                        return canceledBooking;
                     } catch (error) {
                         throw error;
                     }

@@ -451,6 +451,7 @@ export const typeDefinitions = gql`
     createARoomLockPeriod(input: createRoomLockInput!): RoomLockPeriod!
     # bookings
     createBookingAsAdmin(input: createBookingAsAdmin!): Booking!
+    cancelBooking(bookingId: Int!): Booking!
   }
 
 

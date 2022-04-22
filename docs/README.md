@@ -187,7 +187,7 @@
                 -   getPayments start 00:08 done 00:25
     -   Create Booking as admin 
         -   dao done 21 april 2:40
-        -   graphql done 22:57
+        -   graphql done 22:57 brake
         
         
     -   Cancel Booking 
@@ -200,7 +200,7 @@
                 -   delete client payments done :30
                 -   update bookingState :51
                 -   updateBookingAsCancel done 18:15
-        -   graphql 
+        -   graphql start 21 april 23:24    done :32
     -   List Bookings 
         -   dao start 21:30 done 22:11
         -   graphql
