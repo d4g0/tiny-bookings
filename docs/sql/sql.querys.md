@@ -14,6 +14,7 @@
 	- [Create a payment type](#create-a-payment-type)
 	- [Create a currency](#create-a-currency)
 	- [Create a booking](#create-a-booking)
+	- [Get Bookings](#get-bookings)
 	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
 	- [Get Client Payments](#get-client-payments)
 
@@ -183,6 +184,12 @@ values
         '2022-04-19T00:00:00.000Z',
         2
     ) RETURNING *;
+```
+
+## Get Bookings
+
+```sql
+
 ```
  
 ## Create a rooms_bookings record
