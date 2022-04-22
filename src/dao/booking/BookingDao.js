@@ -224,7 +224,95 @@ export async function getBookings({
         // incoming numeric strings fit into the 
         // javascript Number class
         for (let i = 0; i < bookingsRes.length; i++) {
-            bookingsRes[i].total_price = +bookingsRes[i].total_price 
+            bookingsRes[i].total_price = +bookingsRes[i].total_price
+        }
+
+        var results = bookingsRes;
+        var count = +countRes[0].count;
+
+        return {
+            results,
+            count
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+
+export async function getBookingsByClient({
+    client_id,
+    start_date_filter = { year, month, day, hour, minute },
+    end_date_filter = { year, month, day, hour, minute },
+    page = 1, // 1 start based count
+}) {
+    // validation
+    if (!isValidId(client_id)) {
+        throw new Error('Non valid client_id')
+    }
+    if (!isValidDateInput(start_date_filter)) {
+        throw new Error('Non valid start_date_filter')
+    }
+    if (!isValidDateInput(end_date_filter)) {
+        throw new Error('Non valid end_date_filter')
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected')
+    }
+
+    const LIMIT = 50;
+    const OFFSET = (page - 1) * LIMIT;
+
+    var utc_start_date_filter = utcDate({
+        year: start_date_filter.year,
+        month: start_date_filter.month,
+        day: start_date_filter.day,
+        hour: start_date_filter.hour,
+        minute: start_date_filter.minute
+    });
+    var utc_end_date_filter = utcDate({
+        year: end_date_filter.year,
+        month: end_date_filter.month,
+        day: end_date_filter.day,
+        hour: end_date_filter.hour,
+        minute: end_date_filter.minute
+    });
+
+    try {
+        var bookingsRes = await sql`
+            select 
+                *
+            from 
+                booking b
+            where 
+                b.start_date > ${utc_start_date_filter.toISOString()}
+            and
+                b.start_date < ${utc_end_date_filter.toISOString()}
+            and 
+                b.client_id = ${client_id}
+            ORDER BY b.start_date
+            LIMIT ${LIMIT} OFFSET ${OFFSET};
+        `;
+
+        var countRes = await sql`
+            select 
+                count(*) 
+            from 
+                booking b
+            where 
+                b.start_date > ${utc_start_date_filter.toISOString()}
+            and
+                b.start_date < ${utc_end_date_filter.toISOString()}
+            and 
+                b.client_id = ${client_id} ;
+        `;
+
+        // map numeric goted string to number
+        // db total_price scale constrain sould make sure
+        // incoming numeric strings fit into the 
+        // javascript Number class
+        for (let i = 0; i < bookingsRes.length; i++) {
+            bookingsRes[i].total_price = +bookingsRes[i].total_price
         }
 
         var results = bookingsRes;
