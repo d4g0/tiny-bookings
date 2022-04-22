@@ -9,6 +9,7 @@ import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { mapTimeToDateTime } from 'dao/utils';
 import { DateTime } from 'luxon';
 import { v4 as uuid } from 'uuid'
+import { getUserRoleByKey } from 'dao/users/UserRoleDao';
 
 
 
@@ -113,11 +114,12 @@ describe(
                 ;
 
 
-
+                var clientRole = null;
 
                 try {
+                    clientRole = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
                     client = await createNonUserClient({
-                        user_role: getUserRoleId(USER_ROLES.CLIENT.user_role),
+                        user_role: clientRole.id,
                         client_name: uuid().substring(0, 10),
                         client_last_name: uuid().substring(0, 10),
                     })
