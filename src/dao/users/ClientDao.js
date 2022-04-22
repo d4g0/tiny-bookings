@@ -54,7 +54,13 @@ export async function getClientByEmail(email) {
     try {
 
         var clientRes = await sql`
-            select * from clients cl where cl.email = ${email};
+            select 
+                * 
+            from 
+                clients cl 
+            join 
+                user_roles ur on( cl.user_role = ur.id) 
+            where cl.email = ${email};
         `;
 
         var client = clientRes.length > 0 ? clientRes[0] : null;

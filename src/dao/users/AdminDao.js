@@ -202,7 +202,13 @@ export async function getAdminByEmail_NO_THROW(email){
     try {
 
         var adminRes = await sql`
-            select * from admins ad where ad.email = ${email};
+        select 
+            * 
+        from 
+            admins ad 
+        join 
+            user_roles ur on( ad.user_role = ur.id) 
+        where ad.email = ${email};
         `;
 
         var admin = adminRes.length > 0 ? adminRes[0] : null;
@@ -210,6 +216,31 @@ export async function getAdminByEmail_NO_THROW(email){
 
     } catch (error) {
         throw error;
+    }
+}
+
+export async function getAdminJoinRole(email){
+    if(!isValidEmail(email)){
+        throw new Error('Non valid email');
+    }
+
+    try {
+        var adminRes = await sql`
+            select 
+                * 
+            from 
+                admins ad 
+            join 
+                user_roles ur on( ad.user_role = ur.id) 
+            where ad.email = ${email};
+        `;
+
+        var admin = adminRes.length > 0 ? adminRes[0] : null;
+        return admin;
+
+        // select * from admins adm join user_roles ur on( adm.user_role = ur.id)
+    } catch (error) {
+        
     }
 }
 
