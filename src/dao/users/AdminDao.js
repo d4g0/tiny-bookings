@@ -1,6 +1,7 @@
+import sql from 'db/postgres'
 import { prisma } from 'db/PrismaClient.js'
 import { isValidString } from 'utils'
-import { isInAdminRoles, isValidId } from '~/dao/utils'
+import { isInAdminRoles, isValidEmail, isValidId } from '~/dao/utils'
 import { getUserRoleId, USER_ROLES } from '../DBConstans'
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from '../Errors'
 import { getUserRoleByKey } from './UserRoleDao'
@@ -189,6 +190,26 @@ export async function getAdminByEmail(adminEmail) {
     }
     catch (error) {
         throw error
+    }
+}
+
+
+export async function getAdminByEmail_NO_THROW(email){
+    if(!isValidEmail(email)){
+        throw new Error('Non valid email')
+    }
+
+    try {
+
+        var adminRes = await sql`
+            select * from admins ad where ad.email = ${email};
+        `;
+
+        var admin = adminRes.length > 0 ? adminRes[0] : null;
+        return admin;
+
+    } catch (error) {
+        throw error;
     }
 }
 
