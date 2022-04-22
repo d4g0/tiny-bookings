@@ -53,9 +53,10 @@ query login($input: loginInput! ){
         }
         ... on Client{
           id
-          name
           user_role
-        	created_at
+          client_name
+					client_last_name
+          created_at	
         }
         
       },
@@ -66,7 +67,7 @@ query login($input: loginInput! ){
 
 variables:{
   "input": {
-	"email": "tocarralero@gmail.com",
+	"email": "dago@gmail.com",
   "password": "supper-foo-pass"
   }
 }
