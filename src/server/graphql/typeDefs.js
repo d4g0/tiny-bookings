@@ -18,7 +18,7 @@ export const typeDefinitions = gql`
   ##
   type Admin {
     id:                 ID!
-    user_role:          Int!
+    user_role:          String!
     email:              String!
     admin_name:         String!
     admin_description:  String
@@ -43,7 +43,7 @@ export const typeDefinitions = gql`
     id:                 ID!
     client_name:        String!
     client_last_name:   String!
-    user_role:          Int!
+    user_role:          String!
     hash_password:      String
     created_at:         String!
   }
@@ -421,6 +421,7 @@ export const typeDefinitions = gql`
     getClientPayments(input: GetClientPaymentsInput!): ClientPaymentsResult!
     # bookings
     getBookings(input: GetBookingsInput!): BookingsResult!
+    getClientBookingsAsClient(input: GetBookingsInput!): BookingsResult!
   }
 
   ##
