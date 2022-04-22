@@ -2,6 +2,7 @@
 
 - [SQL Querys 👌️](#sql-querys-️)
 	- [Get A Client](#get-a-client)
+	- [Get An Admin](#get-an-admin)
 	- [Create an Admin](#create-an-admin)
 	- [Create a Hotel](#create-a-hotel)
 	- [Create a room_amenity](#create-a-room_amenity)
@@ -37,6 +38,22 @@ join user_roles ur on( cl.user_role = ur.id)
 where cl.id = 88
 ```
 
+## Get An Admin
+```sql
+select 
+adm.id,
+ur.user_role,
+adm.user_role,
+adm.admin_name,
+adm.admin_description,
+adm.hash_password,
+adm.reset_token,
+adm.created_at,
+adm.email
+from admins adm 
+join user_roles ur on( adm.user_role = ur.id)
+where adm.email = 'dago@gmail.com';
+```
 ## Create an Admin
 ```sql
 insert into 

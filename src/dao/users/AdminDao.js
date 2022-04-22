@@ -203,12 +203,18 @@ export async function getAdminByEmail_NO_THROW(email){
 
         var adminRes = await sql`
         select 
-            * 
-        from 
-            admins ad 
-        join 
-            user_roles ur on( ad.user_role = ur.id) 
-        where ad.email = ${email};
+            adm.id,
+            ur.user_role,
+            adm.user_role,
+            adm.admin_name,
+            adm.admin_description,
+            adm.hash_password,
+            adm.reset_token,
+            adm.created_at,
+            adm.email
+        from admins adm 
+        join user_roles ur on( adm.user_role = ur.id)
+        where adm.email = ${email};
         `;
 
         var admin = adminRes.length > 0 ? adminRes[0] : null;
