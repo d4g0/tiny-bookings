@@ -47,6 +47,7 @@ import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
+import { createABookingAsAdmin } from "services/bookings";
 
 export const resolvers = {
 
@@ -897,6 +898,62 @@ export const resolvers = {
                         });
 
                         return roomLock;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        // ---------------
+        // Bookings 
+        // ---------------
+        // create booking as admin
+        createBookingAsAdmin: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date,
+                        end_date,
+                        rooms_ids,
+                        hotel_id,
+                        hotel_calendar_length,
+                        client_name,
+                        client_last_name,
+                        total_price,
+                        payment_type_id,
+                        currency_id,
+                        number_of_guests
+                    } = args.input;
+                    try {
+
+                        // sanitation
+                        var s_client_name = xss(client_name);
+                        var s_client_last_name = xss(client_last_name);
+
+                        var { completed, error, results } = await createABookingAsAdmin({
+                            start_date,
+                            end_date,
+                            rooms_ids,
+                            hotel_id,
+                            hotel_calendar_length,
+                            client_name: s_client_name,
+                            client_last_name: s_client_last_name,
+                            total_price,
+                            payment_type_id,
+                            currency_id,
+                            number_of_guests
+                        });
+
+                        if(!completed){
+                            throw error;
+                        }
+
+                        var booking = results.booking;
+
+                        return booking;
                     } catch (error) {
                         throw error;
                     }

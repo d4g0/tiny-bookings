@@ -349,6 +349,35 @@ export const typeDefinitions = gql`
     page:                   Int!
   }
 
+  # Booking
+  type Booking {
+    id:                     Int!
+    client_id:              Int!
+    hotel_id:               Int!
+    booking_state:          Int!
+    total_price:            Float!
+    start_date:             String!
+    end_date:               String!
+    number_of_guests:       Int!
+    is_cancel:              Boolean!
+    created_at:             String!
+  }
+
+  # input
+  input createBookingAsAdmin {
+    start_date:             DateObject!
+    end_date:               DateObject!
+    rooms_ids:              [Int]!
+    hotel_id:               Int!
+    hotel_calendar_length:  Int!
+    client_name:            String!
+    client_last_name:       String!
+    total_price:            Float!
+    payment_type_id:        Int!
+    currency_id:            Int!
+    number_of_guests:       Int!
+  }
+
   ##
   # Query
   ##
@@ -420,6 +449,8 @@ export const typeDefinitions = gql`
     updateRoomNumberOfBeds(input: UpdateRoomNumberOfBedsInput!): Room!
     # room lock period
     createARoomLockPeriod(input: createRoomLockInput!): RoomLockPeriod!
+    # bookings
+    createBookingAsAdmin(input: createBookingAsAdmin!): Booking!
   }
 
 
