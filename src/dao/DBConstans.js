@@ -11,15 +11,15 @@ import { isValidCurrnecy, isValidId, isValidPaymentType } from "./utils";
 // will be dinamyc as is db state dependent
 export const USER_ROLES = {
     'FULL_ADMIN': {
-        id: 1,
+        id: null,
         user_role: 'FULL_ADMIN'
     },
     'BASIC_ADMIN': {
-        id: 2,
+        id: null,
         user_role: 'BASIC_ADMIN'
     },
     'CLIENT': {
-        id: 3,
+        id: null,
         user_role: 'CLIENT'
     }
 }
