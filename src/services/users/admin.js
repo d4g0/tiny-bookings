@@ -9,7 +9,7 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { createAdmin, deleteAdminById as delAdminByIdDao } from 'dao/users/AdminDao'
+import { createAdmin, deleteAdminById as delAdminByIdDao, getAdminByEmail_NO_THROW } from 'dao/users/AdminDao'
 import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 
 
@@ -109,7 +109,7 @@ export async function createAdminService({
 
 
 export async function getAdminByEmailService(adminEmail) {
-    return getAdminByEmail(adminEmail)
+    return getAdminByEmail_NO_THROW(adminEmail)
 }
 
 
