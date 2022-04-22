@@ -55,12 +55,21 @@ export async function getClientByEmail(email) {
 
         var clientRes = await sql`
             select 
-                * 
+                cl.id,
+                ur.user_role,
+                cl.client_name,
+                cl.client_last_name,
+                cl.hash_password,
+                cl.email,
+                cl.is_email_verified,
+                cl.reset_token,
+                cl.created_at 
             from 
                 clients cl 
             join 
                 user_roles ur on( cl.user_role = ur.id) 
             where cl.email = ${email};
+            
         `;
 
         var client = clientRes.length > 0 ? clientRes[0] : null;

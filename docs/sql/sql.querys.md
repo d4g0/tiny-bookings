@@ -1,6 +1,7 @@
 #   SQL Querys 👌️
 
 - [SQL Querys 👌️](#sql-querys-️)
+	- [Get A Client](#get-a-client)
 	- [Create an Admin](#create-an-admin)
 	- [Create a Hotel](#create-a-hotel)
 	- [Create a room_amenity](#create-a-room_amenity)
@@ -19,6 +20,22 @@
 	- [Get Client Payments](#get-client-payments)
 	- [Get Bookings](#get-bookings-1)
 
+## Get A Client
+```sql
+select 
+cl.id,
+ur.user_role,
+cl.client_name,
+cl.client_last_name,
+cl.hash_password,
+cl.email,
+cl.is_email_verified,
+cl.reset_token,
+cl.created_at
+from clients cl 
+join user_roles ur on( cl.user_role = ur.id)
+where cl.id = 88
+```
 
 ## Create an Admin
 ```sql
