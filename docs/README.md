@@ -204,7 +204,17 @@
     -   List Bookings 
         -   dao start 21:30 done 22:11
         -   graphql done 23:48
+    
+    -   list bookings of a client
+        -   done 22 april 2:46
 
+
+- []
+- clients
+  -   login
+      -   dao 
+          -   getClientByEmail done (+admin resolvers refactor) 22 april 1:21
+      - graphql (big refactor plus admin) done ~ 2:30
 
 
 
@@ -217,6 +227,10 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 **Hot Sopt Tasks:**
 
+Fix broken test by admin new fetch (postgres.js) iteration 
+
+
+[done]
 Cancel Booking
     
 
