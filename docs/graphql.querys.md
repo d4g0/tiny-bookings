@@ -34,6 +34,8 @@
   - [Currency](#currency)
   - [Get Client Payments](#get-client-payments)
   - [Create a Booking as Admin](#create-a-booking-as-admin)
+  - [cancelABooking](#cancelabooking)
+  - [Get Bookings](#get-bookings)
 
 ## Login
 
@@ -719,6 +721,66 @@ mutation createABookingAsAdmin($input: createBookingAsAdmin!){
     "currency_id": 1,
     "payment_type_id": 1,
     "number_of_guests": 2
+  }
+}
+```
+
+## cancelABooking
+
+```graphql
+mutation cancelABooking{
+  cancelBooking(bookingId: 66){
+    id
+    client_id
+    hotel_id
+    booking_state
+    total_price
+    start_date
+    end_date
+    number_of_guests
+    is_cancel
+    created_at
+  }
+}
+```
+
+## Get Bookings
+```graphql
+query getBookings($input: GetBookingsInput!){
+  getBookings(input: $input){
+    results{
+      id
+      client_id
+      hotel_id
+      booking_state
+      total_price
+      start_date
+      end_date
+      number_of_guests
+      is_cancel
+      created_at
+    }
+    count
+  }
+}
+
+{
+  "input": {
+    "start_date_filter": {
+      "year": 2022,
+      "month": 1,
+      "day": 18,
+      "hour": 0,
+      "minute": 0
+    },
+    "end_date_filter":  {
+      "year": 2022,
+      "month": 5,
+      "day": 25,
+      "hour": 0,
+      "minute": 0
+    },
+    "page": 1
   }
 }
 ```

@@ -378,6 +378,17 @@ export const typeDefinitions = gql`
     number_of_guests:       Int!
   }
 
+  input GetBookingsInput {
+    start_date_filter:      DateObject!  
+    end_date_filter:        DateObject!
+    page:                   Int!
+  }
+
+  type BookingsResult {
+    results:                [Booking]!
+    count:                  Int!
+  }
+
   ##
   # Query
   ##
@@ -409,6 +420,8 @@ export const typeDefinitions = gql`
     getCurrencies: [Currencies]!
     # client payments
     getClientPayments(input: GetClientPaymentsInput!): ClientPaymentsResult!
+    # bookings
+    getBookings(input: GetBookingsInput!): BookingsResult!
   }
 
   ##

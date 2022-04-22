@@ -48,6 +48,7 @@ import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
+import { getBookings } from "dao/booking/BookingDao";
 
 export const resolvers = {
 
@@ -320,6 +321,37 @@ export const resolvers = {
 
 
                     return createdAdmin;
+                }
+            )
+        ),
+
+        // get bookings
+        getBookings: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                    } = args.input;
+                    try {
+
+                        var { results, count } = await getBookings({
+                            start_date_filter,
+                            end_date_filter,
+                            page
+                        });
+
+                        return {
+                            results,
+                            count
+                        }
+
+                    } catch (error) {
+                        throw error;
+                    }
+
                 }
             )
         ),
@@ -985,6 +1017,7 @@ export const resolvers = {
                 }
             )
         ),
+        
     },
     // Root Types
     User: {
