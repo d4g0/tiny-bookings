@@ -33,6 +33,7 @@
   - [Booking State](#booking-state)
   - [Currency](#currency)
   - [Get Client Payments](#get-client-payments)
+  - [Create a Booking as Admin](#create-a-booking-as-admin)
 
 ## Login
 
@@ -673,4 +674,51 @@ query getClientPayments($input: GetClientPaymentsInput!){
   }
 }
 
+```
+
+## Create a Booking as Admin
+```graphql
+mutation createABookingAsAdmin($input: createBookingAsAdmin!){
+  	
+  createBookingAsAdmin(input: $input){
+    id
+    hotel_id
+    client_id
+    booking_state
+    total_price
+    start_date
+    end_date
+    number_of_guests
+    is_cancel
+    created_at
+  }
+  
+}
+{
+  "input": {
+    "start_date": {
+      "year": 2022,
+      "month": 3,
+      "day": 10,
+      "hour": 10,
+      "minute": 0
+    },
+    "end_date": {
+      "year": 2022,
+      "month": 3,
+      "day": 12,
+      "hour": 10,
+      "minute": 0
+    }, 
+    "rooms_ids": [102],
+    "hotel_id": 39,
+    "hotel_calendar_length": 90,
+    "client_name": "Lolo ",
+    "client_last_name": "Zanchez de la Concepcion",
+    "total_price": 200,
+    "currency_id": 1,
+    "payment_type_id": 1,
+    "number_of_guests": 2
+  }
+}
 ```
