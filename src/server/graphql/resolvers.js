@@ -3,7 +3,6 @@ import { mapTimeToDateTime } from "dao/utils";
 import {
     createAdminService,
     getAdminsService,
-    getUserByEmailPassword,
     deleteAdminById
 } from "services/users/admin";
 import xss from "xss";
@@ -49,6 +48,8 @@ import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings } from "dao/booking/BookingDao";
+import { getUserRoleByKey } from "dao/users/UserRoleDao";
+import { getUserByEmailPassword } from "services/users/users";
 
 export const resolvers = {
 
@@ -1017,19 +1018,25 @@ export const resolvers = {
                 }
             )
         ),
-        
+
     },
     // Root Types
     User: {
-        __resolveType(obj, ctx, info) {
+        async __resolveType(obj, ctx, info) {
             if (obj.user_role) {
+                var fullAdminRole = await getUserRoleByKey(USER_ROLES.FULL_ADMIN.user_role);
+                var basicAdminRole = await getUserRoleByKey(USER_ROLES.BASIC_ADMIN.user_role);
                 if (
-                    obj.user_role == USER_ROLES.FULL_ADMIN.user_role
-                    || obj.user_role == USER_ROLES.BASIC_ADMIN.user_role
+                    obj.user_role == fullAdminRole.id
+                    || obj.user_role == basicAdminRole.id
                 ) {
                     return 'Admin'
                 } else {
-                    return 'Client'
+                    var clientRole = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
+                    if (obj.user_role == clientRole.id) {
+                        return 'Client'
+                    }
+                    return null
                 }
             }
             return null

@@ -17,13 +17,12 @@ export const typeDefinitions = gql`
   # ADMIN
   ##
   type Admin {
-    id: ID!
-    user_role:          String!
+    id:                 ID!
+    user_role:          Int!
     email:              String!
     admin_name:         String!
     admin_description:  String
     hash_password:      String!
-    reset_token:        String
     created_at:         String! 
   }
 
@@ -41,11 +40,11 @@ export const typeDefinitions = gql`
   # Client
   ##
   type Client {
-    id: ID!
-    name: String!
-    user_role:          String!
+    id:                 ID!
+    client_name:        String!
+    client_last_name:   String!
+    user_role:          Int!
     hash_password:      String
-    reset_token:        String
     created_at:         String!
   }
 
