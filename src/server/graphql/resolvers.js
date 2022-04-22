@@ -48,7 +48,6 @@ import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings } from "dao/booking/BookingDao";
-import { getUserRoleByKey } from "dao/users/UserRoleDao";
 import { getUserByEmailPassword } from "services/users/users";
 
 export const resolvers = {
@@ -78,12 +77,9 @@ export const resolvers = {
 
                 Auth.user = user;
 
-                var token = ctx.createAdminToken({
+                var token = ctx.createUserToken({
                     id: user.id,
-                    user_role: user.user_role,
-                    email: user.email,
-                    admin_name: user.admin_name,
-                    created_at: user.created_at,
+                    user_role: user.user_role
                 });
 
                 Auth.token = token;
@@ -328,6 +324,36 @@ export const resolvers = {
 
         // get bookings
         getBookings: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                    } = args.input;
+                    try {
+
+                        var { results, count } = await getBookings({
+                            start_date_filter,
+                            end_date_filter,
+                            page
+                        });
+
+                        return {
+                            results,
+                            count
+                        }
+
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        getClientBookings: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
@@ -1024,22 +1050,20 @@ export const resolvers = {
     User: {
         async __resolveType(obj, ctx, info) {
             if (obj.user_role) {
-                var fullAdminRole = await getUserRoleByKey(USER_ROLES.FULL_ADMIN.user_role);
-                var basicAdminRole = await getUserRoleByKey(USER_ROLES.BASIC_ADMIN.user_role);
+
                 if (
-                    obj.user_role == fullAdminRole.id
-                    || obj.user_role == basicAdminRole.id
+                    obj.user_role == USER_ROLES.FULL_ADMIN.user_role
+                    || obj.user_role == USER_ROLES.BASIC_ADMIN.user_role
                 ) {
-                    return 'Admin'
-                } else {
-                    var clientRole = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
-                    if (obj.user_role == clientRole.id) {
-                        return 'Client'
-                    }
-                    return null
+                    return 'Admin';
                 }
+
+                if (obj.user_role == USER_ROLES.CLIENT.user_role) {
+                    return 'Client';
+                }
+
+                return null;
             }
-            return null
-        }
+        },
     },
 };
