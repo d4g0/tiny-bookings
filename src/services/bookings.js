@@ -11,7 +11,7 @@
  * 
  */
 
-import { createBooking, deleteBooking, updateBookingAsCancel } from "dao/booking/BookingDao";
+import { createBooking, deleteBooking, updateBookingAsCancel, getBookings as getBookingsDao } from "dao/booking/BookingDao";
 import { getBookingStateByKey } from "dao/booking/BookingStateDao";
 import { createARoomBooking, deleteARoomBooking, deleteRoomBookingsByBookingId } from "dao/booking/RoomsBookingsDao";
 import { BOOKING_STATES, USER_ROLES } from "dao/DBConstans";
@@ -312,4 +312,16 @@ export async function cancelBookingAsAdmin(booking_id) {
             error,
         }
     }
+}
+
+export async function getBookings({
+    start_date_filter = { year, month, day, hour, minute },
+    end_date_filter = { year, month, day, hour, minute },
+    page = 1, // 1 start based count
+}){
+    return getBookingsDao({
+        start_date_filter,
+        end_date_filter,
+        page
+    })
 }

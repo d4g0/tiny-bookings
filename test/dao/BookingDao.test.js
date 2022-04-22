@@ -1,5 +1,5 @@
 
-import { createBooking, deleteBooking, updateBookingState } from 'dao/booking/BookingDao';
+import { createBooking, deleteBooking, getBookings, updateBookingState } from 'dao/booking/BookingDao';
 import { createABookingState, deleteABookingState, getBookingStateByKey } from 'dao/booking/BookingStateDao';
 import { createAPaymentType, deleteAPaymentType } from 'dao/payments/PaymentTypeDao';
 import { BOOKING_STATES, getUserRoleId, USER_ROLES } from 'dao/DBConstans';
@@ -82,17 +82,34 @@ const PERIOD_DATA = {
     },
 }
 
+const BIGGEST_PERIOD_DATA = {
+    start_date: {
+        year: utc_now.year,
+        month: utc_now.month - 2,
+        day: utc_now.day - 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+    end_date: {
+        year: utc_now.year,
+        month: utc_now.month + 2,
+        day: utc_now.day + 10,
+        hour: utc_now.hour,
+        minute: utc_now.minute
+    },
+}
+
 describe(
     'Booking State Dao',
 
     function () {
         // create a booking
         test(
-            "Create, update state and delete  a booking ",
+            "Create, update state, fetch bookings and delete  a booking ",
             async function () {
 
                 var dbError = null, booking = null, client = null,
-                    bookingState = null, paymentType = null, cancelState = null, updatedBooking = null;
+                    bookingState = null, b_results = null, b_count = null, cancelState = null, updatedBooking = null;
                 ;
 
 
@@ -116,18 +133,29 @@ describe(
                         end_date: PERIOD_DATA.end_date,
                         number_of_guests: 2,
                     });
-                    
+
 
                     cancelState = await getBookingStateByKey(BOOKING_STATES.CANCEL.key);
-                    
+
                     updatedBooking = await updateBookingState(booking.id, cancelState.id);
 
+
+                    var { results, count } = await getBookings({
+                        start_date_filter: BIGGEST_PERIOD_DATA.start_date,
+                        end_date_filter: BIGGEST_PERIOD_DATA.end_date,
+                        page: 1
+                    });
+
+                    b_results = results;
+                    b_count = count;
                     console.log({
+                        bpd_start_date: BIGGEST_PERIOD_DATA.start_date,
                         booking,
-                        updatedBooking
+                        updatedBooking,
+                        b_results,
+                        b_count
                     });
                     // clean
-
                     await deleteBooking(booking.id);
                     await deleteABookingState(bookingState.booking_state)
                     await deleteClient(client.id);
@@ -142,8 +170,13 @@ describe(
                 expect(booking.id).toBeDefined();
                 expect(updatedBooking.id).toBe(booking.id);
                 expect(updatedBooking.booking_state).toBe(cancelState.id);
+                // bookings
+                expect(b_results.length).toBeDefined();
+                expect(b_results.length).toBeGreaterThan(0);
+                expect(b_count).toBeDefined();
             }
         )
+
 
 
 
