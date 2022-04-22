@@ -1,4 +1,4 @@
-import { isValidId, isValidClientName } from 'dao/utils';
+import { isValidId, isValidClientName, isValidEmail } from 'dao/utils';
 import sql from 'db/postgres';
 
 
@@ -40,6 +40,26 @@ export async function deleteClient(client_id) {
         delete from clients c where c.id = ${client_id} RETURNING *;
         `
         return delClientRes[0];
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export async function getClientByEmail(email) {
+    if (!isValidEmail(email)) {
+        throw new Error('Non valid email')
+    };
+
+    try {
+
+        var clientRes = await sql`
+            select * from clients cl where cl.email = ${email};
+        `;
+
+        var client = clientRes.length > 0 ? clientRes[0] : null;
+        return client;
+
     } catch (error) {
         throw error;
     }
