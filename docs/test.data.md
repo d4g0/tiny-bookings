@@ -7,3 +7,7 @@ supper-foo-pass
 [susy][basic-admin]
 susy@gmail.com
 supper-foo-pass
+
+[lila][client]
+lila@gmail.com
+supper-foo-pass

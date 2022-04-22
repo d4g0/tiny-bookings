@@ -17,6 +17,7 @@
 	- [Get Bookings](#get-bookings)
 	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
 	- [Get Client Payments](#get-client-payments)
+	- [Get Bookings](#get-bookings-1)
 
 
 ## Create an Admin
@@ -131,12 +132,39 @@ values
 ```
  
 ## Create a client
+**non-user**
 ```sql 
 insert into
 	clients (user_role, client_name, client_last_name)
 values
 	(3, 'Flow', 'Jhensen') RETURNING *;
 ```
+
+**user**
+```sql
+insert into
+	clients (
+		user_role, 
+		client_name, 
+		client_last_name,
+		hash_password,
+		email,
+		is_email_verified,
+		reset_token
+	)
+values
+	(
+		3, 
+		'Lila', 
+		'Lullaby',
+		'$2a$10$ZY/UWFGmTrIf4/dEknuqfuAenlpf87yVgnQg3PuzxCC.AU/nh83yq',
+		'lila@gmail.com',
+		true,
+		'supper-reset-token'
+	) 
+RETURNING *;
+```
+
  
 ## Create a booking state
 ```sql 
@@ -214,5 +242,22 @@ and
 	cp.effectuated_at > '2022-02-21 02:12:03'
 order by cp.effectuated_at
 limit 50 offset 0
+
+```
+
+## Get Bookings
+```sql
+
+select 
+    *
+from 
+    booking b
+where 
+    b.start_date > '2022-05-21 02:12:03'
+and
+    b.start_date < '2022-05-21 02:12:03'
+ORDER BY b.start_date
+LIMIT 50 OFFSET 0;
+`;
 
 ```
