@@ -36,6 +36,7 @@
   - [Create a Booking as Admin](#create-a-booking-as-admin)
   - [cancelABooking](#cancelabooking)
   - [Get Bookings](#get-bookings)
+  - [Get Bookings As Client](#get-bookings-as-client)
 
 ## Login
 
@@ -777,6 +778,48 @@ query getBookings($input: GetBookingsInput!){
     "end_date_filter":  {
       "year": 2022,
       "month": 5,
+      "day": 25,
+      "hour": 0,
+      "minute": 0
+    },
+    "page": 1
+  }
+}
+```
+
+## Get Bookings As Client
+Requires a client to be logued in 
+```graphql
+query getClientBookings($input: GetBookingsInput!){
+  getClientBookingsAsClient(input: $input){
+    results{
+      id
+      client_id
+      hotel_id
+      booking_state
+      total_price
+      start_date
+      end_date
+      number_of_guests
+      is_cancel
+      created_at
+    }
+    count
+  }
+}
+
+{
+  "input": {
+    "start_date_filter": {
+      "year": 2022,
+      "month": 0,
+      "day": 18,
+      "hour": 0,
+      "minute": 0
+    },
+    "end_date_filter":  {
+      "year": 2022,
+      "month": 10,
       "day": 25,
       "hour": 0,
       "minute": 0

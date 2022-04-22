@@ -47,7 +47,7 @@ import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
-import { getBookings } from "dao/booking/BookingDao";
+import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
 
 export const resolvers = {
@@ -76,7 +76,7 @@ export const resolvers = {
                 // if we are here we have a user
 
                 Auth.user = user;
-
+                
                 var token = ctx.createUserToken({
                     id: user.id,
                     user_role: user.user_role
@@ -353,9 +353,9 @@ export const resolvers = {
             )
         ),
 
-        getClientBookings: authenticated(
+        getClientBookingsAsClient: authenticated(
             authorized(
-                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                [USER_ROLES.CLIENT.user_role],
                 async (root, args, ctx) => {
                     var {
                         start_date_filter,
@@ -363,11 +363,11 @@ export const resolvers = {
                         page,
                     } = args.input;
                     try {
-
-                        var { results, count } = await getBookings({
+                        var { results, count } = await getBookingsByClient({
                             start_date_filter,
                             end_date_filter,
-                            page
+                            page,
+                            client_id: ctx.user.id
                         });
 
                         return {
