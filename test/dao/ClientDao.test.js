@@ -1,9 +1,14 @@
 
-import { getUserRoleId, USER_ROLES } from 'dao/DBConstans';
+import { USER_ROLES } from 'dao/DBConstans';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
+import { getUserRoleByKey } from 'dao/users/UserRoleDao';
 import { v4 as uuid } from 'uuid'
 
 
+var CLIENT_USER_ROLE_ID = null;
+beforeAll(async () => {
+    CLIENT_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.CLIENT.key)).id;
+})
 
 
 
@@ -22,7 +27,7 @@ describe(
 
                 try {
                     client = await createNonUserClient({
-                        user_role: getUserRoleId(USER_ROLES.CLIENT.user_role),
+                        user_role: CLIENT_USER_ROLE_ID,
                         client_name: uuid().substring(0, 10),
                         client_last_name: uuid().substring(0, 10)
                     });
