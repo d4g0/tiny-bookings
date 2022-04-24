@@ -3,7 +3,7 @@
 - [Arquitecture](#arquitecture)
   - [Requirement Map](#requirement-map)
     - [General](#general)
-    - [For all users types (admins, and clients)](#for-all-users-types-admins-and-clients)
+    - [For all users types (admins, and clients) [Defered]](#for-all-users-types-admins-and-clients-defered)
     - [From client](#from-client)
     - [From admin](#from-admin)
       - [Operations Roles](#operations-roles)
@@ -18,7 +18,7 @@
 -	Authentication
 -	Autorization
 
-### For all users types (admins, and clients)
+### For all users types (admins, and clients) [Defered]
 -   Reset their password
     -   Clients only
         -   Recover their password by email (forgot my password flow)
@@ -160,7 +160,7 @@
         -   (dao)   
         -   (graphql)   
 
-[]
+[✅]
 -   bookings
     -   define booking states done
     -  (dao)  done 16 april 1:55
@@ -228,7 +228,13 @@ Note the booking service should create a booking on behalf of a client, if for s
 **Hot Sopt Tasks:**
 
 Fix broken test by admin new fetch (postgres.js) iteration 
-
+start 23 april 17:00 done april 24 1:03
+    refactor createAdmin
+       new createAdmin implementation done 19:44
+       test adaptation
+       service adaptation
+       test service adaptation
+    
 
 [done]
 Cancel Booking
