@@ -204,7 +204,7 @@ export async function getBookings({
                 b.start_date > ${utc_start_date_filter.toISOString()}
             and
                 b.start_date < ${utc_end_date_filter.toISOString()}
-            ORDER BY b.start_date
+            ORDER BY b.start_date desc
             LIMIT ${LIMIT} OFFSET ${OFFSET};
         `;
 

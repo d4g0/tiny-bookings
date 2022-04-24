@@ -311,7 +311,7 @@ export async function getRoomLocks({
             rlp.start_date > ${utc_start_date_filter.toISOString()}
         and
             rlp.start_date < ${utc_end_date_filter.toISOString()}
-        ORDER BY rlp.start_date
+        ORDER BY rlp.start_date desc
         LIMIT ${LIMIT} OFFSET ${OFFSET} ;
         `
 
