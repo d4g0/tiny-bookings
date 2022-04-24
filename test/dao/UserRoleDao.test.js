@@ -108,9 +108,9 @@ describe(
                 // normal behavior
                 expect(dbError).toBeNull();
                 // assertions
-                expect(fullAdminRole.id).toBe(getUserRoleId(USER_ROLES.FULL_ADMIN.user_role));
-                expect(basicAdminRole.id).toBe(getUserRoleId(USER_ROLES.BASIC_ADMIN.user_role));
-                expect(clientRole.id).toBe(getUserRoleId(USER_ROLES.CLIENT.user_role));
+                expect(fullAdminRole.id).toBeDefined();
+                expect(basicAdminRole.id).toBeDefined();
+                expect(clientRole.id).toBeDefined();
             }
 
         )
