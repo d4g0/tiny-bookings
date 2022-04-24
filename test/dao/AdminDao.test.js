@@ -1,6 +1,6 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY, NOT_FOUND_RECORD_ERROR_KEY } from 'dao/Errors'
 import { USER_ROLES, USER_ROLES_LIST } from '~/dao/DBConstans'
-import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById } from 'dao/users/AdminDao.js'
+import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById, getAdmins } from 'dao/users/AdminDao.js'
 import { createUserRole, getUserRoleByKey } from 'dao/users/UserRoleDao'
 import { isValidAdminDescription, isValidEmail, isValidId, isValidUserName } from 'dao/utils'
 import { v4 as uuid } from 'uuid'
@@ -264,6 +264,37 @@ describe(
             }
         )
 
+
+        test(
+            "Get admins",
+            async function () {
+                var dbError = null;
+                var admins = null;
+                var cAdmin = null
+                try {
+                    cAdmin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
+
+                    admins = await getAdmins();
+                    console.log({ admins })
+
+                    await deleteAdminByEmail(cAdmin.email);
+
+
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBeNull();
+                expect(admins.length).toBeGreaterThanOrEqual(1);
+            }
+        )
 
 
 

@@ -270,21 +270,24 @@ export async function deleteAdminById(id) {
 
 
 export async function getAdmins() {
-    var admins = await prisma.admins.findMany({
-        include: {
-            user_roles: true
-        }
-    })
+    try {
+        var admRes = await sql`
+        select 
+            adm.id,
+            ur.user_role,
+            adm.admin_name, 
+            adm.admin_description,
+            adm.email,
+            adm.hash_password,
+            adm.reset_token,
+            adm.created_at
+        from admins adm join user_roles ur on (adm.user_role = ur.id )
+        `;
 
-    var mapedAdmins = [];
-    // case admins exists
-    if (admins.length) {
-        // console.log({ loc: 'dao', admins })
-        mapedAdmins = admins.map(function mapToAdmin(adminData) {
-            return mapAdminResponseDataToAdminUser(adminData)
-        })
+        return admRes;
+    } catch (error) {
+        throw error;
     }
-    return mapedAdmins
 }
 
 function mapAdminResponseDataToAdminUser({ // rename
