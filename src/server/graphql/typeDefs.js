@@ -26,7 +26,7 @@ export const typeDefinitions = gql`
     created_at:         String! 
   }
 
-  input createAdminInput {
+  input CreateAdminInput {
     user_role_id:       Int!
     email:              String!
     admin_name:         String!
@@ -34,7 +34,10 @@ export const typeDefinitions = gql`
     password:           String!
   }
 
-
+  type DelAdminResult {
+    completed:         Boolean!
+    count:             Int!
+  }
 
   ##
   # Client
@@ -429,8 +432,8 @@ export const typeDefinitions = gql`
   ##
   type Mutation {
     # admin
-    createAdmin(input: createAdminInput!) : Admin!
-    deleteAdmin(id: Int!): Admin!
+    createAdmin(input: CreateAdminInput!) : Admin!
+    deleteAdmin(id: Int!): DelAdminResult!
     # hotel
     createHotel(input: HotelInput!): Hotel!
     updateHotelName(input: UpdateHotelName!): Hotel!

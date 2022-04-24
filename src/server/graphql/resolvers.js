@@ -435,8 +435,8 @@ export const resolvers = {
                 USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx) => {
                     var id = args.id;
-                    var deletedAdmin = await deleteAdminById(id);
-                    return deletedAdmin;
+                    var {completed, count} = await deleteAdminById(id);
+                    return {completed, count} ;
                 }
             )
         ),
