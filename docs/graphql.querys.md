@@ -2,6 +2,7 @@
 - [GraphQL API Querys](#graphql-api-querys)
   - [Login](#login)
   - [Admins](#admins)
+    - [Get Admins](#get-admins)
     - [Create Admin](#create-admin)
     - [Delete admin](#delete-admin)
   - [Hotel](#hotel)
@@ -75,6 +76,8 @@ variables:{
 ```
 
 ## Admins
+
+### Get Admins
 ```graphql
 query admins{
   admins{
@@ -94,14 +97,15 @@ mutation createAdmin($input:createAdminInput!){
     admin_name
     admin_description
     hash_password
-    reset_token
     created_at
   }
 }
 
+
+
 {
   "input":{
-		"user_role":  "BASIC_ADMIN",
+		"user_role_id":  2,
     "email":      "susy@gmail.com",
     "admin_name": "susy",
     "admin_description": "susy likes salsa",
