@@ -177,27 +177,45 @@ values
 
 **user**
 ```sql
-insert into
-	clients (
-		user_role, 
-		client_name, 
-		client_last_name,
-		hash_password,
-		email,
-		is_email_verified,
-		reset_token
-	)
-values
-	(
-		3, 
-		'Lila', 
-		'Lullaby',
-		'$2a$10$ZY/UWFGmTrIf4/dEknuqfuAenlpf87yVgnQg3PuzxCC.AU/nh83yq',
-		'lila@gmail.com',
-		true,
-		'supper-reset-token'
+with i_cli as 
+	( 
+		insert into 
+			clients (
+				user_role, 
+				client_name, 
+				client_last_name,
+				hash_password,
+				email
+			) 
+		values (
+			3,
+			'lafy',
+			'gonzales',
+			'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu',
+			'lafy@gmail.com'
+		) RETURNING
+			clients.id,
+			clients.user_role,
+			clients.client_name,
+			clients.client_last_name,
+			clients.hash_password,	
+			clients.email,
+			clients.is_email_verified,
+			clients.reset_token,
+			clients.created_at
 	) 
-RETURNING *;
+	select 
+			i_cli.id,
+			ur.user_role,
+			i_cli.client_name,
+			i_cli.client_last_name,
+			i_cli.hash_password,	
+			i_cli.email,
+			i_cli.is_email_verified,
+			i_cli.reset_token,
+			i_cli.created_at
+	from i_cli join user_roles ur on (i_cli.user_role = ur.id )
+;
 ```
 
  
