@@ -5,7 +5,8 @@ import { typeDefinitions } from 'server/graphql/typeDefs';
 import {
   getUserFromToken,
   getTokenFromReq,
-  createUserToken
+  createUserToken,
+  isCaptchaClear
 } from '~/server/graphql/auth'
 
 
@@ -19,7 +20,7 @@ const server = new ApolloServer({
 
     const token = getTokenFromReq(req);
     const user = getUserFromToken(token);
-    return { user, createUserToken }
+    return { user, createUserToken, req, isCaptchaClear }
   },
   // formatError(error) {
   //   return error;

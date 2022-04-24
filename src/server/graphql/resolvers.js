@@ -50,6 +50,7 @@ import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
 import { singUp as singUpClient } from "services/users/clients";
+import { AuthenticationError } from "apollo-server-core";
 
 export const resolvers = {
 
@@ -1048,6 +1049,8 @@ export const resolvers = {
         // singUp
         singUp: async (root, args, ctx) => {
 
+            
+
             var Auth = {
                 user: null,
                 token: null,
@@ -1068,6 +1071,11 @@ export const resolvers = {
             
             try {
 
+                var isCaptchaClear = await ctx.isCaptchaClear(ctx.req);
+
+                if(!isCaptchaClear){
+                    throw new AuthenticationError('Should provide a valid captcha')
+                }
                 var client = await singUpClient({
                     client_name: s_client_name,
                     client_last_name: s_client_last_name,

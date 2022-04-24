@@ -215,6 +215,13 @@
       -   dao 
           -   getClientByEmail done (+admin resolvers refactor) 22 april 1:21
       - graphql (big refactor plus admin) done ~ 2:30
+  -   list bookings of a client
+      -   (dao) all ready done
+      -   (graphql) all ready done
+ - sign up
+   - (dao) create client  done 2:16
+   - (service) done 2:43
+   - crfc token handling with helper
 
 
 

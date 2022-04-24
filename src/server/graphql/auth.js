@@ -9,6 +9,7 @@
  * 
  */
 import jwt from 'jsonwebtoken';
+import { $fetch } from 'ohmyfetch';
 const SECRET = process.env.API_SECRET_KEY || 'foo-key';
 const { AuthenticationError, ForbiddenError } = require('apollo-server-core');
 
@@ -34,7 +35,7 @@ export function getTokenFromReq(req) {
 
 
 
-// pending createCLientToken()
+
 
 export function createUserToken({
     id,
@@ -103,4 +104,38 @@ export const authorized = (role_s, next) => (root, args, context, info) => {
 
 
     return next(root, args, context, info)
+}
+
+export async function isCaptchaClear(req) {
+
+    var isClear = false;
+    var captchaToken = req.get('X-Captcha');
+
+    if (!captchaToken) {
+        return isClear;
+    }
+
+    try {
+
+        const GOOGLE_VERIFY_ENDPOINT = `https://www.google.com/recaptcha/api/siteverify`;
+
+        var gcRes = await $fetch(GOOGLE_VERIFY_ENDPOINT, {
+            method: 'POST',
+            params: {
+                secret: process.env.G_CHAPTCHA_SECRET_KEY,
+                response: captchaToken,
+            }
+        });
+
+        // throw if validation fails
+        if (!gcRes.success) {
+            throw new Error(gcRes['error-codes'].join('\n'));
+        }
+
+        isClear = true;
+        return isClear;
+
+    } catch (error) {
+        return isClear;
+    }
 }
