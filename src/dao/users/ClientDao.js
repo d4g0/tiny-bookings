@@ -1,5 +1,7 @@
-import { isValidId, isValidClientName, isValidEmail } from 'dao/utils';
+import { DB_UNIQUE_CONSTRAINT_ERROR } from 'dao/Errors';
+import { isValidId, isValidClientName, isValidEmail, isValidUserName, isValidPassword } from 'dao/utils';
 import sql from 'db/postgres';
+import { isValidString } from 'utils';
 
 
 export async function createNonUserClient({
@@ -80,11 +82,89 @@ export async function getClientByEmail(email) {
     }
 }
 
-export async function createUserClient() {
+export async function createUserClient({
+    user_role_id,
+    client_name,
+    client_last_name,
+    hash_password,
+    email,
+}) {
 
+    // validation
+    if (!isValidId(user_role_id)) {
+        throw new Error('Non valid user role id')
+    }
+    if (!isValidUserName(client_name)) {
+        throw new Error('Non valid client name')
+    }
+    if (!isValidUserName(client_last_name)) {
+        throw new Error('Non valid client last name')
+    }
+    if (!isValidString(hash_password)) {
+        throw new Error('Non valid hash password')
+    }
+    if (!isValidEmail(email)) {
+        throw new Error('Non valid email');
+    }
+
+    // save
+    try {
+
+        var clientRes = await sql`
+        with i_cli as 
+            ( 
+                insert into 
+                    clients (
+                        user_role, 
+                        client_name, 
+                        client_last_name,
+                        hash_password,
+                        email
+                    ) 
+                values (
+                    ${user_role_id},
+                    ${client_name},
+                    ${client_last_name},
+                    ${hash_password},
+                    ${email}
+                ) RETURNING
+                    clients.id,
+                    clients.user_role,
+                    clients.client_name,
+                    clients.client_last_name,
+                    clients.hash_password,	
+                    clients.email,
+                    clients.is_email_verified,
+                    clients.reset_token,
+                    clients.created_at
+            ) 
+            select 
+                    i_cli.id,
+                    ur.user_role,
+                    i_cli.client_name,
+                    i_cli.client_last_name,
+                    i_cli.hash_password,	
+                    i_cli.email,
+                    i_cli.is_email_verified,
+                    i_cli.reset_token,
+                    i_cli.created_at
+            from i_cli join user_roles ur on (i_cli.user_role = ur.id )
+        ;
+        `;
+
+        var client = clientRes[0]
+        return client;
+
+    } catch (error) {
+        // duplicated key postgres error
+        if (error?.code == '23505') {
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Duplicated Client email', 'email')
+        }
+        throw error;
+    }
 }
 
-export async function getClient() {
+export async function getClient(clientId) {
 
 }
 
@@ -93,14 +173,16 @@ export async function getClients() {
 }
 
 
-export async function updateClientName() {
 
-}
+// defered
+// export async function updateClientName() {
 
-export async function updateClientLastName() {
+// }
 
-}
+// export async function updateClientLastName() {
 
-export async function updateClientHashPassw() {
+// }
 
-}
+// export async function updateClientHashPassw() {
+
+// }
