@@ -107,8 +107,6 @@ export async function createUserClient({
 
     // save
     try {
-        // get client role id
-        
         
         var clientRes = await sql`
         with i_cli as 
