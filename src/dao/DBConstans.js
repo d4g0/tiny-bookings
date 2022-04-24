@@ -12,15 +12,18 @@ import { isValidCurrnecy, isValidId, isValidPaymentType } from "./utils";
 export const USER_ROLES = {
     'FULL_ADMIN': {
         id: null,
-        user_role: 'FULL_ADMIN'
+        user_role: 'FULL_ADMIN',
+        key: 'FULL_ADMIN'
     },
     'BASIC_ADMIN': {
         id: null,
-        user_role: 'BASIC_ADMIN'
+        user_role: 'BASIC_ADMIN',
+        key: 'BASIC_ADMIN'
     },
     'CLIENT': {
         id: null,
-        user_role: 'CLIENT'
+        user_role: 'CLIENT',
+        key: 'CLIENT'
     }
 }
 
@@ -49,9 +52,9 @@ export function getUserRoleId(user_role_key) {
 }
 
 export const USER_ROLES_LIST = [
-    USER_ROLES.FULL_ADMIN,
-    USER_ROLES.BASIC_ADMIN,
-    USER_ROLES.CLIENT
+    USER_ROLES.FULL_ADMIN.user_role,
+    USER_ROLES.BASIC_ADMIN.user_role,
+    USER_ROLES.CLIENT.user_role
 ]
 
 /**
@@ -66,7 +69,7 @@ export const BOOKING_STATES = {
         key: 'CANCEL',
         id: null,
     },
-    
+
 }
 export const BOOKING_STATES_LIST = [
     BOOKING_STATES.PAID.key,
