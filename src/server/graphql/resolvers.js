@@ -51,6 +51,7 @@ import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
 import { singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
+import { getClientById } from "dao/users/ClientDao";
 
 export const resolvers = {
 
@@ -376,6 +377,26 @@ export const resolvers = {
                             results,
                             count
                         }
+
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        getClientForAdmin: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        id
+                    } = args;
+                    try {
+
+                        var client = await getClientById(id);
+                        return client;
 
                     } catch (error) {
                         throw error;

@@ -8,6 +8,7 @@
     - [From admin](#from-admin)
       - [Operations Roles](#operations-roles)
         - [`full-admin`](#full-admin)
+        - [`client`](#client)
   - [Notes](#notes)
     - [Availability](#availability)
   - [NEW Features ideas](#new-features-ideas)
@@ -207,8 +208,16 @@
     
     -   list bookings of a client
         -   done 22 april 2:46
+- []
+- clients
+- get client by id 
+  - (dao) start 24 april 14:30 done :38
+  - (graphql) start :42 done :49
+- list clients
 
 
+
+##### `client`
 - []
 - clients
   -   login
@@ -221,8 +230,7 @@
  - sign up
    - (dao) create client  done 2:16
    - (service) done 2:43
-   - crfc token handling with helper
-
+   - (graphql) done 4:50
 
 
 Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation

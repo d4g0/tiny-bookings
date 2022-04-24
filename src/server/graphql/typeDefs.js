@@ -433,6 +433,7 @@ export const typeDefinitions = gql`
     # bookings
     getBookings(input: GetBookingsInput!): BookingsResult!
     getClientBookingsAsClient(input: GetBookingsInput!): BookingsResult!
+    getClientForAdmin(id: Int!): Client
   }
 
   ##

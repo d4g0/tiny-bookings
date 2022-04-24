@@ -39,6 +39,7 @@
   - [Get Bookings](#get-bookings)
   - [Get Bookings As Client](#get-bookings-as-client)
   - [SingUp](#singup)
+  - [Get Client for admin](#get-client-for-admin)
 
 ## Login
 
@@ -860,6 +861,21 @@ mutation SingUp($input: SingUpInput!){
     "client_last_name": "valdez",
     "password": "supper-foo-pass",
     "email": "casidy4@gmail.com"
+  }
+}
+```
+
+## Get Client for admin
+```graphql
+query getClientForAdmin{
+  getClientForAdmin(id:155){
+    id
+    client_name
+    client_last_name
+    user_role
+    email
+    hash_password
+    created_at
   }
 }
 ```
