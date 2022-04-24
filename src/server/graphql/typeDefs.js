@@ -387,6 +387,12 @@ export const typeDefinitions = gql`
     page:                   Int!
   }
 
+  input PaginationInput {
+    start_date_filter:      DateObject!  
+    end_date_filter:        DateObject!
+    page:                   Int!
+  }
+
   type BookingsResult {
     results:                [Booking]!
     count:                  Int!
@@ -399,6 +405,11 @@ export const typeDefinitions = gql`
     email:                  String!
   }
 
+  # getClients
+  type ClientResult {
+    results:                [Client]!
+    count:                  Int!
+  }
   ##
   # Query
   ##
@@ -434,6 +445,8 @@ export const typeDefinitions = gql`
     getBookings(input: GetBookingsInput!): BookingsResult!
     getClientBookingsAsClient(input: GetBookingsInput!): BookingsResult!
     getClientForAdmin(id: Int!): Client
+    # get clients
+    getClients(input:PaginationInput!): ClientResult!
   }
 
   ##
@@ -479,6 +492,7 @@ export const typeDefinitions = gql`
     cancelBooking(bookingId: Int!): Booking!
     # singup
     singUp(input: SingUpInput!): Auth!
+    
   }
 
 

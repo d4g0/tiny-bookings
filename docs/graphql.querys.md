@@ -40,6 +40,7 @@
   - [Get Bookings As Client](#get-bookings-as-client)
   - [SingUp](#singup)
   - [Get Client for admin](#get-client-for-admin)
+  - [Get Clients](#get-clients)
 
 ## Login
 
@@ -876,6 +877,40 @@ query getClientForAdmin{
     email
     hash_password
     created_at
+  }
+}
+```
+
+## Get Clients
+```graphql
+query getClients($input: PaginationInput!){
+  getClients(input:$input){
+    results{
+      id
+      client_name
+      created_at
+    }
+    count
+  }
+}
+
+{
+  "input": {
+    "start_date_filter": {
+      "year": 2022,
+      "month": 3,
+      "day": 18,
+      "hour": 0,
+      "minute": 0
+    },
+    "end_date_filter":  {
+            "year": 2022,
+      "month": 5,
+      "day": 25,
+      "hour": 0,
+      "minute": 0
+    },
+    "page": 1
   }
 }
 ```

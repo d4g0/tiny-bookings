@@ -1,6 +1,6 @@
 import { USER_ROLES } from 'dao/DBConstans';
 import { DB_UNIQUE_CONSTRAINT_ERROR } from 'dao/Errors';
-import { isValidId, isValidClientName, isValidEmail, isValidUserName, isValidPassword } from 'dao/utils';
+import { isValidId, isValidClientName, isValidEmail, isValidUserName, isValidPassword, isValidDateInput, isValidPositiveInteger, utcDate } from 'dao/utils';
 import sql from 'db/postgres';
 import { isValidString } from 'utils';
 import { getUserRoleByKey } from './UserRoleDao';
@@ -107,7 +107,7 @@ export async function createUserClient({
 
     // save
     try {
-        
+
         var clientRes = await sql`
         with i_cli as 
             ( 
@@ -163,7 +163,7 @@ export async function createUserClient({
 }
 
 export async function getClientById(clientId) {
-    if(!isValidId(clientId)){
+    if (!isValidId(clientId)) {
         throw new Error('Non valid client id');
     }
 
@@ -190,10 +190,91 @@ export async function getClientById(clientId) {
     }
 }
 
-export async function getClients() {
 
+export async function getClients({
+    start_date_filter = { year, month, day, hour, minute },
+    end_date_filter = { year, month, day, hour, minute },
+    page = 1, // 1 start based count
+}) {
+
+    // validation
+    if (!isValidDateInput(start_date_filter)) {
+        throw new Error('Non valid start_date_filter')
+    }
+    if (!isValidDateInput(end_date_filter)) {
+        throw new Error('Non valid end_date_filter')
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected')
+    }
+
+    const LIMIT = 50;
+    const OFFSET = (page - 1) * LIMIT;
+
+    var utc_start_date_filter = utcDate({
+        year: start_date_filter.year,
+        month: start_date_filter.month,
+        day: start_date_filter.day,
+        hour: start_date_filter.hour,
+        minute: start_date_filter.minute
+    });
+    var utc_end_date_filter = utcDate({
+        year: end_date_filter.year,
+        month: end_date_filter.month,
+        day: end_date_filter.day,
+        hour: end_date_filter.hour,
+        minute: end_date_filter.minute
+    });
+
+    try {
+
+        var clientRes = await sql`
+        select 
+            cl.id,
+            ur.user_role,
+            cl.client_name,
+            cl.client_last_name,
+            cl.hash_password,
+            cl.email,
+            cl.is_email_verified,
+            cl.reset_token,
+            cl.created_at
+        from 
+            clients cl
+        join 
+            user_roles ur on( cl.user_role = ur.id) 
+        where 
+            cl.created_at > ${utc_start_date_filter.toISOString()}
+        and
+            cl.created_at < ${utc_end_date_filter.toISOString()}
+        ORDER BY cl.created_at desc
+        LIMIT ${LIMIT} OFFSET ${OFFSET} ;
+        `
+
+        var countRes = await sql`
+        select 
+           count(*)
+        from 
+            clients cl
+        join 
+            user_roles ur on( cl.user_role = ur.id) 
+        where 
+            cl.created_at > ${utc_start_date_filter.toISOString()}
+        and
+            cl.created_at < ${utc_end_date_filter.toISOString()};
+        `;
+
+        var results = clientRes
+        var count = +countRes[0].count
+        return {
+            results,
+            count
+        }
+
+    } catch (error) {
+        throw error
+    }
 }
-
 
 
 // defered

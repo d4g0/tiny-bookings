@@ -51,7 +51,7 @@ import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
 import { singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
-import { getClientById } from "dao/users/ClientDao";
+import { getClientById, getClients  as getClientsService} from "dao/users/ClientDao";
 
 export const resolvers = {
 
@@ -397,6 +397,32 @@ export const resolvers = {
 
                         var client = await getClientById(id);
                         return client;
+
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        getClients: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        start_date_filter,
+                        end_date_filter,
+                        page,
+                    } = args.input;
+                    try {
+
+                        var result = await getClientsService({
+                            start_date_filter,
+                            end_date_filter,
+                            page
+                        });
+                        return result;
 
                     } catch (error) {
                         throw error;
@@ -1070,7 +1096,7 @@ export const resolvers = {
         // singUp
         singUp: async (root, args, ctx) => {
 
-            
+
 
             var Auth = {
                 user: null,
@@ -1089,12 +1115,12 @@ export const resolvers = {
             var s_client_last_name = xss(client_last_name);
             var s_email = xss(email);
 
-            
+
             try {
 
                 var isCaptchaClear = await ctx.isCaptchaClear(ctx.req);
 
-                if(!isCaptchaClear){
+                if (!isCaptchaClear) {
                     throw new AuthenticationError('Should provide a valid captcha')
                 }
                 var client = await singUpClient({
@@ -1104,7 +1130,7 @@ export const resolvers = {
                     password
                 });
 
-                
+
 
                 var token = ctx.createUserToken({
                     id: client.id,
