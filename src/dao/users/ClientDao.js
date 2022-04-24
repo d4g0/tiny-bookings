@@ -1,7 +1,9 @@
+import { USER_ROLES } from 'dao/DBConstans';
 import { DB_UNIQUE_CONSTRAINT_ERROR } from 'dao/Errors';
 import { isValidId, isValidClientName, isValidEmail, isValidUserName, isValidPassword } from 'dao/utils';
 import sql from 'db/postgres';
 import { isValidString } from 'utils';
+import { getUserRoleByKey } from './UserRoleDao';
 
 
 export async function createNonUserClient({
@@ -83,7 +85,6 @@ export async function getClientByEmail(email) {
 }
 
 export async function createUserClient({
-    user_role_id,
     client_name,
     client_last_name,
     hash_password,
@@ -91,9 +92,6 @@ export async function createUserClient({
 }) {
 
     // validation
-    if (!isValidId(user_role_id)) {
-        throw new Error('Non valid user role id')
-    }
     if (!isValidUserName(client_name)) {
         throw new Error('Non valid client name')
     }
@@ -109,7 +107,9 @@ export async function createUserClient({
 
     // save
     try {
-
+        // get client role id
+        
+        
         var clientRes = await sql`
         with i_cli as 
             ( 
@@ -122,7 +122,7 @@ export async function createUserClient({
                         email
                     ) 
                 values (
-                    ${user_role_id},
+                    (select ur.id from user_roles ur where ur.user_role = 'CLIENT'),
                     ${client_name},
                     ${client_last_name},
                     ${hash_password},

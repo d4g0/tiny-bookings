@@ -188,7 +188,7 @@ with i_cli as
 				email
 			) 
 		values (
-			3,
+			(select ur.id from user_roles ur where ur.user_role = 'CLIENT'),
 			'lafy',
 			'gonzales',
 			'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu',

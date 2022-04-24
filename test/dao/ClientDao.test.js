@@ -66,7 +66,6 @@ describe(
                 const EMAIL = uuid().substring(0, 4) + '@gmail.com';
                 try {
                     client = await createUserClient({
-                        user_role_id: CLIENT_USER_ROLE_ID,
                         client_name: uuid().substring(0, 10),
                         client_last_name: uuid().substring(0, 10),
                         hash_password: HASH_PASSW,
