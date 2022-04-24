@@ -117,10 +117,9 @@ mutation createAdmin($input:createAdminInput!){
 ### Delete admin
 ```graphql
 mutation deleteAdmin{
-  deleteAdmin(id:19){
-    id
-    user_role
-    admin_name
+  deleteAdmin(id:169){
+    completed
+    count
   }
 }
 ```
