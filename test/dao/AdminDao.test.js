@@ -1,44 +1,17 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY, NOT_FOUND_RECORD_ERROR_KEY } from 'dao/Errors'
-import { USER_ROLES } from '~/dao/DBConstans'
+import { USER_ROLES, USER_ROLES_LIST } from '~/dao/DBConstans'
 import { getAdminByEmail, deleteAdminByEmail, createAdmin, getAdminById } from 'dao/users/AdminDao.js'
 import { createUserRole, getUserRoleByKey } from 'dao/users/UserRoleDao'
-
-
+import { isValidAdminDescription, isValidEmail, isValidId, isValidUserName } from 'dao/utils'
+import { v4 as uuid } from 'uuid'
+import { isValidString } from 'utils'
+const { log } = console;
 describe(
     'Admin Dao',
 
-    function userDaoTest() {
+    function () {
 
         // init test secuence, init required values if not present in db
-        beforeAll(async () => {
-
-
-            try {
-
-
-                // check for user_roles, create if they are not present
-                // FULL ADMIN
-                var fullAdminRole = await getUserRoleByKey(USER_ROLES.FULL_ADMIN.user_role);
-                // create if it not exist
-                if (!fullAdminRole) {
-                    await createUserRole(USER_ROLES.FULL_ADMIN.user_role);
-                }
-                FULL_ADMIN_USER_ROLE_ID = fullAdminRole.id;
-                // BASIC ADMIN
-                var basicAdminRole = await getUserRoleByKey(USER_ROLES.BASIC.user_role);
-                // create if it not exist
-                if (!basicAdminRole) {
-                    await createUserRole(USER_ROLES.BASIC.user_role);
-                }
-                BASIC_ADMIN_USER_ROLE_ID = basicAdminRole.id;
-
-
-
-
-            } catch (error) {
-                console.log(error);
-            }
-        })
 
         // ---------------
         // Globals 
@@ -73,20 +46,85 @@ describe(
             reset_token: 'supper reset token for test admin',
         }
 
-        // [admins] Retrieve an admin by name that doesn't exists
+        beforeAll(async () => {
+            try {
+                FULL_ADMIN_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.FULL_ADMIN.key)).id;
+                BASIC_ADMIN_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.BASIC_ADMIN.key)).id;
+            } catch (error) {
+                log(error);
+                throw error;
+            }
+        })
+
+
+        // create and admin with postgres.js
         test(
-            "Check error of retrieve an admin that doesen't exist",
+            "Create an admin with postgres",
             async function () {
-                var dbError = null;
+                var dbError = null, c_admin = null, b_admin = null;
 
                 try {
-                    await getAdminByEmail('this-admin-email@should.not.exist');
+                    // full admin
+                    c_admin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
+
+                    b_admin = await createAdmin({
+                        user_role_id: BASIC_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
+
+                    // basic admin 
+                    console.log({ c_admin, b_admin })
                 } catch (error) {
+                    dbError = error;
                     console.log(error);
-                    dbError = error
                 }
-                expect(dbError).toBeDefined();
-                expect(dbError.code).toBe(NOT_FOUND_RECORD_ERROR_KEY);
+
+                expect(dbError).toBeNull()
+                // full admin
+                // id
+                expect(isValidId(c_admin.id)).toBe(true);
+                // user_role
+                expect(USER_ROLES.FULL_ADMIN.key == c_admin.user_role).toBe(true);
+                // admin_name
+                expect(isValidUserName(c_admin.admin_name)).toBe(true);
+                // admin_description
+                expect(isValidAdminDescription(c_admin.admin_description)).toBe(true);
+                // email
+                expect(isValidEmail(c_admin.email)).toBe(true);
+                // hash_password
+                expect(typeof c_admin.hash_password).toBe('string');
+                // reset_token
+                expect(c_admin.reset_token).toBe(null);
+                // created_at
+                expect(typeof c_admin.created_at).toBe('string');
+                // basic admin
+
+                // b
+                expect(isValidId(b_admin.id)).toBe(true);
+                // user_role
+                expect(USER_ROLES.BASIC_ADMIN.key == b_admin.user_role).toBe(true);
+                // admin_name
+                expect(isValidUserName(b_admin.admin_name)).toBe(true);
+                // admin_description
+                expect(isValidAdminDescription(b_admin.admin_description)).toBe(true);
+                // email
+                expect(isValidEmail(b_admin.email)).toBe(true);
+                // hash_password
+                expect(typeof b_admin.hash_password).toBe('string');
+                // reset_token
+                expect(b_admin.reset_token).toBe(null);
+                // created_at
+                expect(typeof b_admin.created_at).toBe('string');
+
             }
         )
 
@@ -102,34 +140,39 @@ describe(
                 // should remove the created admin to clean the db
                 // should have not db connection errors in the execuitions
 
-                var dbError = null, createdAdmin = null, retrivedAdmin = null, deletedAdmin = null, idMatch = true;
+                var dbError = null, cAdmin = null, rAdmin = null, idMatch = true;
+                var delCount = null, delCompleted = null;
+
                 try {
 
 
                     // create
-                    createdAdmin = await createAdmin({
-                        // next comming
-                        user_role: USER_ROLES.FULL_ADMIN.user_role,
-                        email: adminData.email,
-                        admin_name: adminData.admin_name,
-                        admin_description: adminData.admin_description,
-                        hash_password: adminData.hash_password,
-                        reset_token: adminData.reset_token
+                    cAdmin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
                     })
 
                     // read
-                    retrivedAdmin = await getAdminByEmail(adminData.email);
+                    rAdmin = await getAdminByEmail(cAdmin.email);
 
                     // delete
-                    deletedAdmin = await deleteAdminByEmail(adminData.email);
+                    var { completed, count } = await deleteAdminByEmail(cAdmin.email);
+                    delCompleted = completed;
+                    delCount = count;
+                    console.log({
+                        cAdmin,
+                        rAdmin,
+                        delCompleted,
+                        delCount
+                    })
 
-                    console.log(deletedAdmin);
+                    // if (createdAdmin.id == retrivedAdmin.id) {
+                    //     idMatch = true;
+                    // }
 
-                    if (createdAdmin.id == retrivedAdmin.id && retrivedAdmin.id == deletedAdmin.id) {
-                        idMatch = true;
-                    }
-
-                    console.log(createdAdmin)
 
                 } catch (error) {
                     console.log(error)
@@ -138,10 +181,9 @@ describe(
 
                 expect(idMatch).toBe(true);
                 expect(dbError).toBeNull();
-                expect(createdAdmin).toMatchObject(retrivedAdmin);
-                expect(retrivedAdmin).toMatchObject(deletedAdmin)
-
-
+                expect(cAdmin).toMatchObject(rAdmin);
+                expect(delCompleted).toBe(true);
+                expect(delCount).toBe(1);
             }
         )
 
@@ -150,35 +192,34 @@ describe(
             "Check create 2 admins with same name error",
             async function () {
 
-                var dbError = null, admin1 = null, createAdminError = null;
-
+                var dbError = null, cAdmin = null;
+                const ADMIN_NAME = uuid().substring(0, 6);
 
                 try {
                     // create first admin
-                    admin1 = await createAdmin({
-                        user_role: USER_ROLES.FULL_ADMIN.user_role,
-                        email: adminData.email,
-                        admin_name: adminData.admin_name,
-                        admin_description: adminData.admin_description,
-                        hash_password: adminData.hash_password,
-                        reset_token: adminData.reset_token
-                    });
+                    cAdmin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: ADMIN_NAME,
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
 
                     // atemp to create another with same name, 
                     // expect to rise a dbError
                     await createAdmin({
-                        user_role: USER_ROLES.FULL_ADMIN.user_role,
-                        email: adminData.email,
-                        admin_name: adminData.admin_name,
-                        admin_description: adminData.admin_description,
-                        hash_password: adminData.hash_password,
-                        reset_token: adminData.reset_token
-                    });
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: ADMIN_NAME,
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
 
 
 
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
+                    console.log(`code: ` + error?.code)
                     dbError = error;
                     // clean db
                     await deleteAdminByEmail(adminData.email);
@@ -189,72 +230,29 @@ describe(
 
         )
 
-        // [admins] Create a full and a basic admin
-        test(
-            "Create a Full and a Basic admin",
-            async function () {
-                var dbError = null,
-                    basicAdmin = null,
-                    basicAdminExtract = null,
-                    fullAdmin = null,
-                    fullAdminExtract = null;
 
-                try {
-                    basicAdmin = await createAdmin(basicAdminData);
-                    basicAdminExtract = {
-                        user_role: basicAdmin.user_role,
-                        email: basicAdmin.email,
-                        admin_name: basicAdmin.admin_name,
-                        admin_description: basicAdmin.admin_description,
-                        hash_password: basicAdmin.hash_password,
-                        reset_token: basicAdmin.reset_token,
-                    }
-                    fullAdmin = await createAdmin(fullAdminData);
-                    fullAdminExtract = {
-                        user_role: fullAdmin.user_role,
-                        email: fullAdmin.email,
-                        admin_name: fullAdmin.admin_name,
-                        admin_description: fullAdmin.admin_description,
-                        hash_password: fullAdmin.hash_password,
-                        reset_token: fullAdmin.reset_token,
-                    }
-
-                    // happy path clean
-                    await deleteAdminByEmail(basicAdmin.email);
-                    await deleteAdminByEmail(fullAdmin.email);
-
-
-                } catch (error) {
-                    console.log(error);
-                    dbError = error;
-                }
-
-                expect(dbError).toBe(null);
-                expect(basicAdminData).toMatchObject(basicAdminExtract);
-                expect(fullAdminData).toMatchObject(fullAdminExtract);
-            }
-        )
 
         // [admins] Retrieve an admin by id
         test(
             "Retrive an admin by ID",
             async function () {
-                var dbError = null, admin1 = null, retrievedAdmin = null;
+                var dbError = null, cAdmin = null, rAdmin = null;
 
                 try {
-                    admin1 = await createAdmin({
-                        user_role: USER_ROLES.FULL_ADMIN.user_role,
-                        email: adminData.email,
-                        admin_name: adminData.admin_name,
-                        admin_description: adminData.admin_description,
-                        hash_password: adminData.hash_password,
-                        reset_token: adminData.reset_token
+                    cAdmin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
+
+                    rAdmin = await getAdminById(cAdmin.id);
+
+                    await deleteAdminByEmail(cAdmin.email);
+                    console.log({
+                        cAdmin, rAdmin
                     });
-
-                    retrievedAdmin = await getAdminById(admin1.id);
-
-                    await deleteAdminByEmail(admin1.email);
-
 
                 } catch (error) {
                     dbError = error;
@@ -262,7 +260,7 @@ describe(
                 }
 
                 expect(dbError).toBe(null);
-                expect(admin1).toMatchObject(retrievedAdmin);
+                expect(cAdmin).toMatchObject(rAdmin);
             }
         )
 
