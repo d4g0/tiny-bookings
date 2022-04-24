@@ -28,24 +28,6 @@ describe(
             reset_token: 'supper reset token for test admin',
         }
 
-        var basicAdminData = {
-            user_role: USER_ROLES.BASIC_ADMIN.user_role,
-            email: 'test-basic@email.com',
-            admin_name: 'test-basic-admin',
-            admin_description: 'test admin for development',
-            hash_password: 'supper foo hash password ',
-            reset_token: 'supper reset token for test admin',
-        }
-
-        var fullAdminData = {
-            user_role: USER_ROLES.FULL_ADMIN.user_role,
-            email: 'test-full@email.com',
-            admin_name: 'test-full-admin',
-            admin_description: 'test admin for development',
-            hash_password: 'supper foo hash password ',
-            reset_token: 'supper reset token for test admin',
-        }
-
         beforeAll(async () => {
             try {
                 FULL_ADMIN_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.FULL_ADMIN.key)).id;

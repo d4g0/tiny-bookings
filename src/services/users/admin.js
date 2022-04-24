@@ -1,7 +1,7 @@
 import { USER_ROLES } from "dao/DBConstans";
 import { getAdminById, getAdminByEmail, getAdmins } from "dao/users/AdminDao";
+import { createAdmin, deleteAdminById as delAdminByIdDao } from 'dao/users/AdminDao'
 import {
-    isInAdminRoles,
     isValidEmail,
     isValidUserName,
     isValidAdminDescription,
@@ -9,7 +9,6 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { createAdmin, deleteAdminById as delAdminByIdDao, getAdminByEmail_NO_THROW } from 'dao/users/AdminDao'
 import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 
 
@@ -20,7 +19,7 @@ import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
  */
 export async function createAdminService({
     creator_admin_id,
-    user_role,
+    user_role_id,
     email,
     admin_name,
     admin_description,
@@ -39,8 +38,8 @@ export async function createAdminService({
         throw new Error(`$creator_admin_id argument dosen't match with the real records : creator_admin_id: ${creator_admin_id}`);
     }
     // user role validation
-    if (!isInAdminRoles(user_role)) {
-        throw new Error(`$user_role argument dosen't match with the real records : user_role: ${user_role}`);
+    if (!isValidId(user_role_id)) {
+        throw new Error(`Non valid user_role_id`);
     }
 
     // email validation
@@ -74,7 +73,7 @@ export async function createAdminService({
             throw new Error(`Creator Admin with id: ${creator_admin_id} does not exists`)
         }
         // case admin is not full admin
-        if (!admin?.user_role == USER_ROLES.FULL_ADMIN.user_role) {
+        if (!admin?.user_role == USER_ROLES.FULL_ADMIN.key) {
             throw new Error(`Creator Admin with id: ${creator_admin_id} does not have authorization to create a new admin`)
         }
 
@@ -91,7 +90,7 @@ export async function createAdminService({
     // save admin to db
     try {
         const createdAdmin = await createAdmin({
-            user_role,
+            user_role_id,
             email,
             admin_name,
             admin_description,
@@ -109,13 +108,13 @@ export async function createAdminService({
 
 
 export async function getAdminByEmailService(adminEmail) {
-    return getAdminByEmail_NO_THROW(adminEmail)
+    return getAdminByEmail(adminEmail)
 }
 
 
 
 // Returns a user if found a match
-export async function getUserByEmailPassword(email, password) {
+export async function getAdminByEmailPassword(email, password) {
     try {
 
         // validaion
@@ -134,7 +133,7 @@ export async function getUserByEmailPassword(email, password) {
         var admin;
         // get admin if any
         // if not any will throw a not-found-error
-        var admin = await getAdminByEmailService(email);
+        var admin = await getAdminByEmail(email);
 
 
         // check if match

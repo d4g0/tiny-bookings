@@ -395,7 +395,7 @@ export const resolvers = {
                 USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx) => {
                     const {
-                        user_role,
+                        user_role_id,
                         email,
                         admin_name,
                         admin_description,
@@ -413,7 +413,7 @@ export const resolvers = {
                     try {
                         createdAdmin = await createAdminService({
                             creator_admin_id: ctx.user.id,
-                            user_role,
+                            user_role_id,
                             email: s_email,
                             admin_name: s_admin_name,
                             admin_description: s_admin_description,

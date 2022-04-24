@@ -27,7 +27,7 @@ export const typeDefinitions = gql`
   }
 
   input createAdminInput {
-    user_role:          USER_ROLE!
+    user_role_id:       Int!
     email:              String!
     admin_name:         String!
     admin_description:  String

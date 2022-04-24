@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { getClientByEmail } from "dao/users/ClientDao";
 import { isValidEmail, isValidPassword } from "dao/utils";
 import { getAdminByEmailService } from "./admin";
