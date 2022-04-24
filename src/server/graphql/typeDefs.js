@@ -47,6 +47,7 @@ export const typeDefinitions = gql`
     client_name:        String!
     client_last_name:   String!
     user_role:          String!
+    email:              String
     hash_password:      String
     created_at:         String!
   }
@@ -391,6 +392,13 @@ export const typeDefinitions = gql`
     count:                  Int!
   }
 
+  input SingUpInput {
+    client_name:            String!
+    client_last_name:       String!
+    password:               String!
+    email:                  String!
+  }
+
   ##
   # Query
   ##
@@ -468,6 +476,8 @@ export const typeDefinitions = gql`
     # bookings
     createBookingAsAdmin(input: createBookingAsAdmin!): Booking!
     cancelBooking(bookingId: Int!): Booking!
+    # singup
+    singUp(input: SingUpInput!): Auth!
   }
 
 

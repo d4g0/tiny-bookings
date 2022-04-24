@@ -49,6 +49,7 @@ import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
+import { singUp as singUpClient } from "services/users/clients";
 
 export const resolvers = {
 
@@ -76,7 +77,7 @@ export const resolvers = {
                 // if we are here we have a user
 
                 Auth.user = user;
-                
+
                 var token = ctx.createUserToken({
                     id: user.id,
                     user_role: user.user_role
@@ -435,8 +436,8 @@ export const resolvers = {
                 USER_ROLES.FULL_ADMIN.user_role,
                 async (root, args, ctx) => {
                     var id = args.id;
-                    var {completed, count} = await deleteAdminById(id);
-                    return {completed, count} ;
+                    var { completed, count } = await deleteAdminById(id);
+                    return { completed, count };
                 }
             )
         ),
@@ -1044,6 +1045,56 @@ export const resolvers = {
                 }
             )
         ),
+        // singUp
+        singUp: async (root, args, ctx) => {
+
+            var Auth = {
+                user: null,
+                token: null,
+                token_created_at: null,
+            }
+
+            var {
+                client_name,
+                client_last_name,
+                password,
+                email,
+            } = args.input;
+
+            var s_client_name = xss(client_name);
+            var s_client_last_name = xss(client_last_name);
+            var s_email = xss(email);
+
+            
+            try {
+
+                var client = await singUpClient({
+                    client_name: s_client_name,
+                    client_last_name: s_client_last_name,
+                    email: s_email,
+                    password
+                });
+
+                
+
+                var token = ctx.createUserToken({
+                    id: client.id,
+                    user_role: client.user_role
+                });
+
+                var now = new Date().toISOString();
+
+                Auth.user = client;
+                Auth.token = token;
+                Auth.token_created_at = now;
+
+                return Auth;
+
+            } catch (error) {
+                throw error;
+            }
+
+        }
 
     },
     // Root Types
