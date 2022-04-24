@@ -32,6 +32,11 @@ Operation wish handle a lot of records
         -   client_payments
     -   fields
         -   booking_reference
+-   get clients
+    -   tables
+        -   clients
+    -   fields
+        -   created_at (sorting)
 
 ## Indexes
 
@@ -79,4 +84,8 @@ booking_reference
 CREATE INDEX client_payments_booking_reference_idx on client_payments USING BTREE (booking_reference);
 ```
 
-##
+## Get Clients
+created_at
+```sql
+CREATE INDEX client_created_at_idx on clients USING BTREE (created_at);
+```
