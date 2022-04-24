@@ -14,6 +14,13 @@ const { mapTimeToDateTime } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
 import { NOT_FOUND_RECORD_ERROR_KEY } from "dao/Errors";
 import { v4 as uuid } from 'uuid';
+import { getUserRoleByKey } from "dao/users/UserRoleDao";
+
+
+var FULL_ADMIN_USER_ROLE_ID = null;
+beforeAll(async ()=>{
+    FULL_ADMIN_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.FULL_ADMIN.key)).id;
+})
 
 describe(
     'Hotel Dao',
@@ -135,7 +142,14 @@ describe(
 
 
                 try {
-                    fooAdmin = await createAdmin(fullAdminData);
+                    fooAdmin = await createAdmin({
+                        user_role_id: FULL_ADMIN_USER_ROLE_ID,
+                        admin_name: uuid().substring(0, 6),
+                        admin_description: uuid().substring(0, 10),
+                        email: uuid().substring(0, 4) + '@gmail.com',
+                        hash_password: uuid().substring(0, 10)
+                    })
+                    
                     hotel = await createHotelS({
                         admin_id: fooAdmin.id,
                         ...hotelData,
