@@ -12,14 +12,18 @@ import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
 import { date } from "joi";
 import { DateTime } from "luxon";
 import { v4 as uuid } from 'uuid'
+import { getUserRoleByKey } from "dao/users/UserRoleDao";
 
 // need deps
 // a hotel and a room
 
 var HOTEL, ROOM;
+var CLIENT_USER_ROLE_ID = null;
+
 
 beforeAll(async () => {
     try {
+        CLIENT_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.CLIENT.key)).id;
         // create hotel
         var hotelData = {
             hotel_name: uuid().substring(0, 10),
@@ -230,7 +234,7 @@ describe(
                 try {
                     // create room lock for booking deps
                     client = await createNonUserClient({
-                        user_role: getUserRoleId(USER_ROLES.CLIENT.user_role),
+                        user_role: CLIENT_USER_ROLE_ID,
                         client_name: uuid().substring(0, 10),
                         client_last_name: uuid().substring(0, 10),
                     })
