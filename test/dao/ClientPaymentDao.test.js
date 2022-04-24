@@ -7,12 +7,14 @@ import { createHotel } from 'dao/HotelDao';
 import { createAPaymentWithBooking, createAPaymentWithNoBooking, deleteAPayment, getPayments } from 'dao/payments/PaymentsDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
+import { getUserRoleByKey } from 'dao/users/UserRoleDao';
 import { mapTimeToDateTime } from 'dao/utils';
 import { DateTime } from 'luxon';
 import { v4 as uuid } from 'uuid'
 
 
 var HOTEL;
+var CLIENT_USER_ROLE_ID = null;
 
 beforeAll(async () => {
     try {
@@ -26,7 +28,7 @@ beforeAll(async () => {
             iana_time_zone: 'America/Lima'
         }
         HOTEL = await createHotel(hotelData);
-
+        CLIENT_USER_ROLE_ID = (await getUserRoleByKey(USER_ROLES.CLIENT.key)).id;
 
     } catch (error) {
         console.log(error);
@@ -97,7 +99,7 @@ describe(
                 try {
                     // client
                     var client = await createNonUserClient({
-                        user_role: getUserRoleId(USER_ROLES.CLIENT.user_role),
+                        user_role: CLIENT_USER_ROLE_ID,
                         client_name: uuid().substring(0, 10),
                         client_last_name: uuid().substring(0, 10)
                     });
