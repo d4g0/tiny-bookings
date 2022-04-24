@@ -1,6 +1,6 @@
 
 import { USER_ROLES } from 'dao/DBConstans';
-import { createNonUserClient, createUserClient, deleteClient } from 'dao/users/ClientDao';
+import { createNonUserClient, createUserClient, deleteClient, getClientById } from 'dao/users/ClientDao';
 import { getUserRoleByKey } from 'dao/users/UserRoleDao';
 import { isValidId, isValidUserName } from 'dao/utils';
 import { v4 as uuid } from 'uuid'
@@ -19,7 +19,7 @@ describe(
     'Client Dao',
 
     function () {
-        // create a room lock
+        // create a non use client
         test(
             "Create and delete a non user client ",
             async function () {
@@ -59,9 +59,9 @@ describe(
 
         // Create a user client
         test(
-            "Create a user client",
+            "Create a user client, fetch it by id",
             async function () {
-                var dbE = null, client = null;
+                var dbE = null, client = null, f_client = null;
                 const HASH_PASSW = 'foo-bar-baz';
                 const EMAIL = uuid().substring(0, 4) + '@gmail.com';
                 try {
@@ -71,8 +71,8 @@ describe(
                         hash_password: HASH_PASSW,
                         email: EMAIL
                     })
-
-                    console.log({ client });
+                    f_client = await getClientById(client.id);
+                    console.log({ client , f_client});
                 } catch (error) {
                     dbE = error;
                     console.log(error);
@@ -87,7 +87,8 @@ describe(
                 expect(client.email).toBe(EMAIL);
                 expect(client.reset_token).toBe(null);
                 expect(client.created_at).toBeDefined()
-                
+                // fetched client
+                expect(f_client).toStrictEqual(client);
             }
         )
     })

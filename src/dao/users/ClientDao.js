@@ -162,8 +162,32 @@ export async function createUserClient({
     }
 }
 
-export async function getClient(clientId) {
+export async function getClientById(clientId) {
+    if(!isValidId(clientId)){
+        throw new Error('Non valid client id');
+    }
 
+    try {
+        var cRes = await sql`
+        select 
+                clients.id,
+                ur.user_role,
+                clients.client_name,
+                clients.client_last_name,
+                clients.hash_password,	
+                clients.email,
+                clients.is_email_verified,
+                clients.reset_token,
+                clients.created_at
+        from clients join user_roles ur on (clients.user_role = ur.id )
+        where clients.id = ${clientId};
+        `
+
+        var client = cRes.length > 0 ? cRes[0] : null
+        return client;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function getClients() {
