@@ -30,7 +30,7 @@ the bootin secuence. If fails to complete you might need to restore the `dev` db
     admin_description:  String,
     hash_password:      String,
     reset_token:        String || null,
-    created_at:         String (Date)
+    created_at:         String (ISO Date)
 }
 ```
 Token for admin auth
