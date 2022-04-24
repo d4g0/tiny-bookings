@@ -20,6 +20,7 @@
 	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
 	- [Get Client Payments](#get-client-payments)
 	- [Get Bookings](#get-bookings-1)
+	- [Create an admin (basic and full)](#create-an-admin-basic-and-full)
 
 ## Get A Client
 ```sql
@@ -293,5 +294,48 @@ and
 ORDER BY b.start_date
 LIMIT 50 OFFSET 0;
 `;
+
+```
+
+
+## Create an admin (basic and full)
+```sql
+with i_adm as 
+	( 
+		insert into 
+			admins (
+				user_role,
+				admin_name,
+				admin_description,
+				email,
+				hash_password
+			) 
+		values (
+			2,
+			'fufy18',
+			'outlander18',
+			'fufy18@gmail.com',
+			'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu'
+		) RETURNING
+			admins.id,
+			admins.user_role,
+			admins.admin_name, 
+			admins.admin_description,
+			admins.email,
+			admins.hash_password,
+			admins.reset_token,
+			admins.created_at
+	) 
+	select 
+			i_adm.id,
+			ur.user_role,
+			i_adm.admin_name, 
+			i_adm.admin_description,
+			i_adm.email,
+			i_adm.hash_password,
+			i_adm.reset_token,
+			i_adm.created_at
+	from i_adm join user_roles ur on (i_adm.user_role = ur.id )
+;
 
 ```
