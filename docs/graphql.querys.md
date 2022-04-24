@@ -38,6 +38,7 @@
   - [cancelABooking](#cancelabooking)
   - [Get Bookings](#get-bookings)
   - [Get Bookings As Client](#get-bookings-as-client)
+  - [SingUp](#singup)
 
 ## Login
 
@@ -828,6 +829,37 @@ query getClientBookings($input: GetBookingsInput!){
       "minute": 0
     },
     "page": 1
+  }
+}
+```
+
+## SingUp
+
+```graphql
+mutation SingUp($input: SingUpInput!){
+  singUp(input:$input){
+    user{
+      __typename
+      ... on Client{
+          id
+          user_role
+          client_name
+					client_last_name
+          email
+          created_at
+        }
+    }
+    token
+    token_created_at
+  }
+}
+
+{
+  "input": {
+  	 "client_name": "casidy4",
+    "client_last_name": "valdez",
+    "password": "supper-foo-pass",
+    "email": "casidy4@gmail.com"
   }
 }
 ```
