@@ -1,45 +1,51 @@
 #   SQL Querys 👌️
 
 - [SQL Querys 👌️](#sql-querys-️)
-	- [Get A Client](#get-a-client)
-	- [Get An Admin](#get-an-admin)
-	- [Create an Admin](#create-an-admin)
-	- [Create a Hotel](#create-a-hotel)
-	- [Create a room_amenity](#create-a-room_amenity)
-	- [Create a rooms_amenitys record](#create-a-rooms_amenitys-record)
-	- [Create a room](#create-a-room)
-	- [Create a room_lock_period](#create-a-room_lock_period)
-		- [Non Booking](#non-booking)
-		- [With Booking](#with-booking)
-	- [Create a client](#create-a-client)
-	- [Create a booking state](#create-a-booking-state)
-	- [Create a payment type](#create-a-payment-type)
-	- [Create a currency](#create-a-currency)
-	- [Create a booking](#create-a-booking)
-	- [Get Bookings](#get-bookings)
-	- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
-	- [Get Client Payments](#get-client-payments)
-	- [Get Bookings](#get-bookings-1)
-	- [Create an admin (basic and full)](#create-an-admin-basic-and-full)
+	- [Admin](#admin)
+		- [Get An Admin](#get-an-admin)
+		- [Create an Admin](#create-an-admin)
+			- [Simple](#simple)
+			- [Production (basic and full)](#production-basic-and-full)
+	- [Hotel](#hotel)
+		- [Create a Hotel](#create-a-hotel)
+	- [Room](#room)
+		- [Create a room](#create-a-room)
+	- [Room Picture](#room-picture)
+		- [Create a room_picture](#create-a-room_picture)
+	- [Room Amenity](#room-amenity)
+		- [Create a room_amenity](#create-a-room_amenity)
+		- [Create a rooms_amenitys record](#create-a-rooms_amenitys-record)
+	- [Room Types](#room-types)
+		- [Get Room Types](#get-room-types)
+		- [Create A Room Type](#create-a-room-type)
+		- [Update a Room is Type](#update-a-room-is-type)
+	- [Room Lock](#room-lock)
+		- [Create a room_lock_period](#create-a-room_lock_period)
+			- [Non Booking](#non-booking)
+			- [With Booking](#with-booking)
+	- [Clients](#clients)
+		- [Get A Client](#get-a-client)
+		- [Create a client](#create-a-client)
+			- [**non-user**](#non-user)
+			- [**user**](#user)
+	- [Booking State](#booking-state)
+		- [Create a booking state](#create-a-booking-state)
+	- [Payment Type](#payment-type)
+		- [Create a payment type](#create-a-payment-type)
+		- [Get Client Payments](#get-client-payments)
+	- [Currency](#currency)
+		- [Create a currency](#create-a-currency)
+	- [Booking](#booking)
+		- [Create a booking](#create-a-booking)
+		- [Get Bookings](#get-bookings)
+	- [Room Booking record](#room-booking-record)
+		- [Create a rooms_bookings record](#create-a-rooms_bookings-record)
 
-## Get A Client
-```sql
-select 
-cl.id,
-ur.user_role,
-cl.client_name,
-cl.client_last_name,
-cl.hash_password,
-cl.email,
-cl.is_email_verified,
-cl.reset_token,
-cl.created_at
-from clients cl 
-join user_roles ur on( cl.user_role = ur.id)
-where cl.id = 88
-```
 
-## Get An Admin
+
+
+## Admin
+### Get An Admin
 ```sql
 select 
 adm.id,
@@ -55,7 +61,8 @@ from admins adm
 join user_roles ur on( adm.user_role = ur.id)
 where adm.email = 'dago@gmail.com';
 ```
-## Create an Admin
+### Create an Admin
+#### Simple
 ```sql
 insert into 
 	admins (
@@ -73,7 +80,51 @@ values (
 	'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu'
 ) RETURNING *;
 ```
-## Create a Hotel
+
+#### Production (basic and full)
+```sql
+with i_adm as 
+	( 
+		insert into 
+			admins (
+				user_role,
+				admin_name,
+				admin_description,
+				email,
+				hash_password
+			) 
+		values (
+			2,
+			'fufy18',
+			'outlander18',
+			'fufy18@gmail.com',
+			'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu'
+		) RETURNING
+			admins.id,
+			admins.user_role,
+			admins.admin_name, 
+			admins.admin_description,
+			admins.email,
+			admins.hash_password,
+			admins.reset_token,
+			admins.created_at
+	) 
+	select 
+			i_adm.id,
+			ur.user_role,
+			i_adm.admin_name, 
+			i_adm.admin_description,
+			i_adm.email,
+			i_adm.hash_password,
+			i_adm.reset_token,
+			i_adm.created_at
+	from i_adm join user_roles ur on (i_adm.user_role = ur.id )
+;
+
+```
+
+## Hotel
+### Create a Hotel
 ```sql
 insert into
 	hotel (
@@ -94,19 +145,11 @@ values
 		'America/Lima'
 	) returning *;
 ```
-## Create a room_amenity
-```sql
-insert into room_amenity (amenity) values ('');
-```
 
-## Create a rooms_amenitys record
-```sql
-insert into rooms_amenities (
-	room_id,
-	amenity_id
-) values ( 1 , 1);
-```
-## Create a room
+
+
+## Room
+### Create a room
 ```sql
 insert into
 	room (
@@ -120,9 +163,45 @@ values
 	(1, 'Blue Room', 20, 2, 1);
 ```
 
-## Create a room_lock_period
+## Room Picture
+### Create a room_picture
+```sql
+insert into room_pictures ( room_id, filename) values (52, 'supper-foo-pic.jpg')
+```
 
-### Non Booking
+
+## Room Amenity
+### Create a room_amenity
+```sql
+insert into room_amenity (amenity) values ('');
+```
+
+### Create a rooms_amenitys record
+```sql
+insert into rooms_amenities (
+	room_id,
+	amenity_id
+) values ( 1 , 1);
+```
+## Room Types
+### Get Room Types
+```sql
+select * from room_types
+```
+
+### Create A Room Type
+```sql
+insert into room_types ( room_type ) values ('Matrimonial')
+```
+
+### Update a Room is Type
+```sql
+update room rm set room_type = 101 where rm.id = 52
+```
+## Room Lock
+### Create a room_lock_period
+
+#### Non Booking
 ```sql
 insert into
 	room_lock_period (
@@ -142,7 +221,7 @@ values
 	);
 ```
 
-### With Booking
+#### With Booking
 ```sql
 insert into
 	room_lock_period (
@@ -165,9 +244,26 @@ values
 		1
 	) RETURNING *;
 ```
- 
-## Create a client
-**non-user**
+
+## Clients
+### Get A Client
+```sql
+select 
+cl.id,
+ur.user_role,
+cl.client_name,
+cl.client_last_name,
+cl.hash_password,
+cl.email,
+cl.is_email_verified,
+cl.reset_token,
+cl.created_at
+from clients cl 
+join user_roles ur on( cl.user_role = ur.id)
+where cl.id = 88
+```
+### Create a client
+#### **non-user**
 ```sql 
 insert into
 	clients (user_role, client_name, client_last_name)
@@ -175,7 +271,7 @@ values
 	(3, 'Flow', 'Jhensen') RETURNING *;
 ```
 
-**user**
+#### **user**
 ```sql
 with i_cli as 
 	( 
@@ -218,32 +314,50 @@ with i_cli as
 ;
 ```
 
- 
-## Create a booking state
+## Booking State 
+### Create a booking state
 ```sql 
 insert into
 	booking_states (booking_state)
 values
 	('Paid') RETURNING *;
 ```
- 
-## Create a payment type
+
+## Payment Type
+### Create a payment type
 ```sql
 insert into
 	payment_types (payment_type)
 values
 	('Cash') RETURNING *;
 ```
- 
-## Create a currency
+
+### Get Client Payments
+```sql
+
+select 
+	*
+from 
+	client_payments cp
+where 
+	cp.effectuated_at < '2022-05-21 02:12:03'
+and 
+	cp.effectuated_at > '2022-02-21 02:12:03'
+order by cp.effectuated_at
+limit 50 offset 0
+
+```
+
+## Currency
+### Create a currency
 ```sql 
 insert into
 	currencies (currency)
 values
 	('USD') RETURNING *;
 ```
- 
-## Create a booking
+## Booking 
+### Create a booking
 ```sql
 insert into
     booking (
@@ -267,38 +381,7 @@ values
     ) RETURNING *;
 ```
 
-## Get Bookings
-
-```sql
-
-```
- 
-## Create a rooms_bookings record
-```sql
-insert into
-	rooms_bookings (room_id, booking_id)
-values
-	(229, 1) RETURNING *;
-```
-
-
-## Get Client Payments
-```sql
-
-select 
-	*
-from 
-	client_payments cp
-where 
-	cp.effectuated_at < '2022-05-21 02:12:03'
-and 
-	cp.effectuated_at > '2022-02-21 02:12:03'
-order by cp.effectuated_at
-limit 50 offset 0
-
-```
-
-## Get Bookings
+### Get Bookings
 ```sql
 
 select 
@@ -315,45 +398,15 @@ LIMIT 50 OFFSET 0;
 
 ```
 
-
-## Create an admin (basic and full)
+## Room Booking record
+### Create a rooms_bookings record
 ```sql
-with i_adm as 
-	( 
-		insert into 
-			admins (
-				user_role,
-				admin_name,
-				admin_description,
-				email,
-				hash_password
-			) 
-		values (
-			2,
-			'fufy18',
-			'outlander18',
-			'fufy18@gmail.com',
-			'$2a$10$qSRgLcMbPs2s6Hzl/iqCNeZYcLsDNkkWg7/2yBo0ARED0iwfV5ngu'
-		) RETURNING
-			admins.id,
-			admins.user_role,
-			admins.admin_name, 
-			admins.admin_description,
-			admins.email,
-			admins.hash_password,
-			admins.reset_token,
-			admins.created_at
-	) 
-	select 
-			i_adm.id,
-			ur.user_role,
-			i_adm.admin_name, 
-			i_adm.admin_description,
-			i_adm.email,
-			i_adm.hash_password,
-			i_adm.reset_token,
-			i_adm.created_at
-	from i_adm join user_roles ur on (i_adm.user_role = ur.id )
-;
-
+insert into
+	rooms_bookings (room_id, booking_id)
+values
+	(229, 1) RETURNING *;
 ```
+
+
+
+

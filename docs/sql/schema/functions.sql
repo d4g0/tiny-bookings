@@ -1,5 +1,5 @@
 BEGIN;
-
+-- is Room Available
 create or replace function is_room_available_in( 
 	room_id_filter integer,
     delta_search_days integer,
@@ -31,6 +31,16 @@ end loop;
 END;
 $$
 LANGUAGE plpgsql;
+
+
+
+
+-- Get Rooms Available in
+
+
+
+
+
 
 
 END;

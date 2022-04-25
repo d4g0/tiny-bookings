@@ -14,11 +14,13 @@
     - [GetRoomType](#getroomtype)
     - [GetRoomTypes](#getroomtypes)
     - [UpdateRoomType](#updateroomtype)
+  - [Amenities](#amenities)
     - [CreateRoomAmenity](#createroomamenity)
     - [Get RoomAmenity](#get-roomamenity)
     - [Get RoomAmenities](#get-roomamenities)
     - [UpdateRoomAMenity](#updateroomamenity)
     - [DeleteRoomAmenity](#deleteroomamenity)
+  - [Room](#room)
     - [Create a room](#create-a-room)
     - [DeleteARoom](#deletearoom)
     - [updateRoomName](#updateroomname)
@@ -26,8 +28,10 @@
     - [UpdateNightPrice](#updatenightprice)
     - [updateRoomCapacity](#updateroomcapacity)
     - [updateNumberOfBeds](#updatenumberofbeds)
+  - [Room is Amenities](#room-is-amenities)
     - [CreateARoomIsAmenity](#createaroomisamenity)
     - [DeleteARoomIsAmenity](#deletearoomisamenity)
+  - [Room Locks](#room-locks)
     - [GetRoomLocks](#getroomlocks)
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
@@ -272,7 +276,7 @@ mutation UpdateRoomType ($input: RoomTypeUpdateInput!){
   }
 }
 ```
-
+## Amenities
 ### CreateRoomAmenity
 ```graphql
 mutation CreateRoomAmenity ($input: RoomAmenityInput!){
@@ -347,7 +351,7 @@ mutation delRoomAmenity ($input: RoomAmenityInput!){
 }
 ```
 
-
+## Room
 ### Create a room
 ```graphql
 # create room
@@ -499,7 +503,7 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
 }
 ```
 
-
+## Room is Amenities
 
 ### CreateARoomIsAmenity
 ```graphql
@@ -533,6 +537,7 @@ mutation DeleteARoomIsAmenity ($input: DeleteARoomIsAmenityInput!){
 }
 ```
 
+## Room Locks
 
 ### GetRoomLocks
 ```graphql

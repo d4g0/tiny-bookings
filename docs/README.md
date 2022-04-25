@@ -208,12 +208,14 @@
     
     -   list bookings of a client
         -   done 22 april 2:46
-- []
+        
+- [✅]
 - clients
 - get client by id 
   - (dao) start 24 april 14:30 done :38
   - (graphql) start :42 done :49
 - list clients
+  - dao + graphql done at 15:15
 
 
 
@@ -231,6 +233,9 @@
    - (dao) create client  done 2:16
    - (service) done 2:43
    - (graphql) done 4:50
+-  get booking offers start 20:31
+   -  get available rooms in date range
+      -  iterate roomDao/getRooms to postgres.js
 
 
 Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation
