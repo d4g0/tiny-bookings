@@ -3,7 +3,7 @@ import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime, randStr } from 'dao/utils';
 import { createRoom, deleteRoom, getRoomById, getRoomData, getRoomDataRaw, getRoomsData, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
-import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
+import { createRoomType, deleteRoomTypeByType, updateRoomType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
 import { createARoomIsAmenity, createRoomAmenity, deleteARoomIsAmenity, deleteRoomAmenity } from "dao/room/RoomAmenitiesDao";
 describe(
@@ -169,7 +169,7 @@ describe(
                 // room amenities
                 expect(f_room.room_amenities[0].amenity_id).toBe(roomAmenity.id);
                 expect(f_room.room_amenities[0].amenity).toBe(roomAmenity.amenity);
-                
+
                 // //
                 // Delete tests
                 // //
@@ -181,36 +181,43 @@ describe(
 
 
         // roomName
-        // test(
-        //     "Update a room name",
-        //     async function () {
-        //         var dbError = null, room = null, NEW_NAME = uuid().substring(0, 10);
+        test(
+            "Updates",
+            async function () {
+                var dbError = null, room = null, NEW_NAME = randStr(),
+                    roomType = null;
 
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    });
 
-        //             // update
-        //             var u_room = await updateRoomName(room.id, NEW_NAME);
-        //             // console.log({u_room});
-        //             // clean
-        //             await deleteRoom(room.id);
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
+                    // room type
+                    roomType = await createRoomType(randStr());
+                    var u_room = await updateARoomIsType(room.id, roomType.id);
+                    // room name
+                    
+                    
+                    console.log({ u_room });
+                    // clean
+                    await deleteRoom(room.id);
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
 
-        //         expect(dbError).toBe(null);
-        //         expect(room.id).toBeDefined()
-        //         expect(u_room.room_name).toBe(NEW_NAME);
+                expect(dbError).toBe(null);
+                // room type
+                expect(u_room.room_type_id).toBe(roomType.id);
+                expect(u_room.room_type_key).toBe(roomType.room_type);
+                // expect(u_room.room_name).toBe(NEW_NAME);
 
-        //     }
-        // )
+            }
+        )
 
         // update a room is type
         // test(

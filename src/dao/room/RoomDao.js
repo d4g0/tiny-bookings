@@ -97,7 +97,7 @@ export async function deleteRoom(room_id) {
     try {
 
         // fetch room with  its  dependecies
-        
+
 
         // clean dependencies
         // rooms_amenities
@@ -155,25 +155,23 @@ export async function updateARoomIsType(room_id, room_type_id) {
     try {
 
 
-        var room = await prisma.room.update({
-            where: {
-                id: room_id
-            },
-            data: {
-                room_type: room_type_id
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        })
+        var updateRes = await sql`
+            with u_room as 
+            (
+                update room 
+                set room_type = ${room_type_id}
+                where room.id = ${room_id}
+                returning  room.id
+                    
+            ) 
+            select 
+                rm.* 
+            from  u_room ur 
+            join get_room_data(ur.id) rm on (ur.id = rm.id)
+        `;
 
-        room.created_at = room.created_at.toISOString();
+        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+
         return room;
 
     } catch (error) {
@@ -191,7 +189,7 @@ export async function updateARoomIsType(room_id, room_type_id) {
  * @param {number} room_id 
  * @param {string} room_name 
  */
- export async function updateRoomName(room_id, room_name) {
+export async function updateRoomName(room_id, room_name) {
 
     // validate
     if (!isValidId(room_id)) {
@@ -449,7 +447,7 @@ export async function getRoomData(room_id) {
         select * from get_room_data(${room_id});
         `;
         var room = roomDataRes.length > 0 ? mapRawRoomDataToRoom(roomDataRes[0]) : null;
-        
+
         return room;
     } catch (error) {
         throw error;
@@ -511,7 +509,7 @@ export async function getRoomDataRaw(room_id) {
             select * from get_room_data(${room_id});
         `;
         var room = roomDataRes.length > 0 ? roomDataRes[0] : null;
-        
+
         return room;
     } catch (error) {
         throw error;

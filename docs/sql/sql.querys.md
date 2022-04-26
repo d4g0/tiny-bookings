@@ -26,6 +26,8 @@
 		- [Get Room Types](#get-room-types)
 		- [Create A Room Type](#create-a-room-type)
 		- [Update a Room is Type](#update-a-room-is-type)
+			- [Basic](#basic-1)
+			- [Production](#production-1)
 	- [Room Lock](#room-lock)
 		- [Create a room_lock_period](#create-a-room_lock_period)
 			- [Non Booking](#non-booking)
@@ -315,9 +317,26 @@ insert into room_types ( room_type ) values ('Matrimonial')
 ```
 
 ### Update a Room is Type
+#### Basic
 ```sql
 update room rm set room_type = 101 where rm.id = 52
 ```
+#### Production
+```sql
+with u_room as 
+(
+	update room 
+	set room_type = 120
+	where room.id = 270
+	returning  room.id
+		
+) 
+select 
+	rm.* 
+from  u_room ur 
+join get_room_data(ur.id) rm on (ur.id = rm.id)
+```
+
 ## Room Lock
 ### Create a room_lock_period
 
