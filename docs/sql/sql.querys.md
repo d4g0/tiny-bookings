@@ -10,11 +10,18 @@
 		- [Create a Hotel](#create-a-hotel)
 	- [Room](#room)
 		- [Create a room](#create-a-room)
+			- [Basic](#basic)
+			- [Production](#production)
+		- [Get Room Data (by id)](#get-room-data-by-id)
+		- [Get Rooms Data](#get-rooms-data)
 	- [Room Picture](#room-picture)
 		- [Create a room_picture](#create-a-room_picture)
+		- [Delete all room is pictures](#delete-all-room-is-pictures)
 	- [Room Amenity](#room-amenity)
 		- [Create a room_amenity](#create-a-room_amenity)
 		- [Create a rooms_amenitys record](#create-a-rooms_amenitys-record)
+	- [Delete a rooms_amenities record](#delete-a-rooms_amenities-record)
+	- [Delete all room is amenities](#delete-all-room-is-amenities)
 	- [Room Types](#room-types)
 		- [Get Room Types](#get-room-types)
 		- [Create A Room Type](#create-a-room-type)
@@ -23,6 +30,7 @@
 		- [Create a room_lock_period](#create-a-room_lock_period)
 			- [Non Booking](#non-booking)
 			- [With Booking](#with-booking)
+		- [Delete a room](#delete-a-room)
 	- [Clients](#clients)
 		- [Get A Client](#get-a-client)
 		- [Create a client](#create-a-client)
@@ -150,6 +158,8 @@ values
 
 ## Room
 ### Create a room
+
+#### Basic
 ```sql
 insert into
 	room (
@@ -163,12 +173,112 @@ values
 	(1, 'Blue Room', 20, 2, 1);
 ```
 
+
+#### Production
+```sql
+with i_room as 
+(
+	insert into
+		room (
+			hotel_id,
+			room_name,
+			night_price,
+			capacity,
+			number_of_beds
+		)
+	values
+		(39, 'Blue Room foo2', 20, 2, 1) 
+	returning 
+		room.id
+) 
+select 
+	rm.* 
+from  i_room ir 
+join get_room_data(ir.id) rm on (ir.id = rm.id)
+```
+
+### Get Room Data (by id)
+```sql
+select
+	rm.id,
+	rm.hotel_id,
+	rm.room_name,
+	rm.night_price,
+	rm.capacity,
+	rm.number_of_beds,
+	rm.created_at,
+	rm.room_type as room_type_id,
+-- room type
+	( 
+		select rt.room_type from room_types rt
+		where rt.id = rm.room_type
+	) as room_type_key,
+-- 	room pictures
+	ARRAY(
+		select 
+			rp.id || '   ' || rp.filename
+		from room_pictures rp
+		where rp.room_id = rm.id
+	) as room_pictures,
+-- 	room amenities
+	ARRAY(
+		select 
+		 ra.id || '   ' || ra.amenity
+		from room_amenity ra join rooms_amenities rams
+		on ra.id = rams.amenity_id
+		where rams.room_id = rm.id
+	) as room_amenities
+from room rm 
+where rm.id = 52
+```
+
+
+
+### Get Rooms Data
+```sql
+select
+	rm.id,
+	rm.hotel_id,
+	rm.room_name,
+	rm.night_price,
+	rm.capacity,
+	rm.number_of_beds,
+	rm.created_at,
+	rm.room_type as room_type_id,
+-- room type
+	( 
+		select rt.room_type from room_types rt
+		where rt.id = rm.room_type
+	) as room_type_key,
+-- 	room pictures
+	ARRAY(
+		select 
+			rp.id || '   ' || rp.filename
+		from room_pictures rp
+		where rp.room_id = rm.id
+	) as room_pictures,
+-- 	room amenities
+	ARRAY(
+		select 
+		 ra.id || '   ' || ra.amenity
+		from room_amenity ra join rooms_amenities rams
+		on ra.id = rams.amenity_id
+		where rams.room_id = rm.id
+	) as room_amenities
+from room rm 
+order by rm.id
+```
+
+
 ## Room Picture
 ### Create a room_picture
 ```sql
 insert into room_pictures ( room_id, filename) values (52, 'supper-foo-pic.jpg')
 ```
-
+### Delete all room is pictures
+```sql
+delete from room_pictures rmp where rmp.room_id = 273
+```
 
 ## Room Amenity
 ### Create a room_amenity
@@ -182,6 +292,16 @@ insert into rooms_amenities (
 	room_id,
 	amenity_id
 ) values ( 1 , 1);
+```
+
+## Delete a rooms_amenities record
+```sql
+delete from rooms_amenities rams where rams.room_id = 52 and rams.amenity_id = 65
+```
+
+## Delete all room is amenities
+```sql
+delete from rooms_amenities rams where rams.room_id = 52 
 ```
 ## Room Types
 ### Get Room Types
@@ -243,6 +363,11 @@ values
 		true,
 		1
 	) RETURNING *;
+```
+
+### Delete a room
+```sql
+delete from room rm where rm.id = 273  returning *
 ```
 
 ## Clients

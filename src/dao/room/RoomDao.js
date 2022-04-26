@@ -37,26 +37,35 @@ export async function createRoom({
 
     try {
 
-        var room = await prisma.room.create({
-            data: {
-                hotel_id,
-                room_name,
-                night_price,
-                capacity,
-                number_of_beds,
-            },
-            include: {
-                room_pictures: true, // always  returns  an array
-                room_types: true,   // null | RoomType: {id, room_type}
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                } // null | 
-                // rooms_is_amenities array { id, room_id, amenity_id, room_amenity:{ id, amenity } }
-            }
-        })
-        room.created_at = room.created_at.toISOString();
+        var roomRes = await sql`
+            with i_room as 
+            (
+                insert into
+                    room (
+                        hotel_id,
+                        room_name,
+                        night_price,
+                        capacity,
+                        number_of_beds
+                    )
+                values
+                    (
+                        ${hotel_id},
+                        ${room_name},
+                        ${night_price},
+                        ${capacity},
+                        ${number_of_beds}
+                    ) 
+                returning 
+                    room.id
+            ) 
+            select 
+                rm.* 
+            from  i_room ir 
+            join get_room_data(ir.id) rm on (ir.id = rm.id);
+        `;
+
+        var room = mapRawRoomDataToRoom(roomRes[0]);
         return room;
 
     } catch (error) {
@@ -88,43 +97,34 @@ export async function deleteRoom(room_id) {
     try {
 
         // fetch room with  its  dependecies
-        var room = await prisma.room.findFirst({
-            where: {
-                id: room_id
-            },
-            include: {
-                rooms_amenities: true,
-                room_pictures: true,
-            }
-        })
+        
 
         // clean dependencies
         // rooms_amenities
-        var roomsAmenities = room.rooms_amenities;
-        await prisma.rooms_amenities.deleteMany({
-            where: {
-                room_id: room.id
-            }
-        })
-        // room pictures
-        var roomPictures = room.room_pictures;
-        await prisma.room_pictures.deleteMany({
-            where: {
-                room_id: room.id
-            }
-        })
+        await sql`
+            delete from rooms_amenities rams 
+            where rams.room_id = ${room_id}
+        `;
+        // room pictures 
+        await sql`
+            delete from room_pictures rmp 
+            where rmp.room_id = ${room_id}
+        `;
 
 
         // finaly no dependencies, not forgein key errors
         // delete the room
-        var delRes = await prisma.room.delete({
-            where: {
-                id: room_id
-            },
-        })
+        var delRes = await sql`
+            delete from room rm where rm.id = ${room_id}  returning *
+        `
 
+        var count = delRes.length;
+        var completed = true;
 
-        return delRes;
+        return {
+            count,
+            completed
+        }
 
     } catch (error) {
         // case prisma record not found
