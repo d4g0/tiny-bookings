@@ -334,34 +334,6 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 }
 
 
-
-
-
-export async function getRooms() {
-
-    try {
-        var rooms = await prisma.room.findMany({
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        });
-
-
-        return rooms;
-
-    } catch (error) {
-        console.log(error);
-        throw error
-    }
-}
-
-
 export async function getRoomsData() {
 
     const SPLITER = '/'

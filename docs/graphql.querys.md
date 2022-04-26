@@ -7,8 +7,7 @@
     - [Delete admin](#delete-admin)
   - [Hotel](#hotel)
     - [createHotel](#createhotel)
-  - [Rooms](#rooms)
-    - [Get A Room](#get-a-room)
+  - [Rooms Types](#rooms-types)
     - [CreateRoomType](#createroomtype)
     - [DeleteRoomType](#deleteroomtype)
     - [GetRoomType](#getroomtype)
@@ -21,6 +20,8 @@
     - [UpdateRoomAMenity](#updateroomamenity)
     - [DeleteRoomAmenity](#deleteroomamenity)
   - [Room](#room)
+    - [Get A Room](#get-a-room)
+    - [Get Rooms](#get-rooms)
     - [Create a room](#create-a-room)
     - [DeleteARoom](#deletearoom)
     - [updateRoomName](#updateroomname)
@@ -166,33 +167,7 @@ mutation createHotel($input:HotelInput!){
 ```
 
 
-## Rooms
-
-### Get A Room
-```graphql
-query {
-  room(room_id: 52){
- 		id
-    hotel_id
-    room_name
-    night_price
-    capacity
-    number_of_beds
-    created_at
-    room_type_id
-    room_type_key
-    room_pictures{
-      room_picture_id
-      filename
-    }
-    room_amenities{
-      amenity_id
-      amenity
-    }
-  }
-}
-```
-
+## Rooms Types
 ### CreateRoomType
 ```graphql
 mutation CreateRoomType ($input: RoomTypeInput!){
@@ -344,6 +319,55 @@ mutation delRoomAmenity ($input: RoomAmenityInput!){
 ```
 
 ## Room
+### Get A Room
+```graphql
+query {
+  room(room_id: 52){
+ 		id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    created_at
+    room_type_id
+    room_type_key
+    room_pictures{
+      room_picture_id
+      filename
+    }
+    room_amenities{
+      amenity_id
+      amenity
+    }
+  }
+}
+```
+
+### Get Rooms
+```graphql
+query{
+  rooms{
+    id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    created_at
+    room_type_id
+    room_type_key
+    room_pictures{
+      room_picture_id
+      filename
+    }
+    room_amenities{
+      amenity_id
+      amenity
+    }
+  }
+}
+```
 ### Create a room
 ```graphql
 # create room
@@ -494,6 +518,8 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
   }
 }
 ```
+
+
 
 ## Room is Amenities
 

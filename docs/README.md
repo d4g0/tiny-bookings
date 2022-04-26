@@ -77,6 +77,7 @@
     -   list room locks
     -	list clients
     -   list payments
+    -   list rooms
 
 
 -   role: `full-admin`
@@ -147,6 +148,8 @@
             -   updateRoomName done 19:11
     -   room is amenities
         -   done 9 april 22:36
+    -   list rooms 
+        -   graphql done 26 april 18:40 (refactor)
 
 [✅]
 -   room_locks

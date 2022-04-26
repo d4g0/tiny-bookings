@@ -31,8 +31,8 @@ import {
     updateRoomNightPrice as updateRoomNightPriceDao,
     updateRoomCapacity as updateRoomCapacityDao,
     updateRoomNumberOfBeds as updateRoomNumberOfBedsDao,
-    getRooms as getRoomsDao,
     getRoomData,
+    getRoomsData,
 } from '~/dao/room/RoomDao'
 
 // ---------------
@@ -148,5 +148,5 @@ export async function getRoomById(room_id) {
 }
 
 export async function getRooms() {
-    return getRoomsDao()
+    return getRoomsData()
 }
