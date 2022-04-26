@@ -5,7 +5,6 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { prisma } from 'db/PrismaClient.js';
 import { isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName } from "dao/utils";
-import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
 import sql from "db/postgres";
 
 
@@ -364,6 +363,8 @@ export async function getRooms() {
 
 
 export async function getRoomsData() {
+
+    const SPLITER = '/'
     try {
         var roomsData = await sql`
         select
@@ -383,14 +384,14 @@ export async function getRoomsData() {
         -- 	room pictures
             ARRAY(
                 select 
-                    rp.id || ' ' || rp.filename
+                    rp.id || ${SPLITER} || rp.filename
                 from room_pictures rp
                 where rp.room_id = rm.id
             ) as room_pictures,
         -- 	room amenities
             ARRAY(
                 select 
-                ra.id || ' ' || ra.amenity
+                ra.id || ${SPLITER} || ra.amenity
                 from room_amenity ra join rooms_amenities rams
                 on ra.id = rams.amenity_id
                 where rams.room_id = rm.id
@@ -398,8 +399,8 @@ export async function getRoomsData() {
         from room rm 
         order by rm.id
         `;
-
-        return roomsData;
+        var rooms = roomsData.map(rd => mapRawRoomDataToRoom(rd));
+        return rooms;
     } catch (error) {
         throw error;
     }
@@ -415,7 +416,7 @@ export async function getRoomData(room_id) {
         select * from get_room_data(${room_id});
         `;
 
-        console.log({ roomDataRes });
+        // console.log({ roomDataRes });
         var room = (roomDataRes[0].id || roomDataRes[0].id == 0) > 0 ? mapRawRoomDataToRoom(roomDataRes[0]) : null;
 
         return room;

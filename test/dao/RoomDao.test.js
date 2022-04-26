@@ -180,7 +180,7 @@ describe(
         )
 
 
-        // roomName
+        // updates
         test(
             "Updates",
             async function () {
@@ -239,274 +239,113 @@ describe(
             }
         )
 
-        // update a room is type
-        // test(
-        //     "Update a Room is Type",
-        //     async function () {
 
-        //         var dbError = null, room = null, roomType = null, ROOM_TYPE_KEY = uuid().substring(0, 10);
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
-
-        //             // create a room_type to use it
-        //             roomType = await createRoomType(ROOM_TYPE_KEY);
-        //             // console.log({ roomType })
-        //             // update
-        //             var u_room = await updateARoomIsType(room.id, roomType.id);
-
-        //             // console.log({ u_room })
-
-        //             // clean
-        //             await deleteRoom(room.id);
-        //             await deleteRoomTypeByType(roomType.room_type)
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
-
-        //         expect(dbError).toBe(null);
-        //         expect(room.id).toBeDefined()
-        //         expect(u_room.room_type).toBe(roomType.id);
-        //         expect(u_room.room_types.room_type).toBe(ROOM_TYPE_KEY);
-
-        //     }
-        // )
-
-        // updateRoomNightPrice
-        // test(
-        //     "Update a room night price",
-        //     async function () {
-        //         var dbError = null, room = null, u_room = null, NEW_NIGHT_PRICE = 20.79;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             u_room = await updateRoomNightPrice(room.id, NEW_NIGHT_PRICE);
-
-        //             // console.log({ u_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(+u_room.night_price).toBe(NEW_NIGHT_PRICE);
-        //     }
-        // )
-
-        // updateRoomCapacity
-        // test(
-        //     "Update a room capacity",
-        //     async function () {
-        //         var dbError = null, room = null, uc_room = null, NEW_CAPACITY = 40;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             // console.log({
-        //             //     'ntofb': typeof room.number_of_beds
-        //             // })
-        //             uc_room = await updateRoomCapacity(room.id, NEW_CAPACITY);
-
-        //             // console.log({ uc_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(uc_room.capacity).toBe(NEW_CAPACITY);
-        //     }
-        // )
-
-        // updateRoomNumberOfBeds
-        // test(
-        //     "Update a room number_of_beds",
-        //     async function () {
-        //         var dbError = null, room = null, u_room = null, NEW_NUMBER_OF_BEDS = 4;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: 13.50,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             });
-
-        //             // console.log({
-        //             //     'ntofb': typeof room.number_of_beds
-        //             // })
-        //             u_room = await updateRoomNumberOfBeds(room.id, NEW_NUMBER_OF_BEDS);
-
-        //             // console.log({ u_room });
-
-        //             await deleteRoom(room.id);
-
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
-        //         expect(dbError).toBeNull();
-        //         expect(u_room.number_of_beds).toBe(NEW_NUMBER_OF_BEDS);
-        //     }
-        // )
-
-
-
-        // total room spec coverage 
-        // test(
-        //     "Create a room with amenities, type, pictures",
-        //     async function () {
-
-        //         var dbError = null,
-        //             room = null,
-        //             roomType = null,
-        //             ROOM_TYPE_KEY = uuid().substring(0, 10),
-        //             amenity = null,
-        //             secondAmenity = null,
-        //             AMENITY_KEY = uuid().substring(0, 10),
-        //             SECOND_AMENITY_KEY = uuid().substring(0, 10),
-        //             roomPicture = null, FILE_NAME = 'supper-foo-picture',
-        //             final_room = null,
-        //             roomIsAmenity = null,
-        //             secondRoomIsAmenity = null,
-        //             simpleRoom = null,
-        //             f_simpleRoomRaw = null
-        //             ;
-
-        //         try {
-        //             room = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: roomData.room_name,
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
-
-        //             simpleRoom = await createRoom({
-        //                 hotel_id: customHotel.id,
-        //                 room_name: uuid().substring(0, 10),
-        //                 night_price: roomData.night_price,
-        //                 number_of_beds: roomData.number_of_beds,
-        //                 capacity: roomData.capacity
-        //             })
-
-        //             // create a room_type to use it
-        //             roomType = await createRoomType(ROOM_TYPE_KEY);
-        //             // update with the type
-        //             await updateARoomIsType(room.id, roomType.id);
-        //             // amenity
-        //             amenity = await createRoomAmenity(AMENITY_KEY);
-        //             secondAmenity = await createRoomAmenity(SECOND_AMENITY_KEY);
-        //             roomIsAmenity = await createARoomIsAmenity(room.id, amenity.id);
-        //             secondRoomIsAmenity = await createARoomIsAmenity(room.id, secondAmenity.id);
-
-        //             console.log({ roomIsAmenity, secondRoomIsAmenity })
-        //             // pictures
-        //             roomPicture = await createARoomPicture(room.id, FILE_NAME);
-
-        //             final_room = await getRoomData(room.id);
-        //             f_simpleRoomRaw = await getRoomDataRaw(simpleRoom.id);
-
-        //             // final_room = await getRoomById(room.id);
-        //             // final_room = roomsData[0];
-
-        //             console.log({
-        //                 final_room,
-        //                 final_room_1_amenity: final_room.room_amenities[0],
-        //                 final_room_2_amenity: final_room.room_amenities[1],
-        //                 final_room_1_picture: final_room.room_pictures[0],
-        //                 f_simpleRoomRaw: f_simpleRoomRaw
-
-        //             })
-        //             // clean
-        //             // await deleteARoomIsAmenity(roomIsAmenity.room_id, roomIsAmenity.amenity_id);
-        //             // await deleteARoomIsAmenity(secondRoomIsAmenity.room_id, secondRoomIsAmenity.amenity_id);
-        //             // // amenities
-        //             // await deleteRoomAmenity(final_room.rooms_amenities[0].room_amenity.amenity);
-        //             // await deleteRoomAmenity(final_room.rooms_amenities[1].room_amenity.amenity);
-        //             // await deleteARoomPicture(roomPicture.id);
-        //             // await deleteRoom(room.id);
-        //             // await deleteRoomTypeByType(roomType.room_type)
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error;
-        //         }
-
-        //         expect(dbError).toBe(null);
-        //         // ALL CHEKS
-
-        //         // simples
-        //         expect(final_room.id).toBeDefined();
-        //         expect(final_room.hotel_id).toBeDefined();
-        //         expect(final_room.room_name).toBeDefined();
-        //         expect(final_room.night_price).toBeDefined();
-        //         expect(final_room.capacity).toBeDefined();
-        //         expect(final_room.number_of_beds).toBeDefined();
-        //         expect(final_room.created_at).toBeDefined();
-        //         // type
-        //         // expect(final_room.room_type).toBe(roomType.id);
-        //         // expect(final_room.room_types.id).toBe(roomType.id);
-        //         // expect(final_room.room_types.room_type).toBe(roomType.room_type);
-        //         // pictures
-        //         // expect(final_room.room_pictures[0]).toBeDefined();
-        //         // expect(final_room.room_pictures[0].id).toBe(roomPicture.id);
-        //         // expect(final_room.room_pictures[0].room_id).toBe(roomPicture.room_id);
-        //         // expect(final_room.room_pictures[0].filename).toBe(roomPicture.filename);
-        //         // amenities
-        //         // amenity
-        //         // roomAmenity
-        //         // expect(final_room.rooms_amenities[0]).toBeDefined();
-        //         // expect(final_room.rooms_amenities[0].amenity_id).toBe(roomIsAmenity.amenity_id);
-        //         // expect(final_room.rooms_amenities[0].room_id).toBe(roomIsAmenity.room_id);
-        //         // expect(final_room.rooms_amenities[0].room_amenity.id).toBe(amenity.id);
-        //         // expect(final_room.rooms_amenities[0].room_amenity.amenity).toBe(amenity.amenity);
-        //     }
-        // )
 
         // get rooms data
-        // test(
-        //     "Get Rooms Data",
-        //     async function () {
-        //         var dbError = null,
-        //             roomsData = null;
+        test(
+            "Get Rooms Data",
+            async function () {
+                var dbError = null,
+                    roomsData = null;
+                var s_room = null;
+                var f_room = null;
+                var roomType, roomIsType, roomAmenity, roomIsAmenity, roomPic;
+                var r_s_room = null, r_f_room = null;
 
-        //         try {
-        //             roomsData = await getRoomsData();
+                try {
 
-        //             console.log({ roomsData })
-        //         } catch (error) {
-        //             dbError = error;
-        //             console.log(error);
-        //         }
+                    // create a simple room (no deps)
+                    s_room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: randStr(),
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
 
-        //         expect(dbError).toBeNull();
-        //     }
-        // )
+
+
+                    // create a full room
+                    f_room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: randStr(),
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
+                    // add deps
+                    roomType = await createRoomType(randStr());
+                    roomIsType = await updateARoomIsType(f_room.id, roomType.id);
+
+                    // room amenities
+                    roomAmenity = await createRoomAmenity(randStr());
+                    roomIsAmenity = await createARoomIsAmenity(f_room.id, roomAmenity.id);
+
+                    // room pictures
+                    roomPic = await createARoomPicture(f_room.id, randStr() + '.jpg');
+
+
+                    roomsData = await getRoomsData();
+                    // the rooms are sorted by id
+                    // so this test creation order will be respected
+                    // and since not other room it will be created will 
+                    // this test rooms the next secuence has to get the 
+                    // created rooms 
+                    // get last - 1
+                    r_s_room = roomsData[roomsData.length - 2]
+                    // get last
+                    r_f_room = roomsData[roomsData.length - 1]
+
+                    console.log({
+                        // roomsData, 
+                        // s_room,
+                        // f_room,
+                        // r_s_room,
+                        // r_f_room_rp: r_f_room.room_pictures
+                    })
+                } catch (error) {
+                    dbError = error;
+                    console.log(error);
+                }
+
+                expect(dbError).toBeNull();
+                // roomData assertions
+                expect(Array.isArray(roomsData)).toBe(true);
+                // check for matching records
+                expect(s_room.id).toBe(r_s_room.id);
+                expect(f_room.id).toBe(r_f_room.id);
+                // simple room assertions
+                expect(r_s_room.id).toBeDefined();
+                expect(r_s_room.hotel_id).toBeDefined();
+                expect(r_s_room.room_name).toBeDefined();
+                expect(r_s_room.night_price).toBeDefined();
+                expect(r_s_room.capacity).toBeDefined();
+                expect(r_s_room.number_of_beds).toBeDefined();
+                expect(r_s_room.created_at).toBeDefined();
+                expect(r_s_room.room_type_id).toBeNull();
+                expect(r_s_room.room_type_key).toBeNull();
+                expect(r_s_room.room_pictures).toStrictEqual([]);
+                expect(r_s_room.room_amenities).toStrictEqual([]);
+                // full room deps assertions
+                expect(r_f_room.id).toBeDefined();
+                expect(r_f_room.hotel_id).toBeDefined();
+                expect(r_f_room.room_name).toBeDefined();
+                expect(r_f_room.night_price).toBeDefined();
+                expect(r_f_room.capacity).toBeDefined();
+                expect(r_f_room.number_of_beds).toBeDefined();
+                expect(r_f_room.created_at).toBeDefined();
+                // deps checks
+                // room type
+                expect(r_f_room.room_type_id).toBe(roomType.id);
+                expect(r_f_room.room_type_key).toBe(roomType.room_type);
+                // room pics
+                expect(r_f_room.room_pictures[0].room_picture_id).toBe(roomPic.id);
+                expect(r_f_room.room_pictures[0].filename).toBe(roomPic.filename);
+                // room amenities
+                expect(r_f_room.room_amenities[0].amenity_id).toBe(roomAmenity.id);
+                expect(r_f_room.room_amenities[0].amenity).toBe(roomAmenity.amenity);
+            }
+        )
 
     }
 
