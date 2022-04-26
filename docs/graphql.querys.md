@@ -171,31 +171,23 @@ mutation createHotel($input:HotelInput!){
 ### Get A Room
 ```graphql
 query {
-  room(room_id: 528){
-    id
-		hotel_id
-		room_name
-		night_price
-		capacity
-		number_of_beds
-		created_at
-    room_type
-    room_types{
-			id
-      room_type
-    }
+  room(room_id: 52){
+ 		id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    created_at
+    room_type_id
+    room_type_key
     room_pictures{
-      id
-      room_id
+      room_picture_id
       filename
     }
-    rooms_amenities{
-      room_id
+    room_amenities{
       amenity_id
-      room_amenity {
-        id
-        amenity
-      }
+      amenity
     }
   }
 }

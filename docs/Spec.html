@@ -106,6 +106,7 @@ customElements.define('markdown-style', MarkdownStyle);</script><markdown-style 
         <ul>
           <li><a href="#raw-db-cooming-result-postgresjs">Raw Db cooming result (postgres.js)</a></li>
           <li><a href="#mapped-value-to-work-in-the-api">Mapped Value to work in the api</a></li>
+          <li><a href="#get-room-data-case-not-found-recieved-from-db">Get Room Data (case not found recieved from db)</a></li>
           <li><a href="#delete-room--response">Delete room response</a></li>
         </ul>
       </li>
@@ -344,6 +345,46 @@ customElements.define('markdown-style', MarkdownStyle);</script><markdown-style 
         room_amenities: [ {amenity_id:39, amenity: &#x27;06d9fae7-2&#x27;} ]
       }
   }
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <h3 id="get-room-data-case-not-found-recieved-from-db"><a class="anchor" aria-hidden="true" tabindex="-1" href="#get-room-data-case-not-found-recieved-from-db"><span class="octicon octicon-link"></span></a>Get Room Data (case not found recieved from db)</h3>
+    <pre class="language-js"><code class="language-js code-highlight"><span class="code-line line-number" line="1"><span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="2">  <span class="token literal-property property">roomDataRes</span><span class="token operator">:</span> <span class="token function"><span class="token maybe-class-name">Result</span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">[</span>
+</span><span class="code-line line-number" line="3">    <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="4">      <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="5">      <span class="token literal-property property">hotel_id</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="6">      <span class="token literal-property property">room_name</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="7">      <span class="token literal-property property">night_price</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="8">      <span class="token literal-property property">capacity</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="9">      <span class="token literal-property property">number_of_beds</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="10">      <span class="token literal-property property">created_at</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="11">      <span class="token literal-property property">room_type_id</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="12">      <span class="token literal-property property">room_type_key</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="13">      <span class="token literal-property property">room_pictures</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="14">      <span class="token literal-property property">room_amenities</span><span class="token operator">:</span> <span class="token keyword null nil">null</span>
+</span><span class="code-line line-number" line="15">    <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="16">  <span class="token punctuation">]</span>
+</span><span class="code-line line-number" line="17"><span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="18">
+</span><span class="code-line line-number" line="19">
+</span></code><div onclick="copied(this)" data-code="{
+  roomDataRes: Result(1) [
+    {
+      id: null,
+      hotel_id: null,
+      room_name: null,
+      night_price: null,
+      capacity: null,
+      number_of_beds: null,
+      created_at: null,
+      room_type_id: null,
+      room_type_key: null,
+      room_pictures: null,
+      room_amenities: null
+    }
+  ]
+}
+
+
 " class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <h3 id="delete-room--response"><a class="anchor" aria-hidden="true" tabindex="-1" href="#delete-room--response"><span class="octicon octicon-link"></span></a>Delete room response</h3>
     <pre class="language-js"><code class="language-js code-highlight"><span class="code-line line-number" line="1">  

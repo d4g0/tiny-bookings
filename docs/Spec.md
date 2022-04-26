@@ -11,6 +11,7 @@
 - [Room](#room)
   - [Raw Db cooming result (postgres.js)](#raw-db-cooming-result-postgresjs)
   - [Mapped Value to work in the api](#mapped-value-to-work-in-the-api)
+  - [Get Room Data (case not found recieved from db)](#get-room-data-case-not-found-recieved-from-db)
   - [Delete room  response](#delete-room--response)
 - [Room Lock Period](#room-lock-period)
 - [Client](#client)
@@ -174,6 +175,29 @@ auth: {
         room_amenities: [ {amenity_id:39, amenity: '06d9fae7-2'} ]
       }
   }
+```
+
+### Get Room Data (case not found recieved from db)
+```js
+{
+  roomDataRes: Result(1) [
+    {
+      id: null,
+      hotel_id: null,
+      room_name: null,
+      night_price: null,
+      capacity: null,
+      number_of_beds: null,
+      created_at: null,
+      room_type_id: null,
+      room_type_key: null,
+      room_pictures: null,
+      room_amenities: null
+    }
+  ]
+}
+
+
 ```
 
 ### Delete room  response
