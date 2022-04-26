@@ -205,6 +205,18 @@ export const typeDefinitions = gql`
     room_amenity:     RoomAmenity!
   }
 
+
+  # for room type
+  type RoomPictureRes {
+    room_picture_id:  Int!
+    filename:         String!
+  }
+
+  type RoomAmenityRes {
+    amenity_id:       Int!
+    amenity:          String!
+  }
+  
   # Room
   type Room {
     id:               Int!
@@ -214,12 +226,13 @@ export const typeDefinitions = gql`
     capacity:         Int!
     number_of_beds:   Int!
     created_at:       String!
-    room_type:        Int
-    room_types:       RoomType
-    room_pictures:    [RoomPicture]!
-    rooms_amenities:  [RoomIsAmenityWithAmenity]!
+    room_type_id:     Int
+    room_type_key:    String
+    room_pictures:    [RoomPictureRes]!
+    room_amenities:  [RoomAmenityRes]!
   }
 
+  
   
   # inputs
   input CreateRoomInput {

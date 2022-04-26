@@ -333,6 +333,13 @@ ALTER TABLE IF EXISTS public.client_payments
     NOT VALID;
 
 
+
+
+
+
+
+
+
 --  INDEXES
 CREATE INDEX admin_email_idx on admins USING BTREE (email);
 CREATE INDEX client_email_idx on clients USING BTREE (email);
@@ -344,7 +351,19 @@ CREATE INDEX client_payments_effectuated_at_idx on client_payments USING BTREE (
 CREATE INDEX client_payments_booking_reference_idx on client_payments USING BTREE (booking_reference);
 CREATE INDEX client_created_at_idx on clients USING BTREE (created_at);
 
+
+
+
+
+
+
+
 -- FUNCTIONS
+
+
+-- 
+-- is room available in
+-- 
 create or replace function is_room_available_in( 
 	room_id_filter integer,
     delta_search_days integer,
@@ -378,6 +397,11 @@ $$
 LANGUAGE plpgsql;
 
 
+
+
+-- 
+-- get room data
+-- 
 create or replace function get_room_data(
 	room_id_filter integer
 ) returns room_data as 
@@ -406,14 +430,14 @@ select * into temp_room_data from (
 -- 	room pictures
 	ARRAY(
 		select 
-			rp.id || ' ' || rp.filename
+			rp.id || '/' || rp.filename
 		from room_pictures rp
 		where rp.room_id = rm.id
 	) as room_pictures,
 -- 	room amenities
 	ARRAY(
 		select 
-		 ra.id || ' ' || ra.amenity
+		 ra.id || '/' || ra.amenity
 		from room_amenity ra join rooms_amenities rams
 		on ra.id = rams.amenity_id
 		where rams.room_id = rm.id

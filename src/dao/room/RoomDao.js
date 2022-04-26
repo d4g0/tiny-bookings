@@ -435,9 +435,13 @@ function mapRawRoomDataToRoom({
     room_pictures,
     room_amenities,
 }) {
+    // postgresql function: 
+    // get_room_data 
+    // composed field / array / string concatenation value
+    const SPLITER = '/'; 
 
     var m_room_pics = room_pictures.map((line) => {
-        var lineParts = line.split(' ');
+        var lineParts = line.split(SPLITER);
         return {
             room_picture_id: +lineParts[0],
             filename: lineParts[1],
@@ -445,7 +449,7 @@ function mapRawRoomDataToRoom({
     });
 
     var m_room_amenities = room_amenities.map((line) => {
-        var lineParts = line.split(' ');
+        var lineParts = line.split(SPLITER);
         return {
             amenity_id: +lineParts[0],
             amenity: lineParts[1],
