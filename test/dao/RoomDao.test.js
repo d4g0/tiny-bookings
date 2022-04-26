@@ -1,7 +1,7 @@
 import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
-import { mapTimeToDateTime } from 'dao/utils';
+import { mapTimeToDateTime, randStr } from 'dao/utils';
 import { createRoom, deleteRoom, getRoomById, getRoomData, getRoomDataRaw, getRoomsData, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
@@ -95,6 +95,81 @@ describe(
                 expect(room.room_type_key).toBeNull();
                 expect(room.room_pictures).toStrictEqual([]);
                 expect(room.room_amenities).toStrictEqual([]);
+                // //
+                // Delete tests
+                // //
+                expect(del_result.count).toBe(1);
+                expect(del_result.completed).toBe(true);
+
+            }
+        )
+
+
+        // create a room with full deps  and delete it
+        test(
+            "Create and delete room (with deps)",
+            async function () {
+                var dbError = null, room = null, del_result = null;
+                var roomType = null, roomIsType = null,
+                    roomPic = null, roomAmenity = null,
+                    roomIsAmenity = null, f_room = null;
+
+
+                try {
+                    room = await createRoom({
+                        hotel_id: customHotel.id,
+                        room_name: roomData.room_name,
+                        night_price: roomData.night_price,
+                        number_of_beds: roomData.number_of_beds,
+                        capacity: roomData.capacity
+                    })
+
+                    // room type
+                    roomType = await createRoomType(randStr());
+                    roomIsType = await updateARoomIsType(room.id, roomType.id);
+
+                    // room amenities
+                    roomAmenity = await createRoomAmenity(randStr());
+                    roomIsAmenity = await createARoomIsAmenity(room.id, roomAmenity.id);
+
+                    // room pictures
+                    roomPic = await createARoomPicture(room.id, randStr() + '.jpg');
+
+                    f_room = await getRoomData(room.id);
+
+                    console.log({
+                        f_room
+                    });
+                    del_result = await deleteRoom(room.id);
+                } catch (error) {
+                    console.log(error)
+                    dbError = error;
+                }
+
+                expect(dbError).toBe(null);
+                // //
+                // Create tests
+                // //
+                // spec check when created 
+                // some fields are null or empty arrays
+                expect(f_room.id).toBeDefined();
+                expect(f_room.hotel_id).toBeDefined();
+                expect(f_room.room_name).toBeDefined();
+                expect(f_room.night_price).toBeDefined();
+                expect(f_room.capacity).toBeDefined();
+                expect(f_room.number_of_beds).toBeDefined();
+                expect(f_room.created_at).toBeDefined();
+                // deps checks
+                // room type
+                expect(f_room.room_type_id).toBe(roomType.id);
+                expect(f_room.room_type_key).toBe(roomType.room_type);
+                // room pics
+                expect(f_room.room_pictures[0].room_picture_id).toBe(roomPic.id);
+                expect(f_room.room_pictures[0].filename).toBe(roomPic.filename);
+                // room amenities
+                expect(f_room.room_amenities[0].amenity_id).toBe(roomAmenity.id);
+                expect(f_room.room_amenities[0].amenity).toBe(roomAmenity.amenity);
+                
                 // //
                 // Delete tests
                 // //

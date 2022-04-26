@@ -139,55 +139,6 @@ export async function deleteRoom(room_id) {
 
 
 /**
- * Update a room it's name
- * @param {number} room_id 
- * @param {string} room_name 
- */
-export async function updateRoomName(room_id, room_name) {
-
-    // validate
-    if (!isValidId(room_id)) {
-        throw new Error('Non valid [room_id]');
-    }
-    if (!isValidRoomName(room_name)) {
-        throw new Error('Non valid [room_name]');
-    }
-
-    try {
-
-
-        var room = await prisma.room.update({
-            where: {
-                id: room_id
-            },
-            data: {
-                room_name
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        })
-        room.created_at = room.created_at.toISOString();
-        return room;
-
-    } catch (error) {
-        // case prisma record not found
-        if (error.code == 'P2025') {
-            var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
-            throw customError;
-        }
-        throw error;
-    }
-}
-
-
-/**
  * Update a room it's `room_type`
  * @param {number} room_id 
  * @param {string} room_name 
@@ -235,7 +186,53 @@ export async function updateARoomIsType(room_id, room_type_id) {
     }
 }
 
+/**
+ * Update a room it's name
+ * @param {number} room_id 
+ * @param {string} room_name 
+ */
+ export async function updateRoomName(room_id, room_name) {
 
+    // validate
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid [room_id]');
+    }
+    if (!isValidRoomName(room_name)) {
+        throw new Error('Non valid [room_name]');
+    }
+
+    try {
+
+
+        var room = await prisma.room.update({
+            where: {
+                id: room_id
+            },
+            data: {
+                room_name
+            },
+            include: {
+                room_pictures: true,
+                room_types: true,
+                rooms_amenities: {
+                    include: {
+                        room_amenity: true
+                    }
+                }
+            }
+        })
+        room.created_at = room.created_at.toISOString();
+        return room;
+
+    } catch (error) {
+        // case prisma record not found
+        if (error.code == 'P2025') {
+            var customError = new NOT_FOUND_RECORD_ERROR('[room] not found');
+            throw customError;
+        }
+        throw error;
+    }
+}
 
 export async function updateRoomNightPrice(room_id, new_night_price) {
     // validate
@@ -374,19 +371,6 @@ export async function getRoomById(room_id) {
 }
 
 
-export async function getRoomById_p(room_id) {
-    if (!isValidId(room_id)) {
-        throw new Error('Non Valid room_id');
-    }
-
-    try {
-        var rRes = await sql`
-            select
-        `
-    } catch (error) {
-        throw error;
-    }
-}
 
 export async function getRooms() {
 
