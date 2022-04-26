@@ -39,6 +39,11 @@ export const typeDefinitions = gql`
     count:             Int!
   }
 
+  type DelRes {
+    completed:         Boolean!
+    count:             Int!
+  }
+
   ##
   # Client
   ##
@@ -441,7 +446,7 @@ export const typeDefinitions = gql`
     # roomAmenity
     getRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     getRoomAmenities: [RoomAmenity]!
-    room(room_id: Int!): Room!
+    room(room_id: Int!): Room
     rooms: [Room]!
     # room locks
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
@@ -492,7 +497,7 @@ export const typeDefinitions = gql`
     deleteARoomIsAmenity(input: DeleteARoomIsAmenityInput!): DelRoomIsAmenityRes!
     # room
     createRoom(input: CreateRoomInput!): Room!
-    deleteRoom(input: DeleteRoomInput!): Room!
+    deleteRoom(input: DeleteRoomInput!): DelRes!
     updateRoomName(input: UpdateRoomNameInput!): Room!
     updateARoomIsType(input: UpdateRoomIsTypeInput!): Room!
     updateRoomNightPrice(input: UpdateRoomNightPriceInput!): Room!

@@ -828,8 +828,8 @@ export const resolvers = {
                     } = args.input;
                     // sanitation 
                     try {
-                        var room = await deleteRoom(room_id);
-                        return room;
+                        var delResult = await deleteRoom(room_id);
+                        return delResult;
                     } catch (error) {
                         throw error;
                     }
