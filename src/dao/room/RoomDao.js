@@ -203,7 +203,7 @@ export async function updateRoomName(room_id, room_name) {
             (
                 update room 
                 set room_name = ${room_name}
-                where room.id = 270
+                where room.id = ${room_id}
                 returning  room.id
                     
             ) 
@@ -234,25 +234,28 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
     }
 
     try {
-        var room = await prisma.room.update({
-            where: {
-                id: room_id
-            },
-            data: {
-                night_price: new_night_price
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        })
-        room.created_at = room.created_at.toISOString();
+
+
+        var updateRes = await sql`
+            with u_room as 
+            (
+                update room 
+                set night_price = ${new_night_price}
+                where room.id = ${room_id}
+                returning  room.id
+                    
+            ) 
+            select 
+                rm.* 
+            from  u_room ur 
+            join get_room_data(ur.id) rm on (ur.id = rm.id)
+        `;
+
+        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+
         return room;
+
+
     } catch (error) {
         throw error;
     }
