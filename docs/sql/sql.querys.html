@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <title>tiny-bookings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta description="A tiny booking system for hotels reservations">
   </head>
   <body><dark-mode permanent style="position: fixed; top: 8px; left: 10px; z-index: 999;" dark="Dark" light="Light"></dark-mode><script>const t=document;const e="_dark_mode_theme_";const s="permanent";const o="colorschemechange";const i="permanentcolorscheme";const h="light";const r="dark";const n=(t,e,s=e)=>{Object.defineProperty(t,s,{enumerable:true,get(){const t=this.getAttribute(e);return t===null?"":t},set(t){this.setAttribute(e,t)}})};const c=(t,e,s=e)=>{Object.defineProperty(t,s,{enumerable:true,get(){return this.hasAttribute(e)},set(t){if(t){this.setAttribute(e,"")}else{this.removeAttribute(e)}}})};class a extends HTMLElement{static get observedAttributes(){return["mode",h,r,s]}LOCAL_NANE=e;constructor(){super();this.t()}connectedCallback(){n(this,"mode");n(this,r);n(this,h);c(this,s);const a=localStorage.getItem(e);if(a&&[h,r].includes(a)){this.mode=a;this.permanent=true}if(this.permanent&&!a){localStorage.setItem(e,this.mode)}const l=[h,r].includes(a);if(this.permanent&&a){this.o()}else{if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){this.mode=r;this.o()}if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches){this.mode=h;this.o()}}if(!this.permanent&&!l){window.matchMedia("(prefers-color-scheme: light)").onchange=t=>{this.mode=t.matches?h:r;this.o()};window.matchMedia("(prefers-color-scheme: dark)").onchange=t=>{this.mode=t.matches?r:h;this.o()}}const d=new MutationObserver(((s,h)=>{this.mode=t.documentElement.dataset.colorMode;if(this.permanent&&l){localStorage.setItem(e,this.mode);this.i(i,{permanent:this.permanent})}this.h();this.i(o,{colorScheme:this.mode})}));d.observe(t.documentElement,{attributes:true});this.i(o,{colorScheme:this.mode});this.h()}attributeChangedCallback(t,s,o){if(t==="mode"&&s!==o&&[h,r].includes(o)){const t=localStorage.getItem(e);if(this.mode===t){this.mode=o;this.h();this.o()}else if(this.mode&&this.mode!==t){this.h();this.o()}}else if((t===h||t===r)&&s!==o){this.h()}if(t==="permanent"&&typeof this.permanent==="boolean"){this.permanent?localStorage.setItem(e,this.mode):localStorage.removeItem(e)}}o(){t.documentElement.setAttribute("data-color-mode",this.mode)}h(){this.icon.textContent=this.mode===h?"🌒":"🌞";this.text.textContent=this.mode===h?this.getAttribute(r):this.getAttribute(h)}t(){var s=this.attachShadow({mode:"open"});this.label=t.createElement("span");this.label.setAttribute("class","wrapper");this.label.onclick=()=>{this.mode=this.mode===h?r:h;if(this.permanent){localStorage.setItem(e,this.mode)}this.o();this.h()};s.appendChild(this.label);this.icon=t.createElement("span");this.label.appendChild(this.icon);this.text=t.createElement("span");this.label.appendChild(this.text);const o=`
 [data-color-mode*='dark'], [data-color-mode*='dark'] body {
@@ -535,14 +537,14 @@ where rm.id = 52
 </span><span class="code-line line-number" line="15"><span class="token comment">-- 	room pictures</span>
 </span><span class="code-line line-number" line="16">	ARRAY<span class="token punctuation">(</span>
 </span><span class="code-line line-number" line="17">		<span class="token keyword">select</span> 
-</span><span class="code-line line-number" line="18">			rp<span class="token punctuation">.</span>id <span class="token operator">||</span> <span class="token string">'   '</span> <span class="token operator">||</span> rp<span class="token punctuation">.</span>filename
+</span><span class="code-line line-number" line="18">			rp<span class="token punctuation">.</span>id <span class="token operator">||</span> <span class="token string">'/'</span> <span class="token operator">||</span> rp<span class="token punctuation">.</span>filename
 </span><span class="code-line line-number" line="19">		<span class="token keyword">from</span> room_pictures rp
 </span><span class="code-line line-number" line="20">		<span class="token keyword">where</span> rp<span class="token punctuation">.</span>room_id <span class="token operator">=</span> rm<span class="token punctuation">.</span>id
 </span><span class="code-line line-number" line="21">	<span class="token punctuation">)</span> <span class="token keyword">as</span> room_pictures<span class="token punctuation">,</span>
 </span><span class="code-line line-number" line="22"><span class="token comment">-- 	room amenities</span>
 </span><span class="code-line line-number" line="23">	ARRAY<span class="token punctuation">(</span>
 </span><span class="code-line line-number" line="24">		<span class="token keyword">select</span> 
-</span><span class="code-line line-number" line="25">		 ra<span class="token punctuation">.</span>id <span class="token operator">||</span> <span class="token string">'   '</span> <span class="token operator">||</span> ra<span class="token punctuation">.</span>amenity
+</span><span class="code-line line-number" line="25">		 ra<span class="token punctuation">.</span>id <span class="token operator">||</span> <span class="token string">'/'</span> <span class="token operator">||</span> ra<span class="token punctuation">.</span>amenity
 </span><span class="code-line line-number" line="26">		<span class="token keyword">from</span> room_amenity ra <span class="token keyword">join</span> rooms_amenities rams
 </span><span class="code-line line-number" line="27">		<span class="token keyword">on</span> ra<span class="token punctuation">.</span>id <span class="token operator">=</span> rams<span class="token punctuation">.</span>amenity_id
 </span><span class="code-line line-number" line="28">		<span class="token keyword">where</span> rams<span class="token punctuation">.</span>room_id <span class="token operator">=</span> rm<span class="token punctuation">.</span>id
@@ -566,14 +568,14 @@ where rm.id = 52
 -- 	room pictures
 	ARRAY(
 		select 
-			rp.id || &#x27;   &#x27; || rp.filename
+			rp.id || &#x27;/&#x27; || rp.filename
 		from room_pictures rp
 		where rp.room_id = rm.id
 	) as room_pictures,
 -- 	room amenities
 	ARRAY(
 		select 
-		 ra.id || &#x27;   &#x27; || ra.amenity
+		 ra.id || &#x27;/&#x27; || ra.amenity
 		from room_amenity ra join rooms_amenities rams
 		on ra.id = rams.amenity_id
 		where rams.room_id = rm.id

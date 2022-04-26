@@ -253,10 +253,11 @@ Define room_data query
         -   `get_room_data` (by_id) [done] 1:07
         -   `get_rooms_data` 
             
--   Refactor Room Dao to new postgres.js and getRoomData query finish 26 april 5:30
+-   Refactor Room Dao to new postgres.js and getRoomData brake 26 april 5:30
     -   (dao,test) start 23:53
         -   create [done] 1:50
         -   get room data
+        -   pending GetRoomsData start 26 april 17:35 done 18:06
     -   graphql
         -   **todo** update pending graphql.query anotations
 -   Define sql function `get_rooms_available_in` for costumers availablitiy search

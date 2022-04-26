@@ -261,14 +261,14 @@ select
 -- 	room pictures
 	ARRAY(
 		select 
-			rp.id || '   ' || rp.filename
+			rp.id || '/' || rp.filename
 		from room_pictures rp
 		where rp.room_id = rm.id
 	) as room_pictures,
 -- 	room amenities
 	ARRAY(
 		select 
-		 ra.id || '   ' || ra.amenity
+		 ra.id || '/' || ra.amenity
 		from room_amenity ra join rooms_amenities rams
 		on ra.id = rams.amenity_id
 		where rams.room_id = rm.id
