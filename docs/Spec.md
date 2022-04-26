@@ -1,5 +1,28 @@
 ## Internal Data models 
 **Services and up layer, DAO handle db structure internals**
+- [Internal Data models](#internal-data-models)
+  - [USER_ROLES](#user_roles)
+  - [ADMIN](#admin)
+  - [Creation](#creation)
+- [Auth Middleware](#auth-middleware)
+- [Hotel](#hotel)
+- [RoomType](#roomtype)
+- [RoomAmenitiy](#roomamenitiy)
+- [Room](#room)
+  - [Raw Db cooming result (postgres.js)](#raw-db-cooming-result-postgresjs)
+  - [Mapped Value to work in the api](#mapped-value-to-work-in-the-api)
+  - [Delete room  response](#delete-room--response)
+- [Room Lock Period](#room-lock-period)
+- [Client](#client)
+- [Booking State](#booking-state)
+- [Payment Type](#payment-type)
+- [Booking](#booking)
+- [Payment Type](#payment-type-1)
+- [Booking State](#booking-state-1)
+- [Currency](#currency)
+- [Client Payment](#client-payment)
+- [Create A Booking as Admin](#create-a-booking-as-admin)
+
 
 ### USER_ROLES
 -   FULL_ADMIN
@@ -115,83 +138,50 @@ auth: {
 
 
 ## Room
-Create and update Model of room
+
+### Raw Db cooming result (postgres.js)
 ```js
-  room:{
-    id,
-    hotel_id,
-    room_name,
-    night_price,
-    capacity,
-    number_of_beds,
-    created_at,
-    room_type,
-    room_types,
-    room_pictures,
-    rooms_amenities,
-  }
-
-  // sample full
-  sample_room:{
-    "id": 528,
-    "hotel_id": 227,
-    "room_name": "Marazul 30",
-    "night_price": "340",
-    "capacity": 5,
-    "number_of_beds": 15,
-    "created_at": "2022-04-07T23:19:57.852Z",
-    "room_type": 733,
-    "room_types": {
-        "id": 733,
-        "room_type": "Triple"
-    },
-    "room_pictures": [ { "id": 101, "room_id": 468, "filename": "file" } ], // might be an empty array
-    "rooms_amenities": [
-        {
-            "room_id": 528,
-            "amenity_id": 26,
-            "room_amenity": {
-                "id": 26,
-                "amenity": "Air conditioner"
-            }
-        }
-    ] // might be an empty array
-  }
-
-  var noDependenciesRoom room = {
-        id: 143,
-        hotel_id: 29,
-        room_name: 'db8d5efd-1',
-        night_price: 10,
+ // raw
+  var new_room_data = {
+        id: 234,
+        hotel_id: 176,
+        room_name: '69fe1219-8',
+        night_price: '10',
         capacity: 2,
         number_of_beds: 1,
-        created_at: 2022-04-10T01:32:55.534Z,
-        room_pictures: [],
-        room_type: null,
-        room_types: null,
-        rooms_amenities: []
+        created_at: '2022-04-26 03:16:46',
+        room_type_id: 103,  // can be null
+        room_type_key: 'bfe2b40e-6',  // can be null
+        room_pictures: [ '28   supper-foo-picture' ], // can be an empty array
+        room_amenities: [ '39   06d9fae7-2', '40   908334cb-d' ] // can be an empty array
+      }
   }
-
-
 ```
 
-Delete room model response
-
-
+### Mapped Value to work in the api
 ```js
-  
-var del_res = {
-        id: 585,
-        hotel_id: 407,
-        room_name: '7693b0fb-1',
-        night_price: 10,
+ var new_room_data = {
+        id: 234,
+        hotel_id: 176,
+        room_name: '69fe1219-8',
+        night_price: '10',
         capacity: 2,
         number_of_beds: 1,
-        room_type: null,
-        created_at: '2022-04-08T17:47:05.558Z',
-        room_pictures: [],
-        room_types: null,
-        rooms_amenities: []
+        created_at: '2022-04-26 03:16:46',
+        room_type_id: 103,
+        room_type_key: 'bfe2b40e-6',
+        room_pictures: [ {room_picture_id: 28  , filename: 'supper-foo-picture'} ],
+        room_amenities: [ {amenity_id:39, amenity: '06d9fae7-2'} ]
+      }
+  }
+```
+
+### Delete room  response
+```js
+  
+var delRes = {
+        completed: true,
+        count: 1
 }
 ```
 
