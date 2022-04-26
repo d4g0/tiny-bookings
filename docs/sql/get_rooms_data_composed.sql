@@ -6,11 +6,12 @@ select
 	rm.capacity,
 	rm.number_of_beds,
 	rm.created_at,
+	rm.room_type as room_type_id,
 -- room type
 	( 
 		select rt.room_type from room_types rt
 		where rt.id = rm.room_type
-	) as room_type,
+	) as room_type_key,
 -- 	room pictures
 	ARRAY(
 		select 
