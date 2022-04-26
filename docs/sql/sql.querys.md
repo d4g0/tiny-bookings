@@ -32,6 +32,7 @@
 			- [Production](#production-2)
 		- [Update a Room is Night Price](#update-a-room-is-night-price)
 			- [Production](#production-3)
+		- [Update a Room Capacity](#update-a-room-capacity)
 	- [Room Lock](#room-lock)
 		- [Create a room_lock_period](#create-a-room_lock_period)
 			- [Non Booking](#non-booking)
@@ -365,6 +366,22 @@ with u_room as
 (
 	update room 
 	set night_price = 300.50
+	where room.id = 270
+	returning  room.id
+		
+) 
+select 
+	rm.* 
+from  u_room ur 
+join get_room_data(ur.id) rm on (ur.id = rm.id)
+```
+
+### Update a Room Capacity
+```sql
+with u_room as 
+(
+	update room 
+ 	set capacity = 120
 	where room.id = 270
 	returning  room.id
 		

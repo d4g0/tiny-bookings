@@ -270,25 +270,28 @@ export async function updateRoomCapacity(room_id, new_capacity) {
     }
 
     try {
-        var room = await prisma.room.update({
-            where: {
-                id: room_id
-            },
-            data: {
-                capacity: new_capacity
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        })
-        room.created_at = room.created_at.toISOString();
-        return room
+        
+
+        var updateRes = await sql`
+            with u_room as 
+            (
+                update room 
+                set capacity = ${new_capacity}
+                where room.id = ${room_id}
+                returning  room.id
+                    
+            ) 
+            select 
+                rm.* 
+            from  u_room ur 
+            join get_room_data(ur.id) rm on (ur.id = rm.id)
+        `;
+
+        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+
+        return room;
+
+
     } catch (error) {
         throw error;
     }

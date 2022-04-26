@@ -186,7 +186,7 @@ describe(
             async function () {
                 var dbError = null, room = null, NEW_NAME = randStr(),
                     roomType = null, u_room = null, NEW_PRICE = 210.55;
-
+                var NEW_CAPACITY = 4;
                 try {
                     room = await createRoom({
                         hotel_id: customHotel.id,
@@ -205,7 +205,10 @@ describe(
                     await updateRoomName(room.id, NEW_NAME);
 
                     // night price
-                    await updateRoomNightPrice(room.id, NEW_PRICE)
+                    await updateRoomNightPrice(room.id, NEW_PRICE);
+
+                    // capacity
+                    await updateRoomCapacity(room.id, NEW_CAPACITY);
 
                     u_room = await getRoomData(room.id);
                     console.log({ roomType, u_room });
@@ -224,6 +227,8 @@ describe(
                 expect(u_room.room_name).toBe(NEW_NAME);
                 // night price
                 expect(u_room.night_price).toBe(NEW_PRICE);
+                // capacity
+                expect(u_room.capacity).toBe(NEW_CAPACITY);
 
 
             }
