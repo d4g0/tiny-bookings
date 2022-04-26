@@ -869,6 +869,10 @@ mutation SingUp($input: SingUpInput!){
     "email": "casidy4@gmail.com"
   }
 }
+# header
+{
+  "X-Captcha": "captcha response token"
+}
 ```
 
 ## Get Client for admin
