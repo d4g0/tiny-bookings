@@ -3,6 +3,7 @@ import { USER_ROLES } from "~/dao/DBConstans";
 import Joi from 'joi';
 import moment from 'moment-timezone';
 import { DateTime } from 'luxon';
+import { v4 as uuid } from 'uuid';
 /**
  * Maps a find admin query response data 
  * to a consumable admin user obj
@@ -466,4 +467,8 @@ export function mapDateToHourTime(date) {
     var minute = date.getUTCMinutes();
 
     return { hour, minute }
+}
+
+export function randStr(size = 4) {
+    return uuid().substring(0, size)
 }
