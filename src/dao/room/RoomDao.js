@@ -170,7 +170,7 @@ export async function updateARoomIsType(room_id, room_type_id) {
             join get_room_data(ur.id) rm on (ur.id = rm.id)
         `;
 
-        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+        var room = (updateRes[0].id || updateRes[0].id == 0) ? mapRawRoomDataToRoom(updateRes[0]) : null;
 
         return room;
 
@@ -213,7 +213,7 @@ export async function updateRoomName(room_id, room_name) {
             join get_room_data(ur.id) rm on (ur.id = rm.id)
         `;
 
-        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+        var room = (updateRes[0].id || updateRes[0].id == 0) ? mapRawRoomDataToRoom(updateRes[0]) : null;
 
         return room;
 
@@ -251,7 +251,7 @@ export async function updateRoomNightPrice(room_id, new_night_price) {
             join get_room_data(ur.id) rm on (ur.id = rm.id)
         `;
 
-        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+        var room = (updateRes[0].id || updateRes[0].id == 0) ? mapRawRoomDataToRoom(updateRes[0]) : null;
 
         return room;
 
@@ -270,7 +270,7 @@ export async function updateRoomCapacity(room_id, new_capacity) {
     }
 
     try {
-        
+
 
         var updateRes = await sql`
             with u_room as 
@@ -287,7 +287,7 @@ export async function updateRoomCapacity(room_id, new_capacity) {
             join get_room_data(ur.id) rm on (ur.id = rm.id)
         `;
 
-        var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+        var room = (updateRes[0].id || updateRes[0].id == 0) ? mapRawRoomDataToRoom(updateRes[0]) : null;
 
         return room;
 
@@ -307,7 +307,7 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
     }
 
     try {
-        
+
 
         var updateRes = await sql`
         with u_room as 
@@ -324,9 +324,9 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
         join get_room_data(ur.id) rm on (ur.id = rm.id)
     `;
 
-    var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+        var room = (updateRes[0].id || updateRes[0].id == 0) ? mapRawRoomDataToRoom(updateRes[0]) : null;
 
-    return room;
+        return room;
 
 
     } catch (error) {
@@ -414,7 +414,9 @@ export async function getRoomData(room_id) {
         var roomDataRes = await sql`
         select * from get_room_data(${room_id});
         `;
-        var room = roomDataRes.length > 0 ? mapRawRoomDataToRoom(roomDataRes[0]) : null;
+
+        console.log({ roomDataRes });
+        var room = (roomDataRes[0].id || roomDataRes[0].id == 0) > 0 ? mapRawRoomDataToRoom(roomDataRes[0]) : null;
 
         return room;
     } catch (error) {
@@ -438,7 +440,7 @@ function mapRawRoomDataToRoom({
     // postgresql function: 
     // get_room_data 
     // composed field / array / string concatenation value
-    const SPLITER = '/'; 
+    const SPLITER = '/';
 
     var m_room_pics = room_pictures.map((line) => {
         var lineParts = line.split(SPLITER);
@@ -480,7 +482,7 @@ export async function getRoomDataRaw(room_id) {
         var roomDataRes = await sql`
             select * from get_room_data(${room_id});
         `;
-        var room = roomDataRes.length > 0 ? roomDataRes[0] : null;
+        var room = (roomDataRes[0].id || roomDataRes[0].id == 0) ? roomDataRes[0] : null;
 
         return room;
     } catch (error) {
