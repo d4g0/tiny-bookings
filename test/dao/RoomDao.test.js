@@ -185,7 +185,7 @@ describe(
             "Updates",
             async function () {
                 var dbError = null, room = null, NEW_NAME = randStr(),
-                    roomType = null;
+                    roomType = null, u_room = null;
 
                 try {
                     room = await createRoom({
@@ -198,11 +198,14 @@ describe(
 
                     // room type
                     roomType = await createRoomType(randStr());
-                    var u_room = await updateARoomIsType(room.id, roomType.id);
+                    await updateARoomIsType(room.id, roomType.id);
+
+
                     // room name
-                    
-                    
-                    console.log({ u_room });
+                    await updateRoomName(room.id, NEW_NAME);
+
+                    u_room = await getRoomData(room.id);
+                    console.log({ roomType, u_room });
                     // clean
                     await deleteRoom(room.id);
                 } catch (error) {
@@ -214,6 +217,7 @@ describe(
                 // room type
                 expect(u_room.room_type_id).toBe(roomType.id);
                 expect(u_room.room_type_key).toBe(roomType.room_type);
+                // room name
                 // expect(u_room.room_name).toBe(NEW_NAME);
 
             }

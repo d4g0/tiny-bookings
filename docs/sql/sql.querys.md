@@ -20,14 +20,16 @@
 	- [Room Amenity](#room-amenity)
 		- [Create a room_amenity](#create-a-room_amenity)
 		- [Create a rooms_amenitys record](#create-a-rooms_amenitys-record)
-	- [Delete a rooms_amenities record](#delete-a-rooms_amenities-record)
-	- [Delete all room is amenities](#delete-all-room-is-amenities)
+		- [Delete a rooms_amenities record](#delete-a-rooms_amenities-record)
+		- [Delete all room is amenities](#delete-all-room-is-amenities)
 	- [Room Types](#room-types)
 		- [Get Room Types](#get-room-types)
 		- [Create A Room Type](#create-a-room-type)
 		- [Update a Room is Type](#update-a-room-is-type)
 			- [Basic](#basic-1)
 			- [Production](#production-1)
+		- [Update a Room is Name](#update-a-room-is-name)
+			- [Production](#production-2)
 	- [Room Lock](#room-lock)
 		- [Create a room_lock_period](#create-a-room_lock_period)
 			- [Non Booking](#non-booking)
@@ -296,12 +298,12 @@ insert into rooms_amenities (
 ) values ( 1 , 1);
 ```
 
-## Delete a rooms_amenities record
+### Delete a rooms_amenities record
 ```sql
 delete from rooms_amenities rams where rams.room_id = 52 and rams.amenity_id = 65
 ```
 
-## Delete all room is amenities
+### Delete all room is amenities
 ```sql
 delete from rooms_amenities rams where rams.room_id = 52 
 ```
@@ -337,6 +339,22 @@ from  u_room ur
 join get_room_data(ur.id) rm on (ur.id = rm.id)
 ```
 
+### Update a Room is Name
+#### Production
+```sql
+with u_room as 
+(
+	update room 
+	set room_name = 'new name'
+	where room.id = 270
+	returning  room.id
+		
+) 
+select 
+	rm.* 
+from  u_room ur 
+join get_room_data(ur.id) rm on (ur.id = rm.id)
+```
 ## Room Lock
 ### Create a room_lock_period
 
