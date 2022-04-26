@@ -6,6 +6,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR }
 import { prisma } from 'db/PrismaClient.js';
 import { isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName } from "dao/utils";
 import { getAmenitiesByRoom } from "./RoomAmenitiesDao";
+import sql from "db/postgres";
 
 
 export async function createRoom({
@@ -122,7 +123,7 @@ export async function deleteRoom(room_id) {
             },
         })
 
-        
+
         return delRes;
 
     } catch (error) {
@@ -373,6 +374,20 @@ export async function getRoomById(room_id) {
 }
 
 
+export async function getRoomById_p(room_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non Valid room_id');
+    }
+
+    try {
+        var rRes = await sql`
+            select
+        `
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getRooms() {
 
     try {
@@ -394,6 +409,128 @@ export async function getRooms() {
     } catch (error) {
         console.log(error);
         throw error
+    }
+}
+
+
+export async function getRoomsData() {
+    try {
+        var roomsData = await sql`
+        select
+            rm.id,
+            rm.hotel_id,
+            rm.room_name,
+            rm.night_price,
+            rm.capacity,
+            rm.number_of_beds,
+            rm.created_at,
+            rm.room_type as room_type_id,
+        -- room type
+            ( 
+                select rt.room_type from room_types rt
+                where rt.id = rm.room_type
+            ) as room_type_key,
+        -- 	room pictures
+            ARRAY(
+                select 
+                    rp.id || ' ' || rp.filename
+                from room_pictures rp
+                where rp.room_id = rm.id
+            ) as room_pictures,
+        -- 	room amenities
+            ARRAY(
+                select 
+                ra.id || ' ' || ra.amenity
+                from room_amenity ra join rooms_amenities rams
+                on ra.id = rams.amenity_id
+                where rams.room_id = rm.id
+            ) as room_amenities
+        from room rm 
+        order by rm.id
+        `;
+
+        return roomsData;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export async function getRoomData(room_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid room id')
+    }
+    try {
+        var roomDataRes = await sql`
+        select * from get_room_data(${room_id});
+        `;
+        var room = roomDataRes.length > 0 ? mapRawRoomDataToRoom(roomDataRes[0]) : null;
+        
+        return room;
+    } catch (error) {
+        throw error;
+    }
+}
+
+function mapRawRoomDataToRoom({
+    id,
+    hotel_id,
+    room_name,
+    night_price,
+    capacity,
+    number_of_beds,
+    created_at,
+    room_type_id,
+    room_type_key,
+    room_pictures,
+    room_amenities,
+}) {
+
+    var m_room_pics = room_pictures.map((line) => {
+        var lineParts = line.split(' ');
+        return {
+            room_picture_id: +lineParts[0],
+            filename: lineParts[1],
+        }
+    });
+
+    var m_room_amenities = room_amenities.map((line) => {
+        var lineParts = line.split(' ');
+        return {
+            amenity_id: +lineParts[0],
+            amenity: lineParts[1],
+        }
+    });
+    return {
+        id,
+        hotel_id,
+        room_name,
+        night_price: +night_price,
+        capacity,
+        number_of_beds,
+        created_at,
+        room_type_id,
+        room_type_key,
+        room_pictures: m_room_pics,
+        room_amenities: m_room_amenities,
+    }
+}
+
+
+// test only
+export async function getRoomDataRaw(room_id) {
+    if (!isValidId(room_id)) {
+        throw new Error('Non valid room id')
+    }
+    try {
+        var roomDataRes = await sql`
+            select * from get_room_data(${room_id});
+        `;
+        var room = roomDataRes.length > 0 ? roomDataRes[0] : null;
+        
+        return room;
+    } catch (error) {
+        throw error;
     }
 }
 
