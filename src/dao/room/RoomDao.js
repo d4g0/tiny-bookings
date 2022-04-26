@@ -307,25 +307,28 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
     }
 
     try {
-        var room = await prisma.room.update({
-            where: {
-                id: room_id
-            },
-            data: {
-                number_of_beds: new_number_of_beds
-            },
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        })
-        room.created_at = room.created_at.toISOString();
-        return room
+        
+
+        var updateRes = await sql`
+        with u_room as 
+        (
+            update room 
+            set number_of_beds = ${new_number_of_beds}
+            where room.id = ${room_id}
+            returning  room.id
+                
+        ) 
+        select 
+            rm.* 
+        from  u_room ur 
+        join get_room_data(ur.id) rm on (ur.id = rm.id)
+    `;
+
+    var room = updateRes.length ? mapRawRoomDataToRoom(updateRes[0]) : null;
+
+    return room;
+
+
     } catch (error) {
         throw error;
     }
