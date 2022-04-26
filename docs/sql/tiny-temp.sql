@@ -177,5 +177,20 @@ CREATE TABLE IF NOT EXISTS public.client_payments
     PRIMARY KEY (id)
 );
 
+-- for get room data functions
+CREATE TABLE IF NOT EXISTS public.room_data
+(
+    id integer NOT NULL,
+    hotel_id integer NOT NULL,
+    room_name character(20) NOT NULL,
+    night_price numeric(10, 2) NOT NULL,
+    capacity integer NOT NULL,
+    number_of_beds integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    room_type_id integer,
+    room_type_key character(30),
+    room_pictures text[],
+    room_amenities text[]
+);
 
 END;
