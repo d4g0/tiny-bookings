@@ -336,38 +336,6 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 
 
 
-export async function getRoomById(room_id) {
-
-    if (!isValidId(room_id)) {
-        throw new Error('Non Valid room_id');
-    }
-
-    // fetch the room
-    try {
-
-        var room = await prisma.room.findUnique({
-            where: {
-                id: room_id
-            },
-            // room spec pack
-            include: {
-                room_pictures: true,
-                room_types: true,
-                rooms_amenities: {
-                    include: {
-                        room_amenity: true
-                    }
-                }
-            }
-        });
-        room.created_at = room.created_at.toISOString();
-        return room;
-
-    } catch (error) {
-        throw error
-    }
-}
-
 
 
 export async function getRooms() {
