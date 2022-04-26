@@ -247,6 +247,26 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 **Hot Sopt Tasks:**
 
+Define room_data query
+-   Define `room_data`  tables for craft the folowing functions [done] 1:07
+-   Define functions:
+        -   `get_room_data` (by_id) [done] 1:07
+        -   `get_rooms_data` 
+            
+-   Refactor Room Dao to new postgres.js and getRoomData query
+    -   (dao,test) start 23:53
+        -   create [done] 1:50
+        -   get room data
+    -   graphql
+-   Define sql function `get_rooms_available_in` for costumers availablitiy search
+-   iterate old room methods to drop prisma and use postgres.js to use this new sql functions enhances instead 
+
+
+
+
+
+
+[done]
 Fix broken test by admin new fetch (postgres.js) iteration 
 start 23 april 17:00 done april 24 1:03
     refactor createAdmin
