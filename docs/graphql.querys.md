@@ -347,7 +347,7 @@ query {
 ### Get Rooms
 ```graphql
 query{
-  rooms{
+  rooms(hotel_id_filter: 39){
     id
     hotel_id
     room_name

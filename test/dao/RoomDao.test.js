@@ -285,7 +285,7 @@ describe(
                     roomPic = await createARoomPicture(f_room.id, randStr() + '.jpg');
 
 
-                    roomsData = await getRoomsData();
+                    roomsData = await getRoomsData(customHotel.id);
                     // the rooms are sorted by id
                     // so this test creation order will be respected
                     // and since not other room it will be created will 

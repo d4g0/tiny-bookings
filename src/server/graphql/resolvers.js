@@ -197,7 +197,8 @@ export const resolvers = {
 
         rooms: async (root, args, ctx) => {
             try {
-                var rooms = await getRooms();
+                var { hotel_id_filter }  = args;
+                var rooms = await getRooms(hotel_id_filter);
                 return rooms;
             } catch (error) {
                 throw error;

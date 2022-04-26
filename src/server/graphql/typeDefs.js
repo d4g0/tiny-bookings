@@ -447,7 +447,7 @@ export const typeDefinitions = gql`
     getRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     getRoomAmenities: [RoomAmenity]!
     room(room_id: Int!): Room
-    rooms: [Room]!
+    rooms(hotel_id_filter: Int!): [Room]!
     # room locks
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
     getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!

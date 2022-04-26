@@ -334,9 +334,11 @@ export async function updateRoomNumberOfBeds(room_id, new_number_of_beds) {
 }
 
 
-export async function getRoomsData() {
-
-    const SPLITER = '/'
+export async function getRoomsData(hotel_id_filter) {
+    if(!isValidId(hotel_id_filter)){
+        throw new Error('Non valid hotel_id_filter')
+    }
+    const SPLITER = '/';
     try {
         var roomsData = await sql`
         select
@@ -368,7 +370,8 @@ export async function getRoomsData() {
                 on ra.id = rams.amenity_id
                 where rams.room_id = rm.id
             ) as room_amenities
-        from room rm 
+        from room rm
+        where rm.hotel_id = ${hotel_id_filter} 
         order by rm.id
         `;
         var rooms = roomsData.map(rd => mapRawRoomDataToRoom(rd));

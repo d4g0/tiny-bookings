@@ -147,6 +147,6 @@ export async function getRoomById(room_id) {
     return getRoomData(room_id);
 }
 
-export async function getRooms() {
-    return getRoomsData()
+export async function getRooms(hotel_id_filter) {
+    return getRoomsData(hotel_id_filter)
 }
