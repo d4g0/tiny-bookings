@@ -7,6 +7,8 @@
     - [Delete admin](#delete-admin)
   - [Hotel](#hotel)
     - [createHotel](#createhotel)
+    - [Get a Hotel](#get-a-hotel)
+    - [Get Hotels](#get-hotels)
     - [Update Hotel Check in](#update-hotel-check-in)
     - [Update Hotel Check out](#update-hotel-check-out)
     - [Pending craft other dao fn respective querys](#pending-craft-other-dao-fn-respective-querys)
@@ -168,6 +170,26 @@ mutation createHotel($input:HotelInput!){
   }
 }
 
+```
+
+### Get a Hotel
+```graphql
+{
+  hotel(id: 56){
+    id
+    hotel_name
+  }
+}
+```
+
+### Get Hotels
+```graphql
+{
+  hotels{
+    id
+    hotel_name
+  }
+}
 ```
 
 ### Update Hotel Check in

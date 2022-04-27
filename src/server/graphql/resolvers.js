@@ -118,7 +118,7 @@ export const resolvers = {
         // ---------------
         hotel: async (root, args, ctx, info) => {
             // hotel
-            var { id } = args.input;
+            var { id } = args;
 
             try {
                 var hotel = await getHotelById(id);
@@ -1027,7 +1027,6 @@ export const resolvers = {
                         end_date,
                         rooms_ids,
                         hotel_id,
-                        hotel_calendar_length,
                         client_name,
                         client_last_name,
                         total_price,
@@ -1046,7 +1045,6 @@ export const resolvers = {
                             end_date,
                             rooms_ids,
                             hotel_id,
-                            hotel_calendar_length,
                             client_name: s_client_name,
                             client_last_name: s_client_last_name,
                             total_price,

@@ -106,9 +106,6 @@ export const typeDefinitions = gql`
     iana_time_zone:               String!
   }
 
-  input getHotelInput {
-    id: Int!
-  }
 
   
   input UpdateHotelName {
@@ -390,7 +387,6 @@ export const typeDefinitions = gql`
     end_date:               DateObject!
     rooms_ids:              [Int]!
     hotel_id:               Int!
-    hotel_calendar_length:  Int!
     client_name:            String!
     client_last_name:       String!
     total_price:            Float!
@@ -437,7 +433,7 @@ export const typeDefinitions = gql`
     # admin
     admins: [Admin]!
     # hotel
-    hotel(input: getHotelInput!): Hotel!
+    hotel(id: Int!): Hotel!
     hotels: [Hotel]!
     # room
     # roomType
