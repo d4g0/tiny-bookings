@@ -206,9 +206,9 @@ export async function getBookings({
             from 
                 booking b
             where 
-                b.start_date > ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${utc_start_date_filter.toISOString()}
             and
-                b.start_date < ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${utc_end_date_filter.toISOString()}
             and b.hotel_id = ${hotel_id}
             ORDER BY b.start_date desc
             LIMIT ${LIMIT} OFFSET ${OFFSET};
@@ -220,9 +220,9 @@ export async function getBookings({
             from 
                 booking b
             where 
-                b.start_date > ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${utc_start_date_filter.toISOString()}
             and
-                b.start_date < ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${utc_end_date_filter.toISOString()}
             and b.hotel_id = ${hotel_id}
         `;
 

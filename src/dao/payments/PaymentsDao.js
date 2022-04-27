@@ -198,6 +198,9 @@ export async function getPayments({
     }
 }
 
+// TODO write getAClientIsPayments
+// same as above just filter by a client id
+
 export async function deleteAPayment(payment_id) {
 
 

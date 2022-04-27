@@ -244,9 +244,9 @@ export async function getClients({
         join 
             user_roles ur on( cl.user_role = ur.id) 
         where 
-            cl.created_at > ${utc_start_date_filter.toISOString()}
+            cl.created_at >= ${utc_start_date_filter.toISOString()}
         and
-            cl.created_at < ${utc_end_date_filter.toISOString()}
+            cl.created_at <= ${utc_end_date_filter.toISOString()}
         ORDER BY cl.created_at desc
         LIMIT ${LIMIT} OFFSET ${OFFSET} ;
         `
@@ -259,9 +259,9 @@ export async function getClients({
         join 
             user_roles ur on( cl.user_role = ur.id) 
         where 
-            cl.created_at > ${utc_start_date_filter.toISOString()}
+            cl.created_at >= ${utc_start_date_filter.toISOString()}
         and
-            cl.created_at < ${utc_end_date_filter.toISOString()};
+            cl.created_at <= ${utc_end_date_filter.toISOString()};
         `;
 
         var results = clientRes

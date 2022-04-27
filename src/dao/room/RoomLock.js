@@ -335,9 +335,9 @@ export async function getRoomLocks({
         join hotel ht
         on rm.hotel_id = ht.id 
         where 
-            rlp.start_date > ${utc_start_date_filter.toISOString()}
+            rlp.start_date >= ${utc_start_date_filter.toISOString()}
         and
-            rlp.start_date < ${utc_end_date_filter.toISOString()}
+            rlp.start_date <= ${utc_end_date_filter.toISOString()}
         and ht.id = ${hotel_id}
         `
 
@@ -400,9 +400,9 @@ export async function getARoomIsLocks({
         from 
             room_lock_period rlp 
         where 
-            rlp.start_date > ${utc_start_date_filter.toISOString()}
+            rlp.start_date >= ${utc_start_date_filter.toISOString()}
         and
-            rlp.start_date < ${utc_end_date_filter.toISOString()}
+            rlp.start_date <= ${utc_end_date_filter.toISOString()}
         and
             rlp.room_id = ${room_id_filter}
         ORDER BY rlp.start_date
@@ -415,9 +415,9 @@ export async function getARoomIsLocks({
         from 
             room_lock_period rlp 
         where 
-            rlp.start_date > ${utc_start_date_filter.toISOString()}
+            rlp.start_date >= ${utc_start_date_filter.toISOString()}
         and
-            rlp.start_date < ${utc_end_date_filter.toISOString()}
+            rlp.start_date <= ${utc_end_date_filter.toISOString()}
         and
             rlp.room_id = ${room_id_filter}
         `

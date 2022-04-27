@@ -250,6 +250,15 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 **Hot Sopt Tasks:**
 
+evaluate:
+getRoomLocks set  date range search extreme inclusive,  or best desired outcoume
+iterate all date range ops to be poles inclusive when appropiate
+getClientPayments [done]
+getBookings [done]
+getRoomLocks, getARoomIsLocks [done]
+getClients [done]
+
+
 Define room_data query
 -   Define `room_data`  tables for craft the folowing functions [done] 1:07
 -   Define functions:
@@ -282,7 +291,7 @@ to avoid potential errors when admins update the hotel calendar length
 set a hotel id filter in room_locks search
 
 set hotel id filter to: getBookings [done]
-getRooms
+set hotel id filter to: clientPayment [done]
 
 
 [done]
