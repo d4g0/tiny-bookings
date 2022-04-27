@@ -245,16 +245,12 @@ export async function updateHotelDaysToCancel(hotelId, minimal_prev_days_to_canc
     }
 
     try {
-        var updatedRes = await prisma.hotel.update({
-            where: {
-                id: hotelId
-            },
-            data: {
-                minimal_prev_days_to_cancel
-            }
-        })
+        var uRes = await sql`
+            update hotel set minimal_prev_days_to_cancel = ${minimal_prev_days_to_cancel} where hotel.id = ${hotelId} returning *
+        `;
 
-        return mapHotelResToHotel(updatedRes);
+        var hotel = uRes.length > 0 ? uRes[0] : null;
+        return hotel;
     } catch (error) {
         throw error;
     }

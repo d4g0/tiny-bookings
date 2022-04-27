@@ -95,6 +95,7 @@ describe(
                 var NEW_IN_TIME = { hours: 3, minutes: 10 };
                 var NEW_OUT_TIME = { hours: 10, minutes: 10 };
                 var NEW_DAYS = 10;
+                var NEW_CANCEL_DAYS = 10;
                 try {
                     fooHotel = await createHotel(hotelData);
                     // name
@@ -106,7 +107,7 @@ describe(
                     // maximun_free_calendar_days
                     await updateHotelFreeCalendarDays(fooHotel.id, NEW_DAYS);
                     // minimal_prev_days_to_cancel
-                    // await updateHotelDaysToCancel(fooHotel.id, 10);
+                    await updateHotelDaysToCancel(fooHotel.id, NEW_CANCEL_DAYS);
                     // iana_time_zone
                     // await updateHotelTimeZone(fooHotel.id, 'America/Havana');
 
@@ -134,6 +135,7 @@ describe(
                     ) // aditional seconds in incoming time string from postgres, im lazy to deal with it other wise
                 ).toBe(true);
                 expect(uHotel.maximun_free_calendar_days).toBe(NEW_DAYS);
+                expect(uHotel.minimal_prev_days_to_cancel).toBe(NEW_CANCEL_DAYS);
 
             }
         )
