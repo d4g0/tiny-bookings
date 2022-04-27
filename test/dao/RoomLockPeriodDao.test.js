@@ -8,8 +8,6 @@ import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { createRoom, deleteRoom } from "dao/room/RoomDao";
 import { createARoomLockPeriod, deleteRoomLockPeriod, getARoomIsLocks, getRoomLocks } from "dao/room/RoomLock";
 import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
-import { mapDateToHourTime, mapTimeToDateTime } from "dao/utils";
-import { date } from "joi";
 import { DateTime } from "luxon";
 import { v4 as uuid } from 'uuid'
 import { getUserRoleByKey } from "dao/users/UserRoleDao";
@@ -148,7 +146,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
                     // clean
                     var deletedRoomLockPeriod = await deleteRoomLockPeriod(roomLockPeriod.id)
@@ -189,7 +186,6 @@ describe(
                         reason: 'create 2 with same dates',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
 
                     res2 = await createARoomLockPeriod({
@@ -197,7 +193,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
 
                 } catch (error) {
@@ -261,7 +256,6 @@ describe(
                         reason: 'Gardening',
                         start_date: PERIOD_DATA.start_date,
                         end_date: PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                         is_a_booking: true,
                         booking_id: booking.id
                     });
@@ -317,7 +311,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
 
                     var rl2 = await createARoomLockPeriod({
@@ -325,7 +318,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: PERIOD_DATA.start_date,
                         end_date: PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
                     // clean
 
@@ -375,7 +367,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: ROOM_LOCK_PERIOD_DATA.start_date,
                         end_date: ROOM_LOCK_PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
 
                     var rl2 = await createARoomLockPeriod({
@@ -383,7 +374,6 @@ describe(
                         reason: '[Gardining] We are going to grow some plants in this room',
                         start_date: PERIOD_DATA.start_date,
                         end_date: PERIOD_DATA.end_date,
-                        hotel_calendar_length: HOTEL.maximun_free_calendar_days,
                     });
                     // clean
 

@@ -25,6 +25,7 @@ import {
 
 import { AVAILABILITY_ERROR } from 'dao/Errors';
 import { isValid } from 'date-fns';
+import { MAXIMUN_HOTEL_CALENDAR_LENGHT } from 'dao/DBConstans';
 
 
 
@@ -43,7 +44,6 @@ export async function createARoomLockPeriod({
     reason = 'Default Reason', // default since it's optional
     start_date = { year, month, day, hour, minute },
     end_date = { year, month, day, hour, minute },
-    hotel_calendar_length,
     is_a_booking = false,
     booking_id = null
 }) {
@@ -68,10 +68,6 @@ export async function createARoomLockPeriod({
 
             if (!isValidDateInput(end_date)) {
                 throw new Error('Non valid end_date')
-            }
-
-            if (!isValidInteger(hotel_calendar_length) || hotel_calendar_length < 1) {
-                throw new Error('Non valid hotel_calendar_length: ' + hotel_calendar_length);
             }
 
             if (booking_id && !isValidId(booking_id)) {
@@ -114,7 +110,7 @@ export async function createARoomLockPeriod({
         // generate the last hotel calendar day date
         // by suming calendar length days to current day date
         const MILISECONDS_IN_A_DAY = 86400000;
-        const LAST_HOTEL_CALENDAR_DAY_DATE = new Date(currentUTCDayDate.valueOf() + (hotel_calendar_length * MILISECONDS_IN_A_DAY));
+        const LAST_HOTEL_CALENDAR_DAY_DATE = new Date(currentUTCDayDate.valueOf() + (MAXIMUN_HOTEL_CALENDAR_LENGHT * MILISECONDS_IN_A_DAY));
 
         if (!(utc_end_date.valueOf() <= LAST_HOTEL_CALENDAR_DAY_DATE.valueOf())) {
             throw new Error('End date outbounds the hotel calendar');
@@ -124,7 +120,7 @@ export async function createARoomLockPeriod({
         // check if is availability for the locking
         var isAvailable = await isRoomAvailableIn({
             room_id,
-            delta_search_days: hotel_calendar_length,
+            delta_search_days: MAXIMUN_HOTEL_CALENDAR_LENGHT,
             start_date,
             end_date
         })
