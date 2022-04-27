@@ -1,26 +1,31 @@
+import sql from 'db/postgres'
 import { prisma } from 'db/PrismaClient.js'
 import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
-import { isValidHotelName, isValidHourTime, isValidId, isValidInteger, isValidTimeZone } from './utils'
+import { hourTimeToSQLTimeStr, isValidHotelName, isValidHourTime, isValidHourTimeInput, isValidId, isValidInteger, isValidTimeZone } from './utils'
 
 
-
+/**
+ * TODO
+ * Convert hotel id to integer
+ */
 
 
 
 /**
  * Creates a Hotel in DB
- * 
+ * `check_in_hour_time // hour_time { hours: 0 - 24 , minutes: 0 - 59 }
  * Throws dbErrors:
  * 
  */
 export async function createHotel({
     hotel_name,
     maximun_free_calendar_days,
-    check_in_hour_time, // hour_time { hour: 0 - 24 , min: 0 - 59 }
-    check_out_hour_time,
+    check_in_hour_time = { hours, minutes },
+    check_out_hour_time = { hours, minutes },
     minimal_prev_days_to_cancel,
     iana_time_zone
 }) {
+
     // validate
     if (!isValidHotelName(hotel_name)) {
         throw new Error(`Non valid string provided: ${hotel_name}`)
@@ -29,11 +34,11 @@ export async function createHotel({
         throw new Error(`Non valid integer provided: ${maximun_free_calendar_days}`)
     }
 
-    if (!isValidHourTime(check_in_hour_time)) {
+    if (!isValidHourTimeInput(check_in_hour_time)) {
         throw new Error(`Non valid check_in_hour_time provided`)
     }
 
-    if (!isValidHourTime(check_out_hour_time)) {
+    if (!isValidHourTimeInput(check_out_hour_time)) {
         throw new Error(`Non valid check_in_hour_time provided`)
     }
 
@@ -46,29 +51,44 @@ export async function createHotel({
     }
 
 
+    // map hour time objs to sql time string
+    check_in_hour_time = hourTimeToSQLTimeStr(check_in_hour_time);
+    check_out_hour_time = hourTimeToSQLTimeStr(check_out_hour_time);
+
 
     try {
         // create
-        var hotel = await prisma.hotel.create({
-            data: {
+        var hotelRes = await await sql`
+        insert into
+            hotel (
                 hotel_name,
                 maximun_free_calendar_days,
                 minimal_prev_days_to_cancel,
                 check_in_hour_time,
                 check_out_hour_time,
                 iana_time_zone
-            }
-        })
+            )
+        values
+            (
+                ${hotel_name},
+                ${maximun_free_calendar_days},
+                ${minimal_prev_days_to_cancel},
+                ${check_in_hour_time},
+                ${check_out_hour_time},
+                ${iana_time_zone}
+            ) returning *;
+        `
 
-        return mapHotelResToHotel(hotel);
+        var hotel = hotelRes.length > 0 ? hotelRes[0] : null;
+
+        return hotel;
 
     } catch (error) {
         // handle know errors
         // unique constraint
-        if (error?.code == 'P2002') {
-            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unable to create as unique constrain fails')
+        if (error?.code == '23505') {
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Duplicated Hotel name')
         }
-
         // default hanlding
         throw error;
     }
@@ -80,15 +100,12 @@ export async function getHotelById(hotelId) {
     }
 
     try {
-        var hotel = await prisma.hotel.findFirst({
-            where: {
-                id: hotelId
-            },
-        })
-        if (!hotel) {
-            throw new NOT_FOUND_RECORD_ERROR('No Hotel Found')
-        }
-        return mapHotelResToHotel(hotel);
+        var hotelRes = await sql`
+            select * from hotel where hotel.id = ${hotelId};
+        `
+
+        var hotel = hotelRes.length > 0 ? hotelRes[0] : null;
+        return hotel;
     } catch (error) {
         throw error
     }
