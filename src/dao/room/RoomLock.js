@@ -308,9 +308,9 @@ export async function getRoomLocks({
         from 
             room_lock_period rlp 
         where 
-            rlp.start_date > ${utc_start_date_filter.toISOString()}
+            rlp.start_date >= ${utc_start_date_filter.toISOString()}
         and
-            rlp.start_date < ${utc_end_date_filter.toISOString()}
+            rlp.start_date <= ${utc_end_date_filter.toISOString()}
         ORDER BY rlp.start_date desc
         LIMIT ${LIMIT} OFFSET ${OFFSET} ;
         `
