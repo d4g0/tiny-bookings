@@ -281,7 +281,7 @@ to avoid potential errors when admins update the hotel calendar length
 [done]
 set a hotel id filter in room_locks search
 
-set hotel id filter to getBookings
+set hotel id filter to: getBookings [done]
 getRooms
 
 

@@ -14,6 +14,7 @@
 			- [Production](#production)
 		- [Get Room Data (by id)](#get-room-data-by-id)
 		- [Get Rooms Data](#get-rooms-data)
+		- [Delete a room](#delete-a-room)
 	- [Room Picture](#room-picture)
 		- [Create a room_picture](#create-a-room_picture)
 		- [Delete all room is pictures](#delete-all-room-is-pictures)
@@ -38,7 +39,7 @@
 		- [Create a room_lock_period](#create-a-room_lock_period)
 			- [Non Booking](#non-booking)
 			- [With Booking](#with-booking)
-		- [Delete a room](#delete-a-room)
+		- [Get room lock periods by hotel id](#get-room-lock-periods-by-hotel-id)
 	- [Clients](#clients)
 		- [Get A Client](#get-a-client)
 		- [Create a client](#create-a-client)
@@ -276,7 +277,10 @@ select
 from room rm 
 order by rm.id
 ```
-
+### Delete a room
+```sql
+delete from room rm where rm.id = 273  returning *
+```
 
 ## Room Picture
 ### Create a room_picture
@@ -431,6 +435,7 @@ values
 	);
 ```
 
+
 #### With Booking
 ```sql
 insert into
@@ -455,10 +460,27 @@ values
 	) RETURNING *;
 ```
 
-### Delete a room
+### Get room lock periods by hotel id
 ```sql
-delete from room rm where rm.id = 273  returning *
+select 
+            rlp.* 
+        from 
+            room_lock_period rlp
+		join room rm 
+		on rlp.room_id = rm.id
+		join hotel ht
+		on rm.hotel_id = ht.id
+        where 
+            rlp.start_date >= '2001-10-20 10:00:00'
+        and
+            rlp.start_date <= '2031-10-20 10:00:00'
+		and ht.id = 1
+        ORDER BY rlp.start_date desc
+        LIMIT 50 OFFSET 0 
 ```
+
+
+
 
 ## Clients
 ### Get A Client
