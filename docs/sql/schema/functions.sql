@@ -1,4 +1,3 @@
-BEGIN;
 -- is Room Available
 create or replace function is_room_available_in( 
 	room_id_filter integer,
@@ -92,13 +91,44 @@ LANGUAGE plpgsql;
 
 
 
-
+-- 
 -- Get Rooms Available in
+-- 
+
+create or replace function get_rooms_available_in(
+	hotel_id_filter integer,
+	delta_search_days integer,
+	query_range tsrange
+) returns setof room_data as
+$$
+
+DECLARE
+-- temp record
+temp_room_data room_data%rowtype;
+temp_room room%rowtype;
 
 
+BEGIN
 
 
-
-
+for temp_room in 
+		select * from room 
+		where room.hotel_id = hotel_id_filter
+		order by room.id
+LOOP
+IF ( select is_available
+		from is_room_available_in(
+			temp_room.id,
+			delta_search_days,
+			query_range
+		)
+	) = true  then
+		RETURN QUERY select * from get_room_data(temp_room.id);
+END IF;
+	
+END LOOP;
+RETURN;
 
 END;
+$$
+LANGUAGE plpgsql;
