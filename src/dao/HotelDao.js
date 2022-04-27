@@ -150,17 +150,17 @@ export async function updateHotelName(hotelId, hotelName) {
     }
 
     try {
-        var updatedRes = await prisma.hotel.update({
-            where: {
-                id: hotelId
-            },
-            data: {
-                hotel_name: hotelName
-            }
-        })
+        var uRes = await sql`
+            update hotel set hotel_name = ${hotelName} where hotel.id = ${hotelId} returning *
+        `;
 
-        return mapHotelResToHotel(updatedRes);
+        var hotel = uRes.length > 0 ? uRes[0] : null;
+
+        return hotel;
     } catch (error) {
+        if (error?.code == '23505') {
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Duplicated Admin name or description', 'hotel name')
+        }
         throw error;
     }
 }

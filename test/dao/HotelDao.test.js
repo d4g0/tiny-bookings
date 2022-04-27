@@ -84,42 +84,42 @@ describe(
             }
         );
 
-        
-
-        // test(
-        //     "Update a hotel",
-        //     async function () {
-
-        //         var dbError = null, fooHotel, updatedFooHotel;
-
-        //         try {
-        //             fooHotel = await createHotel(hotelData);
-        //             // name
-        //             updatedFooHotel = await updateHotelName(fooHotel.id, 'Supper Foo Hotel');
-        //             // check_in_hour_time
-        //             updatedFooHotel = await updateHotelCheckInTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
-        //             // check_out_hour_time
-        //             updatedFooHotel = await updateHotelCheckOutTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
-        //             // maximun_free_calendar_days
-        //             updatedFooHotel = await updateHotelFreeCalendarDays(fooHotel.id, 90);
-        //             // minimal_prev_days_to_cancel
-        //             updatedFooHotel = await updateHotelDaysToCancel(fooHotel.id, 10);
-        //             // iana_time_zone
-        //             updatedFooHotel = await updateHotelTimeZone(fooHotel.id, 'America/Havana');
 
 
-        //             // clean
-        //             await deleteHotelById(fooHotel.id);
-        //             console.log({ updatedFooHotel })
-        //         } catch (error) {
-        //             console.log(error)
-        //             dbError = error
-        //         }
+        test(
+            "Update a hotel",
+            async function () {
 
-        //         expect(updatedFooHotel.id).toBeDefined();
-        //         expect(dbError).toBe(null);
-        //     }
-        // )
+                var dbError = null, fooHotel, uHotel;
+                var NEW_NAME = randStr();
+                try {
+                    fooHotel = await createHotel(hotelData);
+                    // name
+                    await updateHotelName(fooHotel.id, NEW_NAME);
+                    // check_in_hour_time
+                    // await updateHotelCheckInTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
+                    // check_out_hour_time
+                    // await updateHotelCheckOutTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
+                    // maximun_free_calendar_days
+                    // await updateHotelFreeCalendarDays(fooHotel.id, 90);
+                    // minimal_prev_days_to_cancel
+                    // await updateHotelDaysToCancel(fooHotel.id, 10);
+                    // iana_time_zone
+                    // await updateHotelTimeZone(fooHotel.id, 'America/Havana');
+
+                    uHotel = await getHotelById(fooHotel.id);
+                    // clean
+                    await deleteHotelById(fooHotel.id);
+                } catch (error) {
+                    console.log(error)
+                    dbError = error
+                }
+
+                expect(uHotel.id).toBeDefined();
+                expect(dbError).toBe(null);
+                expect(uHotel.hotel_name).toBe(NEW_NAME);
+            }
+        )
 
         // test(
         //     "Crate Hotel Service",
