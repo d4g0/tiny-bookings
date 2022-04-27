@@ -22,8 +22,8 @@ beforeAll(async () => {
         var hotelData = {
             hotel_name: uuid().substring(0, 10),
             maximun_free_calendar_days: 30,
-            check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
-            check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
+            check_in_hour_time: { hours: 13, minutes: 30 },
+            check_out_hour_time: { hours: 12, minutes: 0 },
             minimal_prev_days_to_cancel: 5,
             iana_time_zone: 'America/Lima'
         }
