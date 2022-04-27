@@ -170,7 +170,6 @@ describe(
                 client_last_name: 'Jhojansen Bawer',
                 currency_id: 1,
                 hotel_id: hotel.id,
-                hotel_calendar_length: hotel.maximun_free_calendar_days,
                 number_of_guests: 2,
                 payment_type_id: 1,
                 total_price: 2000,
