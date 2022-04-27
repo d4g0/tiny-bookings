@@ -269,6 +269,7 @@ export async function getRoomLocks({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
+    hotel_id,
 }) {
 
     // validation
@@ -280,6 +281,10 @@ export async function getRoomLocks({
     }
     if (!isValidPositiveInteger(page)) {
         throw new Error('Non valid page, positive integer expected')
+    }
+
+    if(!isValidId(hotel_id)){
+        throw new Error('Non valid hotel id');
     }
 
     const LIMIT = 50;
@@ -304,13 +309,18 @@ export async function getRoomLocks({
 
         var room_locks_res = await sql`
         select 
-            * 
+            rlp.* 
         from 
-            room_lock_period rlp 
+            room_lock_period rlp
+        join room rm 
+        on rlp.room_id = rm.id
+        join hotel ht
+        on rm.hotel_id = ht.id 
         where 
             rlp.start_date >= ${utc_start_date_filter.toISOString()}
         and
             rlp.start_date <= ${utc_end_date_filter.toISOString()}
+        and ht.id = ${hotel_id}
         ORDER BY rlp.start_date desc
         LIMIT ${LIMIT} OFFSET ${OFFSET} ;
         `
@@ -319,11 +329,16 @@ export async function getRoomLocks({
         select 
             count(*) 
         from 
-            room_lock_period rlp 
+            room_lock_period rlp
+        join room rm 
+        on rlp.room_id = rm.id
+        join hotel ht
+        on rm.hotel_id = ht.id 
         where 
             rlp.start_date > ${utc_start_date_filter.toISOString()}
         and
             rlp.start_date < ${utc_end_date_filter.toISOString()}
+        and ht.id = ${hotel_id}
         `
 
         var results = room_locks_res
