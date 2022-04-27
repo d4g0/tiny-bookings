@@ -4,6 +4,10 @@
     a default `Blocked` reason.
     
     The dates are required to be in `UTC` time
+
+    TODO
+    Filter room locks by hotel id
+    
  */
 
 
