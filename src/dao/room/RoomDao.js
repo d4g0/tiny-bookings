@@ -65,12 +65,10 @@ export async function createRoom({
         `;
 
         var room = mapRawRoomDataToRoom(roomRes[0]);
+        console.log({room});
         return room;
 
     } catch (error) {
-        if (error.code == 'P2002') {
-            throw new DB_UNIQUE_CONSTRAINT_ERROR('Unique constraint error', error?.meta?.target[0]);
-        }
         throw error
     }
 
