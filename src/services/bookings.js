@@ -14,7 +14,7 @@
 import { createBooking, deleteBooking, updateBookingAsCancel, getBookings as getBookingsDao } from "dao/booking/BookingDao";
 import { getBookingStateByKey } from "dao/booking/BookingStateDao";
 import { createARoomBooking, deleteARoomBooking, deleteRoomBookingsByBookingId } from "dao/booking/RoomsBookingsDao";
-import { BOOKING_STATES, USER_ROLES } from "dao/DBConstans";
+import { BOOKING_STATES, MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from "dao/DBConstans";
 import { createAPaymentWithBooking, deleteAPayment, deletePaymentByBookingId } from "dao/payments/PaymentsDao";
 import { createARoomLockPeriod, deleteRoomLockPeriod, deleteRoomLocksByBookingId, isRoomAvailableIn } from "dao/room/RoomLock";
 import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
@@ -26,7 +26,6 @@ export async function createABookingAsAdmin({
     end_date = { year, month, day, hour, minute },
     rooms_ids = [],
     hotel_id,
-    hotel_calendar_length,
     client_name,
     client_last_name,
     total_price,
@@ -110,9 +109,6 @@ export async function createABookingAsAdmin({
                 throw new Error('Non valid number_of_guests')
             }
 
-            if (!isValidPositiveInteger(hotel_calendar_length)) {
-                throw new Error('Non valid hotel calendar lenght')
-            }
 
         }
 
@@ -125,7 +121,7 @@ export async function createABookingAsAdmin({
         for (let i = 0; i < rooms_ids.length; i++) {
 
             var isAvailable = await isRoomAvailableIn({
-                delta_search_days: hotel_calendar_length,
+                delta_search_days: MAXIMUN_HOTEL_CALENDAR_LENGHT,
                 room_id: rooms_ids[i],
                 start_date,
                 end_date
@@ -187,7 +183,6 @@ export async function createABookingAsAdmin({
                 room_id: rooms_ids[i],
                 start_date,
                 end_date,
-                hotel_calendar_length: hotel_calendar_length,
                 reason: 'Booked',
                 is_a_booking: true,
                 booking_id: booking.id,
