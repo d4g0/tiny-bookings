@@ -94,8 +94,7 @@ CREATE TABLE IF NOT EXISTS public.room
     number_of_beds integer NOT NULL,
     created_at timestamp(0) without time zone DEFAULT (now() at time zone 'utc'),
     room_type integer,
-    PRIMARY KEY (id),
-    CONSTRAINT unique_room_name UNIQUE (room_name)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS public.rooms_amenities
