@@ -128,9 +128,14 @@ export async function deleteHotelById(hotelId) {
 }
 
 export async function getHotels() {
-    var hotelsRaw = await prisma.hotel.findMany();
-    var hotels = hotelsRaw.map(hotel => mapHotelResToHotel(hotel));
-    return hotels;
+    try {
+        var hotelRes = await sql`
+            select * from hotel order by hotel.id
+        `;
+        return hotelRes;
+    } catch (error) {
+        throw error;
+    }
 }
 
 
