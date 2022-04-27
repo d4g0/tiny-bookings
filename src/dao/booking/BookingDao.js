@@ -164,6 +164,7 @@ export async function getBookings({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
+    hotel_id,
 }) {
     // validation
     if (!isValidDateInput(start_date_filter)) {
@@ -174,6 +175,10 @@ export async function getBookings({
     }
     if (!isValidPositiveInteger(page)) {
         throw new Error('Non valid page, positive integer expected')
+    }
+
+    if(!isValidId(hotel_id)){
+        throw new Error('Non valid hotel id');
     }
 
     const LIMIT = 50;
@@ -204,6 +209,7 @@ export async function getBookings({
                 b.start_date > ${utc_start_date_filter.toISOString()}
             and
                 b.start_date < ${utc_end_date_filter.toISOString()}
+            and b.hotel_id = ${hotel_id}
             ORDER BY b.start_date desc
             LIMIT ${LIMIT} OFFSET ${OFFSET};
         `;

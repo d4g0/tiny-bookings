@@ -145,7 +145,8 @@ describe(
                     var { results, count } = await getBookings({
                         start_date_filter: BIGGEST_PERIOD_DATA.start_date,
                         end_date_filter: BIGGEST_PERIOD_DATA.end_date,
-                        page: 1
+                        page: 1,
+                        hotel_id: HOTEL.id
                     });
 
                     b_results = results;
