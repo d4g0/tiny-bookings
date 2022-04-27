@@ -117,16 +117,12 @@ export async function deleteHotelById(hotelId) {
     }
 
     try {
-        var delHotel = await prisma.hotel.delete({
-            where: {
-                id: hotelId
-            }
-        })
-        return mapHotelResToHotel(delHotel);
+        var delRes = await sql`
+            delete from hotel where hotel.id = ${hotelId} returning *;
+        `
+        var hotel = delRes.length > 0 ? delRes[0] : null;
+        return hotel
     } catch (error) {
-        if (error?.code == 'P2025') {
-            error = new NOT_FOUND_RECORD_ERROR('Not Found')
-        }
         throw error
     }
 }
