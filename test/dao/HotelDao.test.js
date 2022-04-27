@@ -93,6 +93,7 @@ describe(
                 var dbError = null, fooHotel, uHotel;
                 var NEW_NAME = randStr();
                 var NEW_IN_TIME = { hours: 3, minutes: 10 };
+                var NEW_OUT_TIME = { hours: 10, minutes: 10 };
                 try {
                     fooHotel = await createHotel(hotelData);
                     // name
@@ -100,7 +101,7 @@ describe(
                     // check_in_hour_time
                     await updateHotelCheckInTime(fooHotel.id, NEW_IN_TIME);
                     // check_out_hour_time
-                    // await updateHotelCheckOutTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
+                    await updateHotelCheckOutTime(fooHotel.id, NEW_OUT_TIME);
                     // maximun_free_calendar_days
                     // await updateHotelFreeCalendarDays(fooHotel.id, 90);
                     // minimal_prev_days_to_cancel
@@ -124,6 +125,11 @@ describe(
                 expect(
                     uHotel.check_in_hour_time.startsWith(
                         hourTimeToSQLTimeStr(NEW_IN_TIME)
+                    ) // aditional seconds in incoming time string from postgres, im lazy to deal with it other wise
+                ).toBe(true);
+                expect(
+                    uHotel.check_out_hour_time.startsWith(
+                        hourTimeToSQLTimeStr(NEW_OUT_TIME)
                     ) // aditional seconds in incoming time string from postgres, im lazy to deal with it other wise
                 ).toBe(true);
             }

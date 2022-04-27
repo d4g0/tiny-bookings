@@ -196,18 +196,15 @@ export async function updateHotelCheckOutTime(hotelId, check_out_hour_time) {
     if (!isValidHourTime(check_out_hour_time)) {
         throw new Error(`Non valid check_out_hour_time provided`)
     }
-
+    
+    check_out_hour_time = hourTimeToSQLTimeStr(check_out_hour_time);
     try {
-        var updatedRes = await prisma.hotel.update({
-            where: {
-                id: hotelId
-            },
-            data: {
-                check_out_hour_time
-            }
-        })
+        var uRes = await sql`
+            update hotel set check_out_hour_time = ${check_out_hour_time} where hotel.id = ${hotelId} returning *
+        `;
 
-        return mapHotelResToHotel(updatedRes);
+        var hotel = uRes.length > 0 ? uRes[0] : null;
+        return hotel;
     } catch (error) {
         throw error;
     }
