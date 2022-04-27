@@ -51,7 +51,7 @@ import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
 import { singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
-import { getClientById, getClients  as getClientsService} from "dao/users/ClientDao";
+import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
 
 export const resolvers = {
 
@@ -197,7 +197,7 @@ export const resolvers = {
 
         rooms: async (root, args, ctx) => {
             try {
-                var { hotel_id_filter }  = args;
+                var { hotel_id_filter } = args;
                 var rooms = await getRooms(hotel_id_filter);
                 return rooms;
             } catch (error) {
@@ -516,8 +516,8 @@ export const resolvers = {
                         var hotelData = {
                             hotel_name: s_hotel_name,
                             maximun_free_calendar_days,
-                            check_in_hour_time: mapTimeToDateTime(check_in_hour_time),
-                            check_out_hour_time: mapTimeToDateTime(check_out_hour_time),
+                            check_in_hour_time: check_in_hour_time,
+                            check_out_hour_time: check_out_hour_time,
                             minimal_prev_days_to_cancel,
                             iana_time_zone
                         }
@@ -607,7 +607,7 @@ export const resolvers = {
                         check_in_hour_time,
                     } = args.input;
                     try {
-                        check_in_hour_time = mapTimeToDateTime(check_in_hour_time);
+
                         var hotel = await updateHotelCheckInTime(hotel_id, check_in_hour_time);
                         return hotel;
                     } catch (error) {
@@ -627,7 +627,6 @@ export const resolvers = {
                         check_out_hour_time,
                     } = args.input;
                     try {
-                        check_out_hour_time = mapTimeToDateTime(check_out_hour_time);
                         var hotel = await updateHotelCheckOutTime(hotel_id, check_out_hour_time);
                         return hotel;
                     } catch (error) {

@@ -7,6 +7,9 @@
     - [Delete admin](#delete-admin)
   - [Hotel](#hotel)
     - [createHotel](#createhotel)
+    - [Update Hotel Check in](#update-hotel-check-in)
+    - [Update Hotel Check out](#update-hotel-check-out)
+    - [Pending craft other dao fn respective querys](#pending-craft-other-dao-fn-respective-querys)
   - [Rooms Types](#rooms-types)
     - [CreateRoomType](#createroomtype)
     - [DeleteRoomType](#deleteroomtype)
@@ -150,21 +153,66 @@ mutation createHotel($input:HotelInput!){
 
 {
   "input":{
-"hotel_name":"Graphy Hotel",
-"maximun_free_calendar_days": 30,
+"hotel_name":"Sloppy Joe's Grand Hotel",
+"maximun_free_calendar_days": 90,
 "minimal_prev_days_to_cancel":5,
 "check_in_hour_time":{
   "hours": 10,
-  "mins": 0
+  "minutes": 0
 },
 "check_out_hour_time":{
   "hours": 13,
-  "mins": 30
+  "minutes": 30
 },
 "iana_time_zone":"America/Lima"
   }
 }
+
 ```
+
+### Update Hotel Check in
+```graphql
+mutation updateHotelCheckIn($input: UpdateHotelCheckIn!){
+  updateHotelCheckIn(input:$input){
+    id
+    hotel_name
+    check_in_hour_time
+  }
+}
+
+{
+  "input": {
+    "hotel_id": 56,
+    "check_in_hour_time": {
+      "hours": 11,
+      "minutes": 30
+    }
+  }
+}
+```
+
+### Update Hotel Check out
+```graphql
+mutation updateHotelCheckOut($input: UpdateHotelCheckOut!){
+  updateHotelCheckOut(input:$input){
+    id
+    hotel_name
+    check_out_hour_time
+  }
+}
+
+{
+  "input": {
+    "hotel_id": 56,
+    "check_out_hour_time": {
+      "hours": 14,
+      "minutes": 30
+    }
+  }
+}
+```
+
+### Pending craft other dao fn respective querys
 
 
 ## Rooms Types

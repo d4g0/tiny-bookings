@@ -83,7 +83,7 @@ export const typeDefinitions = gql`
   ##
 
   type Hotel {
-    id:                           ID!
+    id:                           Int!
     hotel_name:                   String!
     maximun_free_calendar_days:   Int!
     check_in_hour_time:           String!
@@ -94,7 +94,7 @@ export const typeDefinitions = gql`
 
   input HourTime {
     hours:                        Int!
-    mins:                         Int!
+    minutes:                         Int!
   }
 
   input HotelInput {
