@@ -238,7 +238,8 @@
    - (graphql) done 4:50
 -  get booking offers start 20:31
    -  get available rooms in date range
-      -  iterate roomDao/getRooms to postgres.js
+      - getAvailability 
+        - sql table, function, dao, test, graphql [done] april 27 19:47
 
 
 Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation
@@ -250,11 +251,13 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 **Hot Sopt Tasks:**
 
+getAvailability [done] april 27 19:47
+
+
 evaluate:
-getRoomLocks set  date range search extreme inclusive,  or best desired outcoume
-iterate all date range ops to be poles inclusive when appropiate
+getRoomLocks set  date range search extreme inclusive
 getClientPayments [done]
-getBookings [done]
+getBookings, getBookingsByClient [done]
 getRoomLocks, getARoomIsLocks [done]
 getClients [done]
 

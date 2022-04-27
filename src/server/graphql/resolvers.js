@@ -1,4 +1,4 @@
-import { USER_ROLES } from "dao/DBConstans";
+import { MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from "dao/DBConstans";
 import { mapTimeToDateTime } from "dao/utils";
 import {
     createAdminService,
@@ -52,6 +52,7 @@ import { getUserByEmailPassword } from "services/users/users";
 import { singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
 import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
+import { getRoomsAvailableIn } from "dao/room/RoomDao";
 
 export const resolvers = {
 
@@ -438,6 +439,29 @@ export const resolvers = {
                 }
             )
         ),
+
+        // get rooms available
+        getRoomsAvailable: async (root, args, ctx) => {
+            var {
+                hotel_id,
+                start_date,
+                end_date,
+            } = args.input;
+            try {
+
+                var result = await getRoomsAvailableIn({
+                    hotel_id,
+                    hotel_calendar_length: MAXIMUN_HOTEL_CALENDAR_LENGHT,
+                    start_date,
+                    end_date,
+                });
+                return result;
+
+            } catch (error) {
+                throw error;
+            }
+
+        }
     },
 
     Mutation: {

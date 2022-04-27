@@ -65,7 +65,7 @@ export async function createRoom({
         `;
 
         var room = mapRawRoomDataToRoom(roomRes[0]);
-        console.log({room});
+        // console.log({room});
         return room;
 
     } catch (error) {

@@ -1,3 +1,4 @@
+const { MAXIMUN_HOTEL_CALENDAR_LENGHT } = require("dao/DBConstans");
 const { createHotel } = require("dao/HotelDao");
 const { getRoomsAvailableIn, createRoom } = require("dao/room/RoomDao");
 const { randStr } = require("dao/utils");
@@ -71,14 +72,14 @@ describe(
                     // expected available
                     room_data_of_expected_available = await getRoomsAvailableIn({
                         hotel_id: hotel.id,
-                        hotel_calendar_length: hotel.maximun_free_calendar_days,
+                        hotel_calendar_length: MAXIMUN_HOTEL_CALENDAR_LENGHT,
                         start_date: SEARCH_INTERVALS.expected_available.start_date,
                         end_date: SEARCH_INTERVALS.expected_available.end_date,
                     });
 
                     room_data_of_expected_not_available = await getRoomsAvailableIn({
                         hotel_id: hotel.id,
-                        hotel_calendar_length: hotel.maximun_free_calendar_days,
+                        hotel_calendar_length: MAXIMUN_HOTEL_CALENDAR_LENGHT,
                         start_date: SEARCH_INTERVALS.expected_unavailable.start_date,
                         end_date: SEARCH_INTERVALS.expected_unavailable.end_date,
                     })
