@@ -120,6 +120,7 @@ export async function getPayments({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
+    hotel_id
 }) {
 
     // validation
@@ -133,6 +134,9 @@ export async function getPayments({
         throw new Error('Non valid page, positive integer expected')
     }
 
+    if(!isValidId(hotel_id)){
+        throw new Error('Non valid hotel id');
+    }
     const LIMIT = 50;
     const OFFSET = (page - 1) * LIMIT;
 
@@ -159,10 +163,12 @@ export async function getPayments({
                 *
             from 
                 client_payments cp
+            join booking b on (cp.booking_reference = b.id)
             where 
-                cp.effectuated_at < ${utc_end_date_filter.toISOString()}
+                cp.effectuated_at >= ${utc_start_date_filter.toISOString()}
             and 
-                cp.effectuated_at > ${utc_start_date_filter.toISOString()}
+                cp.effectuated_at <= ${utc_end_date_filter.toISOString()}
+            and b.hotel_id = ${hotel_id}
             order by cp.effectuated_at
             limit ${LIMIT} offset ${OFFSET};
         `;
@@ -172,10 +178,12 @@ export async function getPayments({
                 count(*)
             from 
                 client_payments cp
+            join booking b on (cp.booking_reference = b.id)
             where 
                 cp.effectuated_at < ${utc_end_date_filter.toISOString()}
             and 
                 cp.effectuated_at > ${utc_start_date_filter.toISOString()}
+            and b.hotel_id = ${hotel_id}
         `;
 
         var results = paymentsRes;

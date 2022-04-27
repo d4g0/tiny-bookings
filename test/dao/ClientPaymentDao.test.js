@@ -6,10 +6,12 @@ import { BOOKING_STATES, CURRENCIES, getUserRoleId, PAYMENT_TYPES, USER_ROLES } 
 import { createHotel } from 'dao/HotelDao';
 import { createAPaymentWithBooking, createAPaymentWithNoBooking, deleteAPayment, getPayments } from 'dao/payments/PaymentsDao';
 import { getPaymentTypeByKey } from 'dao/payments/PaymentTypeDao';
+import { createRoom } from 'dao/room/RoomDao';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { getUserRoleByKey } from 'dao/users/UserRoleDao';
-import { mapTimeToDateTime } from 'dao/utils';
+import { mapTimeToDateTime, randStr } from 'dao/utils';
 import { DateTime } from 'luxon';
+import { createABookingAsAdmin } from 'services/bookings';
 import { v4 as uuid } from 'uuid'
 
 
@@ -163,29 +165,130 @@ describe(
             "Get Client Payments",
             async function () {
                 var dbError = null, cp_results, cp_count;
-
+                var d_hotel,
+                    d_room,
+                    c_b_res;
+                const CLIENT_NAME = randStr();
+                const CLIENT_LAST_NAME = randStr();
 
                 try {
+
+                    var {
+                        hotel,
+                        room1,
+                        booking1
+                    } = await prepareClientPaymentsDeps({
+                        clanedar_length: 90,
+                        booking_days_duration: 2,
+                        client_name: CLIENT_NAME,
+                        client_last_name: CLIENT_LAST_NAME
+                    })
+                    c_b_res = booking1;
+
+
                     var { results, count } = await getPayments({
                         start_date_filter: BIGGEST_PERIOD_DATA.start_date,
                         end_date_filter: BIGGEST_PERIOD_DATA.end_date,
-                        page: 1
+                        page: 1,
+                        hotel_id: hotel.id
                     });
 
-                    console.log({ results, count });
+                    
                     cp_results = results;
                     cp_count = count;
+
+                    // console.log({ 
+                    //     rci: results[0].client_id,
+                    //     cp_rci: cp_results[0].client_id,
+                    //     results: cp_results, 
+                    //     count: cp_count, 
+                    //     c_b_res, 
+                    //     booking: c_b_res.results.booking,
+                    //     client: c_b_res.results.client
+                    // });
                 } catch (error) {
                     console.log(error);
                     dbError = error;
                 }
-
                 expect(dbError).toBeNull();
-                expect(cp_results.length).toBeDefined()
-                expect(cp_count).toBeDefined()
+                expect(cp_results.length).toBe(1)
+                expect(cp_count).toBe(1)
+                expect(cp_results[0].client_id).toBe(c_b_res.results.client.id)
 
             }
         )
 
+        async function prepareClientPaymentsDeps({
+            clanedar_length = 90,
+            booking_days_duration = 2,
+            client_name,
+            client_last_name
+        }) {
+            // create a hotel
+            // create 2 rooms 
+            // create 2 reservations
 
+            // hotel
+            var hotel = await createHotel({
+                hotel_name: randStr(10),
+                maximun_free_calendar_days: clanedar_length,
+                check_in_hour_time: { hours: 10, minutes: 0 },
+                check_out_hour_time: { hours: 10, minutes: 0 },
+                iana_time_zone: 'America/Havana',
+                minimal_prev_days_to_cancel: 5
+            })
+
+            console.log({ hotel });
+
+            // room 1
+            var room1 = await createRoom({
+                hotel_id: hotel.id,
+                room_name: 'Outlander 006',
+                night_price: 150,
+                capacity: 2,
+                number_of_beds: 1
+            })
+
+
+            // dates deps
+            const utc_now = DateTime.now().toUTC();
+
+            const DATES_DATA = {
+                start_date: {
+                    year: utc_now.year,
+                    month: utc_now.month,
+                    day: utc_now.day,
+                    hour: utc_now.hour,
+                    minute: utc_now.minute
+                },
+                end_date: {
+                    year: utc_now.year,
+                    month: utc_now.month,
+                    day: utc_now.day + booking_days_duration,
+                    hour: utc_now.hour,
+                    minute: utc_now.minute
+                },
+            }
+
+            // reservation
+            var booking1 = await createABookingAsAdmin({
+                start_date: DATES_DATA.start_date,
+                end_date: DATES_DATA.end_date,
+                client_name,
+                client_last_name,
+                currency_id: 1,
+                hotel_id: hotel.id,
+                number_of_guests: 2,
+                payment_type_id: 1,
+                total_price: 2000,
+                rooms_ids: [room1.id]
+            })
+
+
+            return {
+                hotel,
+                room1,
+                booking1
+            }
+        }
     })
