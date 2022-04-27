@@ -379,21 +379,17 @@ mutation CreateARoom($input: CreateRoomInput!){
     night_price
     capacity
     number_of_beds
-    room_type
-    rooms_amenities{
-      room_id
-      amenity_id
-      room_amenity {
-        id
-        amenity
-      }
-    }
-    room_pictures {
-      id
-      room_id
+    created_at
+    room_type_id
+    room_type_key
+    room_pictures{
+      room_picture_id
       filename
     }
-    created_at
+    room_amenities{
+      amenity_id
+      amenity
+    }
   }
 }
 
