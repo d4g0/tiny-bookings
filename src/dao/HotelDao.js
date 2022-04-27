@@ -1,13 +1,15 @@
 import sql from 'db/postgres'
+import { MAXIMUN_HOTEL_CALENDAR_LENGHT } from './DBConstans'
 import { DB_UNIQUE_CONSTRAINT_ERROR } from './Errors'
-import { hourTimeToSQLTimeStr, isValidHotelName, isValidHourTime, isValidHourTimeInput, isValidId, isValidInteger, isValidTimeZone } from './utils'
-
-
-/**
- * TODO
- * Convert hotel id to integer
- */
-
+import {
+    hourTimeToSQLTimeStr,
+    isValidHotelName,
+    isValidHourTime,
+    isValidHourTimeInput,
+    isValidId,
+    isValidInteger,
+    isValidTimeZone
+} from './utils'
 
 
 /**
@@ -32,7 +34,10 @@ export async function createHotel({
     if (!isValidInteger(maximun_free_calendar_days)) {
         throw new Error(`Non valid integer provided: ${maximun_free_calendar_days}`)
     }
-
+    
+    if (maximun_free_calendar_days > MAXIMUN_HOTEL_CALENDAR_LENGHT) {
+        throw new Error('Calendar days has to be less then the maximal calendar days posible: ' + MAXIMUN_HOTEL_CALENDAR_LENGHT);
+    }
     if (!isValidHourTimeInput(check_in_hour_time)) {
         throw new Error(`Non valid check_in_hour_time provided`)
     }
@@ -158,7 +163,7 @@ export async function updateHotelName(hotelId, hotelName) {
         return hotel;
     } catch (error) {
         if (error?.code == '23505') {
-            throw new DB_UNIQUE_CONSTRAINT_ERROR('Duplicated Admin name or description', 'hotel name')
+            throw new DB_UNIQUE_CONSTRAINT_ERROR('Duplicated hotel name', 'hotel name')
         }
         throw error;
     }
@@ -218,6 +223,9 @@ export async function updateHotelFreeCalendarDays(hotelId, maximun_free_calendar
     }
     if (!isValidInteger(maximun_free_calendar_days)) {
         throw new Error(`Non valid maximun_free_calendar_days provided`)
+    }
+    if (maximun_free_calendar_days > MAXIMUN_HOTEL_CALENDAR_LENGHT) {
+        throw new Error('Calendar days has to be less then the maximal calendar days posible: ' + MAXIMUN_HOTEL_CALENDAR_LENGHT);
     }
 
     try {

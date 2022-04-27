@@ -5,6 +5,8 @@
 
 import { isValidCurrnecy, isValidId, isValidPaymentType } from "./utils";
 
+
+export const MAXIMUN_HOTEL_CALENDAR_LENGHT = 90;
 /**
  * User Roles
  */
