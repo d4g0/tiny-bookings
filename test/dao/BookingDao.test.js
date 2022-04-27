@@ -174,9 +174,8 @@ describe(
                 expect(updatedBooking.id).toBe(booking.id);
                 expect(updatedBooking.booking_state).toBe(cancelState.id);
                 // bookings
-                expect(b_results.length).toBeDefined();
-                expect(b_results.length).toBeGreaterThan(0);
-                expect(b_count).toBeDefined();
+                expect(b_results.length).toBe(1);
+                expect(b_count).toBe(1);
             }
         )
 
