@@ -2,7 +2,7 @@ import { DB_UNIQUE_CONSTRAINT_ERROR_KEY } from "dao/Errors";
 import { createHotel, deleteHotelById } from "dao/HotelDao";
 import { v4 as uuid } from 'uuid';
 import { mapTimeToDateTime, randStr } from 'dao/utils';
-import { createRoom, deleteRoom, getRoomById, getRoomData, getRoomDataRaw, getRoomsData, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
+import { createRoom, deleteRoom, getRoomById, getRoomData, getRoomDataRaw, getRoomsAvailableIn, getRoomsData, updateARoomIsType, updateRoomCapacity, updateRoomName, updateRoomNightPrice, updateRoomNumberOfBeds } from "dao/room/RoomDao";
 import { createRoomType, deleteRoomTypeByType, updateRoomType } from "dao/room/RoomTypesDao";
 import { createARoomPicture, deleteARoomPicture } from "dao/room/RoomPicturesDao";
 import { createARoomIsAmenity, createRoomAmenity, deleteARoomIsAmenity, deleteRoomAmenity } from "dao/room/RoomAmenitiesDao";
@@ -19,12 +19,11 @@ describe(
                 customHotel = await createHotel({
                     hotel_name: uuid().substring(10),
                     maximun_free_calendar_days: 30,
-                    check_in_hour_time: mapTimeToDateTime({ hours: 13, mins: 30 }),
-                    check_out_hour_time: mapTimeToDateTime({ hours: 12, mins: 0 }),
+                    check_in_hour_time: { hours: 13, minutes: 30 },
+                    check_out_hour_time: { hours: 12, minutes: 0 },
                     minimal_prev_days_to_cancel: 5,
                     iana_time_zone: 'America/Lima'
                 });
-
 
 
             } catch (error) {
