@@ -308,6 +308,7 @@ export const resolvers = {
                         start_date_filter,
                         end_date_filter,
                         page,
+                        hotel_id,
                     } = args.input;
 
                     try {
@@ -316,6 +317,7 @@ export const resolvers = {
                             start_date_filter,
                             end_date_filter,
                             page,
+                            hotel_id
                         });
                         return result;
                     } catch (error) {
