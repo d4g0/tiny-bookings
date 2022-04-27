@@ -275,12 +275,14 @@ Define room_data query
 
 
 [important]
-set a maximun free calendar days and use in availability and room_locks search
+set a maximun free calendar days and use in availability and availability search
 to avoid potential errors when admins update the hotel calendar length
 
-set a hotel id filter in room_locks availability
+[done]
+set a hotel id filter in room_locks search
 
 set hotel id filter to getBookings
+getRooms
 
 
 [done]

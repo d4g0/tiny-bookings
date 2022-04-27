@@ -315,6 +315,7 @@ export const typeDefinitions = gql`
     start_date_filter:      DateObject!  
     end_date_filter:        DateObject!
     page:                   Int!
+    hotel_id:               Int!
   }
 
   input GetARoomIsLocksInput {

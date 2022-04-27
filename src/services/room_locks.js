@@ -46,11 +46,13 @@ export async function getRoomLocks({
     start_date_filter,
     end_date_filter,
     page,
+    hotel_id
 }) {
     return getRoomLocksDao({
         start_date_filter,
         end_date_filter,
         page,
+        hotel_id
     })
 }
 
