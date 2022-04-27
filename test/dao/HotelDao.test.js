@@ -10,7 +10,7 @@ import {
 } from "dao/HotelDao";
 import { createHotel as createHotelS, updateHotelTimeZone } from "~/services/hotel"
 const { createAdmin, deleteAdminById } = require("dao/users/AdminDao");
-const { mapTimeToDateTime, randStr } = require("dao/utils");
+const { mapTimeToDateTime, randStr, hourTimeToSQLTimeStr } = require("dao/utils");
 import { USER_ROLES } from '~/dao/DBConstans'
 import { NOT_FOUND_RECORD_ERROR_KEY } from "dao/Errors";
 import { v4 as uuid } from 'uuid';
@@ -92,12 +92,13 @@ describe(
 
                 var dbError = null, fooHotel, uHotel;
                 var NEW_NAME = randStr();
+                var NEW_IN_TIME = { hours: 3, minutes: 10 };
                 try {
                     fooHotel = await createHotel(hotelData);
                     // name
                     await updateHotelName(fooHotel.id, NEW_NAME);
                     // check_in_hour_time
-                    // await updateHotelCheckInTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
+                    await updateHotelCheckInTime(fooHotel.id, NEW_IN_TIME);
                     // check_out_hour_time
                     // await updateHotelCheckOutTime(fooHotel.id, mapTimeToDateTime({ hours: 3, minutes: 10 }));
                     // maximun_free_calendar_days
@@ -108,16 +109,23 @@ describe(
                     // await updateHotelTimeZone(fooHotel.id, 'America/Havana');
 
                     uHotel = await getHotelById(fooHotel.id);
+
+                    // console.log({ uHotel });
                     // clean
                     await deleteHotelById(fooHotel.id);
                 } catch (error) {
                     console.log(error)
                     dbError = error
                 }
-
+                ''.startsWith()
                 expect(uHotel.id).toBeDefined();
                 expect(dbError).toBe(null);
                 expect(uHotel.hotel_name).toBe(NEW_NAME);
+                expect(
+                    uHotel.check_in_hour_time.startsWith(
+                        hourTimeToSQLTimeStr(NEW_IN_TIME)
+                    ) // aditional seconds in incoming time string from postgres, im lazy to deal with it other wise
+                ).toBe(true);
             }
         )
 
