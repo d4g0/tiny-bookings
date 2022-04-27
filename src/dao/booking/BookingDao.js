@@ -292,9 +292,9 @@ export async function getBookingsByClient({
             from 
                 booking b
             where 
-                b.start_date > ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${utc_start_date_filter.toISOString()}
             and
-                b.start_date < ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${utc_end_date_filter.toISOString()}
             and 
                 b.client_id = ${client_id}
             ORDER BY b.start_date
@@ -307,9 +307,9 @@ export async function getBookingsByClient({
             from 
                 booking b
             where 
-                b.start_date > ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${utc_start_date_filter.toISOString()}
             and
-                b.start_date < ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${utc_end_date_filter.toISOString()}
             and 
                 b.client_id = ${client_id} ;
         `;
