@@ -180,9 +180,9 @@ export async function getPayments({
                 client_payments cp
             join booking b on (cp.booking_reference = b.id)
             where 
-                cp.effectuated_at < ${utc_end_date_filter.toISOString()}
+                cp.effectuated_at >= ${utc_start_date_filter.toISOString()}
             and 
-                cp.effectuated_at > ${utc_start_date_filter.toISOString()}
+                cp.effectuated_at <= ${utc_end_date_filter.toISOString()}
             and b.hotel_id = ${hotel_id}
         `;
 
