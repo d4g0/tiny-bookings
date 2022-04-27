@@ -191,6 +191,34 @@ export function isValidHourTime2({ hour = 0, minute = 0 }) {
     return !h_error && !m_error;
 }
 
+export function isValidHourTimeInput(hourTime = { hours: 0, minutes: 0 }) {
+    // hours from 0 to 23 and min from 0 to 59
+    // to avoid date recalculations
+
+    if (Number.isNaN(Number.parseInt(hourTime.hours))){
+        return false;
+    }
+    if (Number.isNaN(Number.parseInt(hourTime.minutes))){
+        return false;
+    }
+
+    const hourSchema = Joi.number().integer().min(0).max(23).required();
+    const minSchema = Joi.number().integer().min(0).max(59).required();
+
+    const { h_error, h_value } = hourSchema.validate(
+        hourTime.hours,
+        { presence: 'required', convert: false }
+    );
+    const { m_error, m_value } = minSchema.validate(
+        hourTime.minutes,
+        { presence: 'required', convert: false }
+    );
+
+
+
+    return !h_error && !m_error;
+}
+
 export function isValidTimeZone(iana_time_zone) {
     var tzSchema = Joi.string().trim().required();
     const { error, value } = tzSchema.validate(
@@ -471,4 +499,29 @@ export function mapDateToHourTime(date) {
 
 export function randStr(size = 4) {
     return uuid().substring(0, size)
+}
+
+
+export function hourTimeToSQLTimeStr({ hours, minutes }) {
+    var time = {
+        hours, minutes
+    }
+
+    // hour
+    if (hours < 10) {
+        time.hours = `0${hours}`
+    } else {
+        time.hours = `${hours}`
+    }
+
+    // minutes
+    if (minutes < 10) {
+        time.minutes = `0${minutes}`
+    } else {
+        time.minutes = `${minutes}`
+    }
+
+
+    return `${time.hours}:${time.minutes}`
+
 }
