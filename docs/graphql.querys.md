@@ -811,7 +811,6 @@ mutation createABookingAsAdmin($input: createBookingAsAdmin!){
     }, 
     "rooms_ids": [102],
     "hotel_id": 39,
-    "hotel_calendar_length": 90,
     "client_name": "Lolo ",
     "client_last_name": "Zanchez de la Concepcion",
     "total_price": 200,
