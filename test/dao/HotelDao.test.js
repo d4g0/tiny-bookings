@@ -94,6 +94,7 @@ describe(
                 var NEW_NAME = randStr();
                 var NEW_IN_TIME = { hours: 3, minutes: 10 };
                 var NEW_OUT_TIME = { hours: 10, minutes: 10 };
+                var NEW_DAYS = 10;
                 try {
                     fooHotel = await createHotel(hotelData);
                     // name
@@ -103,7 +104,7 @@ describe(
                     // check_out_hour_time
                     await updateHotelCheckOutTime(fooHotel.id, NEW_OUT_TIME);
                     // maximun_free_calendar_days
-                    // await updateHotelFreeCalendarDays(fooHotel.id, 90);
+                    await updateHotelFreeCalendarDays(fooHotel.id, NEW_DAYS);
                     // minimal_prev_days_to_cancel
                     // await updateHotelDaysToCancel(fooHotel.id, 10);
                     // iana_time_zone
@@ -111,7 +112,7 @@ describe(
 
                     uHotel = await getHotelById(fooHotel.id);
 
-                    // console.log({ uHotel });
+                    console.log({ uHotel });
                     // clean
                     await deleteHotelById(fooHotel.id);
                 } catch (error) {
@@ -132,6 +133,8 @@ describe(
                         hourTimeToSQLTimeStr(NEW_OUT_TIME)
                     ) // aditional seconds in incoming time string from postgres, im lazy to deal with it other wise
                 ).toBe(true);
+                expect(uHotel.maximun_free_calendar_days).toBe(NEW_DAYS);
+
             }
         )
 

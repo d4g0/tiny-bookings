@@ -222,16 +222,12 @@ export async function updateHotelFreeCalendarDays(hotelId, maximun_free_calendar
     }
 
     try {
-        var updatedRes = await prisma.hotel.update({
-            where: {
-                id: hotelId
-            },
-            data: {
-                maximun_free_calendar_days
-            }
-        })
+        var uRes = await sql`
+            update hotel set maximun_free_calendar_days = ${maximun_free_calendar_days} where hotel.id = ${hotelId} returning *
+        `;
 
-        return mapHotelResToHotel(updatedRes);
+        var hotel = uRes.length > 0 ? uRes[0] : null;
+        return hotel;
     } catch (error) {
         throw error;
     }
