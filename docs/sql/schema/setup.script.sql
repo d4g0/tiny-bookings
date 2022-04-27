@@ -474,7 +474,7 @@ BEGIN
 for temp_room in 
         select * from room 
         where room.hotel_id = hotel_id_filter
-        order by room.id
+        order by room.capacity
 LOOP
 IF ( select is_available
         from is_room_available_in(
