@@ -864,6 +864,7 @@ query getBookings($input: GetBookingsInput!){
 
 {
   "input": {
+    "hotel_id": 1,
     "start_date_filter": {
       "year": 2022,
       "month": 1,

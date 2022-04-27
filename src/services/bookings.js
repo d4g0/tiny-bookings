@@ -313,10 +313,12 @@ export async function getBookings({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
+    hotel_id
 }){
     return getBookingsDao({
         start_date_filter,
         end_date_filter,
-        page
+        page,
+        hotel_id
     })
 }

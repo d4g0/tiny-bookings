@@ -337,13 +337,15 @@ export const resolvers = {
                         start_date_filter,
                         end_date_filter,
                         page,
+                        hotel_id
                     } = args.input;
                     try {
 
                         var { results, count } = await getBookings({
                             start_date_filter,
                             end_date_filter,
-                            page
+                            page,
+                            hotel_id
                         });
 
                         return {

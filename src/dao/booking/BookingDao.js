@@ -223,6 +223,7 @@ export async function getBookings({
                 b.start_date > ${utc_start_date_filter.toISOString()}
             and
                 b.start_date < ${utc_end_date_filter.toISOString()}
+            and b.hotel_id = ${hotel_id}
         `;
 
         // map numeric goted string to number
