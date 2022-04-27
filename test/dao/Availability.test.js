@@ -116,11 +116,13 @@ describe(
             var hotel = await createHotel({
                 hotel_name: randStr(10),
                 maximun_free_calendar_days: clanedar_length,
-                check_in_hour_time: { hours: 10, mins: 0 },
-                check_out_hour_time: { hours: 10, mins: 0 },
+                check_in_hour_time: { hours: 10, minutes: 0 },
+                check_out_hour_time: { hours: 10, minutes: 0 },
                 iana_time_zone: 'America/Havana',
                 minimal_prev_days_to_cancel: 5
             })
+
+            console.log({ hotel });
 
             // room 1
             var room1 = await createRoom({
