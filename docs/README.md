@@ -266,10 +266,21 @@ Define room_data query
         -   [done] update pending graphql.query anotations
 -   Define sql function `get_rooms_available_in` for costumers availablitiy search
 -   iterate old room methods to drop prisma and use postgres.js to use this new sql functions enhances instead 
+-   -----------------------
+-   done 27 april 2:20
+-   refactor hotel dao test and graphql [done]
+-   refactor roomdao + test + graphql [done]
+-   getRoomsAailable roomdao [done]
+-   ---------------
 
 
+[important]
+set a maximun free calendar days and use in availability and room_locks search
+to avoid potential errors when admins update the hotel calendar length
 
+set a hotel id filter in room_locks availability
 
+set hotel id filter to getBookings
 
 
 [done]
