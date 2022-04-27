@@ -96,6 +96,7 @@ describe(
                 var NEW_OUT_TIME = { hours: 10, minutes: 10 };
                 var NEW_DAYS = 10;
                 var NEW_CANCEL_DAYS = 10;
+                var NEW_TZ = 'UTC';
                 try {
                     fooHotel = await createHotel(hotelData);
                     // name
@@ -109,7 +110,7 @@ describe(
                     // minimal_prev_days_to_cancel
                     await updateHotelDaysToCancel(fooHotel.id, NEW_CANCEL_DAYS);
                     // iana_time_zone
-                    // await updateHotelTimeZone(fooHotel.id, 'America/Havana');
+                    await updateHotelTimeZone(fooHotel.id, NEW_TZ);
 
                     uHotel = await getHotelById(fooHotel.id);
 
@@ -136,6 +137,7 @@ describe(
                 ).toBe(true);
                 expect(uHotel.maximun_free_calendar_days).toBe(NEW_DAYS);
                 expect(uHotel.minimal_prev_days_to_cancel).toBe(NEW_CANCEL_DAYS);
+                expect(uHotel.iana_time_zone).toBe(NEW_TZ);
 
             }
         )

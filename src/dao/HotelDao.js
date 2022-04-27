@@ -1,6 +1,5 @@
 import sql from 'db/postgres'
-import { prisma } from 'db/PrismaClient.js'
-import { DB_UNIQUE_CONSTRAINT_ERROR, NOT_FOUND_RECORD_ERROR } from './Errors'
+import { DB_UNIQUE_CONSTRAINT_ERROR } from './Errors'
 import { hourTimeToSQLTimeStr, isValidHotelName, isValidHourTime, isValidHourTimeInput, isValidId, isValidInteger, isValidTimeZone } from './utils'
 
 
@@ -196,7 +195,7 @@ export async function updateHotelCheckOutTime(hotelId, check_out_hour_time) {
     if (!isValidHourTime(check_out_hour_time)) {
         throw new Error(`Non valid check_out_hour_time provided`)
     }
-    
+
     check_out_hour_time = hourTimeToSQLTimeStr(check_out_hour_time);
     try {
         var uRes = await sql`
@@ -267,39 +266,13 @@ export async function updateHotelTimeZone(hotelId, iana_time_zone) {
     }
 
     try {
-        var updatedRes = await prisma.hotel.update({
-            where: {
-                id: hotelId
-            },
-            data: {
-                iana_time_zone
-            }
-        })
+        var uRes = await sql`
+            update hotel set iana_time_zone = ${iana_time_zone} where hotel.id = ${hotelId} returning *
+        `;
 
-        return mapHotelResToHotel(updatedRes);
+        var hotel = uRes.length > 0 ? uRes[0] : null;
+        return hotel;
     } catch (error) {
         throw error;
-    }
-}
-
-
-
-export function mapHotelResToHotel({
-    id,
-    hotel_name,
-    maximun_free_calendar_days,
-    minimal_prev_days_to_cancel,
-    check_in_hour_time,
-    check_out_hour_time,
-    iana_time_zone,
-}) {
-    return {
-        id,
-        hotel_name,
-        maximun_free_calendar_days,
-        minimal_prev_days_to_cancel,
-        check_in_hour_time: check_in_hour_time.toUTCString(),
-        check_out_hour_time: check_out_hour_time.toUTCString(),
-        iana_time_zone
     }
 }
