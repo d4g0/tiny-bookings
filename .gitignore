@@ -2,3 +2,4 @@
 node_modules/
 docs/test.data.md
 dist/
+public/img/**
