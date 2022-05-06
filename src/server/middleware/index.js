@@ -74,3 +74,16 @@ export function auth(req, res, next) {
 
 
 }
+
+export function quickLogger(req, res, next) {
+    // operationName: 'IntrospectionQuery'
+    if(req.body['operationName'] =='IntrospectionQuery' ){
+        return next();
+    }
+    var now = new Date().toISOString().slice(0, -5);
+    console.log('-------------------');
+    console.log(now)
+    console.log(req.body);
+    console.log('-------------------');
+    next();
+}
