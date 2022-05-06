@@ -2,10 +2,12 @@ const API_PORT = process.env.API_PORT || 3010;
 import Express from 'express';
 const app = Express();
 import router from '~/server/router';
-import { apiRateLimiter } from '~/server/middleware/index.js';
+import { apiRateLimiter, quickLogger } from '~/server/middleware/index.js';
 import helmet from 'helmet';
 import graphqlServer from '~/server/graphql'
 import expressPlayground from 'graphql-playground-middleware-express';
+
+
 
 // app settings 
 // behind proxy setting
@@ -15,6 +17,10 @@ if (process.env.NODE_ENV == 'production') {
     app.use(apiRateLimiter, helmet());
 }
 app.use(Express.json());
+// quick logger
+// TODO Remove for production
+app.use(quickLogger)
+
 // api routes
 app.use('/api/', router);
 
@@ -37,6 +43,6 @@ export function spinUpServer() {
     server = app.listen(API_PORT, () => { console.log('app listening at port:' + API_PORT) })
 }
 
-export  async function closeServer() {
+export async function closeServer() {
     return server.close();
 }
