@@ -27,7 +27,7 @@ app.use('/api/', router);
 // cors
 var allowedOrigins = mapLineToArray(process.env.API_ALLOWED_DOMAINS, ',');
 
-app.options('/graphql', cors({origin: allowedOrigins}));
+app.options('/graphql', cors({ origin: allowedOrigins }));
 // graphql
 async function setupGraphQl() {
     await graphqlServer.start();
