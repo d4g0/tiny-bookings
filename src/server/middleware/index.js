@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
  * The limiter middleware
  */
 export const apiRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100
+    windowMs: 60 * 60 * 1000, // 60 minutes
+    max: 1000
 });
 
 
