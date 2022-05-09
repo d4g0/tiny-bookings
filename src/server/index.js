@@ -6,8 +6,8 @@ import { apiRateLimiter, quickLogger } from '~/server/middleware/index.js';
 import helmet from 'helmet';
 import graphqlServer from '~/server/graphql'
 import expressPlayground from 'graphql-playground-middleware-express';
-
-
+import cors from 'cors';
+import { mapLineToArray } from 'utils';
 
 // app settings 
 // behind proxy setting
@@ -24,6 +24,10 @@ app.use(quickLogger)
 // api routes
 app.use('/api/', router);
 
+// cors
+var allowedOrigins = mapLineToArray(process.env.API_ALLOWED_DOMAINS, ',');
+
+app.options('/graphql', cors({origin: allowedOrigins}));
 // graphql
 async function setupGraphQl() {
     await graphqlServer.start();
