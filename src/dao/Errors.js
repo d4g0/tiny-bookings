@@ -52,8 +52,18 @@ export class FORGEIN_KEY_ERROR extends Error {
 
 export const AVAILABILITY_ERROR_KEY = 'NOT AVAILABLE IN THIS DATE RANGE';
 export class AVAILABILITY_ERROR extends Error {
-    constructor(message){
+    constructor(message) {
         super(message);
         this.code = AVAILABILITY_ERROR_KEY
+    }
+}
+
+
+export const VALIATION_ERROR_KEY = "NON VALID ARGUMENT";
+export class VALIATION_ERROR extends Error {
+    constructor(message, target = '') {
+        super(message);
+        this.code = VALIATION_ERROR_KEY;
+        this.target = target;
     }
 }

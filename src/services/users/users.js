@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
+import { NOT_FOUND_RECORD_ERROR, VALIATION_ERROR } from "dao/Errors";
 import { getClientByEmail } from "dao/users/ClientDao";
 import { isValidEmail, isValidPassword } from "dao/utils";
 import { getAdminByEmailService } from "./admin";
@@ -9,7 +9,7 @@ export async function getUserByEmailPassword(email, password) {
 
         // validaion
         if (!isValidEmail(email)) {
-            var error = new Error('Non Valid Email Arg');
+            var error = new VALIATION_ERROR('Non Valid Email Arg', 'email');
             // error.code = 544;
             throw error;
         }
