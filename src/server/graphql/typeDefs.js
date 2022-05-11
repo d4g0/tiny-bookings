@@ -67,14 +67,6 @@ export const typeDefinitions = gql`
     password:           String!
   }
 
-  union User = Admin | Client
-
-  type Auth {
-    user:               User!
-    token:              String!
-    token_created_at:   String!
-  }
-
   type ClientAuth {
     client:             Client!
     token:              String!
@@ -453,7 +445,6 @@ export const typeDefinitions = gql`
   ##
   type Query {
     # login
-    login(input: loginInput!): Auth!
     loginAsAdmin(input: loginInput!): AdminAuth!
     loginAsClient(input: loginInput!): ClientAuth!
     # admin
@@ -533,7 +524,7 @@ export const typeDefinitions = gql`
     createBookingAsAdmin(input: createBookingAsAdmin!): Booking!
     cancelBooking(bookingId: Int!): Booking!
     # singup
-    singUp(input: SingUpInput!): Auth!
+    singUp(input: SingUpInput!): ClientAuth!
     
   }
 

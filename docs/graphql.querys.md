@@ -50,11 +50,11 @@
   - [cancelABooking](#cancelabooking)
   - [Get Bookings](#get-bookings)
   - [Get Bookings As Client](#get-bookings-as-client)
-  - [SingUp](#singup)
   - [Get Client for admin](#get-client-for-admin)
   - [Get Clients](#get-clients)
   - [Clients](#clients)
     - [Login as Client](#login-as-client)
+    - [SingUp](#singup)
 
 
 
@@ -1003,40 +1003,7 @@ query getClientBookings($input: GetBookingsInput!){
 }
 ```
 
-## SingUp
 
-```graphql
-mutation SingUp($input: SingUpInput!){
-  singUp(input:$input){
-    user{
-      __typename
-      ... on Client{
-          id
-          user_role
-          client_name
-					client_last_name
-          email
-          created_at
-        }
-    }
-    token
-    token_created_at
-  }
-}
-
-{
-  "input": {
-  	 "client_name": "casidy4",
-    "client_last_name": "valdez",
-    "password": "supper-foo-pass",
-    "email": "casidy4@gmail.com"
-  }
-}
-# header
-{
-  "X-Captcha": "captcha response token"
-}
-```
 
 ## Get Client for admin
 ```graphql
@@ -1111,5 +1078,39 @@ query loginAsClient($input: loginInput! ){
 	"email": "lafy@gmail.com",
   "password": "supper-foo-pass"
   }
+}
+```
+
+### SingUp
+
+```graphql
+mutation SingUp($input: SingUpInput!){
+  singUp(input:$input){
+    client{
+          id
+          user_role
+          client_name
+					client_last_name
+          email
+          created_at
+    }
+    token
+    token_created_at
+  }
+}
+
+
+
+{
+  "input": {
+  	 "client_name": "casidy4",
+    "client_last_name": "valdez",
+    "password": "supper-foo-pass",
+    "email": "casidy4@gmail.com"
+  }
+}
+# header
+{
+  "X-Captcha": "captcha response token"
 }
 ```

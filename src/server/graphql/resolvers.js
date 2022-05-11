@@ -48,7 +48,6 @@ import { getCurrencies } from "dao/currencies/CurrencyDao";
 import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
-import { getUserByEmailPassword } from "services/users/users";
 import { getClientByEmailPassword, singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
 import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
@@ -58,42 +57,6 @@ export const resolvers = {
 
 
     Query: {
-
-        // ---------------
-        // Login 
-        // ---------------
-        async login(root, args, ctx) {
-
-            var Auth = {
-                user: null,
-                token: null,
-                token_created_at: null,
-            }
-
-
-            var { email, password } = args.input;
-            try {
-
-
-                var user = await getUserByEmailPassword(email, password);
-                // getUserByEmailPassword throws if not found, so
-                // if we are here we have a user
-
-                Auth.user = user;
-
-                var token = ctx.createUserToken({
-                    id: user.id,
-                    user_role: user.user_role
-                });
-
-                Auth.token = token;
-                Auth.token_created_at = new Date().toISOString();
-
-                return Auth;
-            } catch (error) {
-                throw error
-            }
-        },
 
         async loginAsAdmin(root, args, ctx) {
 
@@ -109,7 +72,6 @@ export const resolvers = {
 
 
                 var admin = await getAdminByEmailPassword(email, password);
-                // getUserByEmailPassword throws if not found, so
                 // if we are here we have a user
 
                 Auth.admin = admin;
@@ -142,7 +104,6 @@ export const resolvers = {
 
 
                 var client = await getClientByEmailPassword(email, password);
-                // getUserByEmailPassword throws if not found, so
                 // if we are here we have a user
 
                 Auth.client = client;
@@ -1193,7 +1154,7 @@ export const resolvers = {
 
 
             var Auth = {
-                user: null,
+                client: null,
                 token: null,
                 token_created_at: null,
             }
@@ -1233,7 +1194,7 @@ export const resolvers = {
 
                 var now = new Date().toISOString();
 
-                Auth.user = client;
+                Auth.client = client;
                 Auth.token = token;
                 Auth.token_created_at = now;
 
@@ -1246,24 +1207,5 @@ export const resolvers = {
         }
 
     },
-    // Root Types
-    User: {
-        async __resolveType(obj, ctx, info) {
-            if (obj.user_role) {
-
-                if (
-                    obj.user_role == USER_ROLES.FULL_ADMIN.user_role
-                    || obj.user_role == USER_ROLES.BASIC_ADMIN.user_role
-                ) {
-                    return 'Admin';
-                }
-
-                if (obj.user_role == USER_ROLES.CLIENT.user_role) {
-                    return 'Client';
-                }
-
-                return null;
-            }
-        },
-    },
+    
 };
