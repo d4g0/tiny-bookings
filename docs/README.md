@@ -219,13 +219,15 @@
   - (graphql) start :42 done :49
 - list clients
   - dao + graphql done at 15:15
-
+  - 
+- [✅]
+  - login (admin specific) completed 11 may 19:20
 
 
 ##### `client`
 - []
 - clients
-  -   login
+  -   login (client specific)
       -   dao 
           -   getClientByEmail done (+admin resolvers refactor) 22 april 1:21
       - graphql (big refactor plus admin) done ~ 2:30
@@ -250,6 +252,8 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 
 **Hot Sopt Tasks:**
+Investigate and set up a correct rate limit
+
 
 getAvailability [done] april 27 19:47
 

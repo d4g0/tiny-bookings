@@ -1,9 +1,9 @@
 import { MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from "dao/DBConstans";
-import { mapTimeToDateTime } from "dao/utils";
 import {
     createAdminService,
     getAdminsService,
-    deleteAdminById
+    deleteAdminById,
+    getAdminByEmailPassword
 } from "services/users/admin";
 import xss from "xss";
 import { authenticated, authorized } from "./auth";
@@ -84,6 +84,39 @@ export const resolvers = {
                 var token = ctx.createUserToken({
                     id: user.id,
                     user_role: user.user_role
+                });
+
+                Auth.token = token;
+                Auth.token_created_at = new Date().toISOString();
+
+                return Auth;
+            } catch (error) {
+                throw error
+            }
+        },
+
+        async loginAsAdmin(root, args, ctx) {
+
+            var Auth = {
+                admin: null,
+                token: null,
+                token_created_at: null,
+            }
+
+
+            var { email, password } = args.input;
+            try {
+
+
+                var admin = await getAdminByEmailPassword(email, password);
+                // getUserByEmailPassword throws if not found, so
+                // if we are here we have a user
+
+                Auth.admin = admin;
+
+                var token = ctx.createUserToken({
+                    id: admin.id,
+                    user_role: admin.user_role
                 });
 
                 Auth.token = token;

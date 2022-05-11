@@ -2,6 +2,7 @@
 - [GraphQL API Querys](#graphql-api-querys)
   - [Login](#login)
   - [Admins](#admins)
+    - [Login as Admin](#login-as-admin)
     - [Get Admins](#get-admins)
     - [Create Admin](#create-admin)
     - [Delete admin](#delete-admin)
@@ -91,6 +92,33 @@ variables:{
 
 ## Admins
 
+
+### Login as Admin
+```graphql
+query loginAsAdmin($input: loginInput! ){
+  loginAsAdmin(input:$input){  
+     admin{ 
+        	id
+      		user_role
+       		email
+        	admin_name
+        	admin_description   		
+        	created_at       
+      },
+      token
+      token_created_at
+  }
+}
+
+#variables
+{
+  "input": {
+	"email": "dago@gmail.com",
+  "password": "supper-foo-pass"
+  }
+}
+
+```
 ### Get Admins
 ```graphql
 query admins{

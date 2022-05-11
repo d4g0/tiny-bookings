@@ -9,7 +9,7 @@ import {
     isValidId,
 } from "dao/utils";
 import bcrypt from "bcryptjs";
-import { NOT_FOUND_RECORD_ERROR } from "dao/Errors";
+import { NOT_FOUND_RECORD_ERROR, VALIATION_ERROR } from "dao/Errors";
 
 
 /**
@@ -113,46 +113,6 @@ export async function getAdminByEmailService(adminEmail) {
 
 
 
-// Returns a user if found a match
-export async function getAdminByEmailPassword(email, password) {
-    try {
-
-        // validaion
-        if (!isValidEmail(email)) {
-            var error = new Error('Non Valid Email Arg');
-            // error.code = 544;
-            throw error;
-        }
-
-        if (!isValidPassword(password)) {
-            throw new Error(`$password arg is not a valid password`);
-        }
-
-
-        // admin oulet
-        var admin;
-        // get admin if any
-        // if not any will throw a not-found-error
-        var admin = await getAdminByEmail(email);
-
-
-        // check if match
-        const passwordsMatch = await bcrypt.compare(password, admin.hash_password);
-        if (passwordsMatch) {
-            return admin;
-        }
-        if (!passwordsMatch) {
-            // maybe a user was found
-            // but we are choosing not 
-            // bubble up this info to potential 
-            // atakers so we throw a not-found-error
-            throw new NOT_FOUND_RECORD_ERROR('Admin not found')
-        }
-
-    } catch (error) {
-        throw error
-    }
-}
 
 
 export async function getAdminsService() {
@@ -161,4 +121,46 @@ export async function getAdminsService() {
 
 export async function deleteAdminById(id) {
     return delAdminByIdDao(id);
+}
+
+
+export async function getAdminByEmailPassword(email, password) {
+    try {
+
+        // validaion
+        if (!isValidEmail(email)) {
+            var error = new VALIATION_ERROR('Non Valid Email Arg', 'email');
+            // error.code = 544;
+            throw error;
+        }
+
+        if (!isValidPassword(password)) {
+            throw new Error(`$password arg is not a valid password`);
+        }
+
+        // case admin (they loguin mostly and are just a few)
+        // admin oulet
+        var admin;
+        // get admin if any
+        // if not any will throw a not-found-error
+        var admin = await getAdminByEmailService(email);
+
+
+        if (!admin) {
+            // if found and pass dont match do not bubble up that sensitive info
+            throw new NOT_FOUND_RECORD_ERROR('User not found');
+        }
+
+        // check if match
+        const passwordsMatch = await bcrypt.compare(password, admin.hash_password);
+        if (!passwordsMatch) {
+            throw new NOT_FOUND_RECORD_ERROR('User not found');
+        }
+
+        return admin;
+
+
+    } catch (error) {
+        throw error
+    }
 }
