@@ -49,7 +49,7 @@ import { getPayments } from "dao/payments/PaymentsDao";
 import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
 import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
 import { getUserByEmailPassword } from "services/users/users";
-import { singUp as singUpClient } from "services/users/clients";
+import { getClientByEmailPassword, singUp as singUpClient } from "services/users/clients";
 import { AuthenticationError } from "apollo-server-core";
 import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
 import { getRoomsAvailableIn } from "dao/room/RoomDao";
@@ -117,6 +117,39 @@ export const resolvers = {
                 var token = ctx.createUserToken({
                     id: admin.id,
                     user_role: admin.user_role
+                });
+
+                Auth.token = token;
+                Auth.token_created_at = new Date().toISOString();
+
+                return Auth;
+            } catch (error) {
+                throw error
+            }
+        },
+
+        async loginAsClient(root, args, ctx) {
+
+            var Auth = {
+                client: null,
+                token: null,
+                token_created_at: null,
+            }
+
+
+            var { email, password } = args.input;
+            try {
+
+
+                var client = await getClientByEmailPassword(email, password);
+                // getUserByEmailPassword throws if not found, so
+                // if we are here we have a user
+
+                Auth.client = client;
+
+                var token = ctx.createUserToken({
+                    id: client.id,
+                    user_role: client.user_role
                 });
 
                 Auth.token = token;

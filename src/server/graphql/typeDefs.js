@@ -76,7 +76,7 @@ export const typeDefinitions = gql`
   }
 
   type ClientAuth {
-    user:               Client!
+    client:             Client!
     token:              String!
     token_created_at:   String!
   }
@@ -455,6 +455,7 @@ export const typeDefinitions = gql`
     # login
     login(input: loginInput!): Auth!
     loginAsAdmin(input: loginInput!): AdminAuth!
+    loginAsClient(input: loginInput!): ClientAuth!
     # admin
     admins: [Admin]!
     # hotel

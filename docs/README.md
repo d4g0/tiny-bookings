@@ -227,10 +227,11 @@
 ##### `client`
 - []
 - clients
-  -   login (client specific)
+  -   login 
       -   dao 
           -   getClientByEmail done (+admin resolvers refactor) 22 april 1:21
       - graphql (big refactor plus admin) done ~ 2:30
+      - iteration (client specific) [done] 19:30
   -   list bookings of a client
       -   (dao) all ready done
       -   (graphql) all ready done

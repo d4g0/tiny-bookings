@@ -53,6 +53,12 @@
   - [SingUp](#singup)
   - [Get Client for admin](#get-client-for-admin)
   - [Get Clients](#get-clients)
+  - [Clients](#clients)
+    - [Login as Client](#login-as-client)
+
+
+
+
 
 ## Login
 
@@ -1077,6 +1083,33 @@ query getClients($input: PaginationInput!){
       "minute": 0
     },
     "page": 1
+  }
+}
+```
+
+## Clients
+
+### Login as Client
+```graphql
+query loginAsClient($input: loginInput! ){
+  loginAsClient(input:$input){  
+     client{ 
+        	id
+      		user_role
+       		email
+        	client_name
+          client_last_name
+          created_at
+      },
+      token
+      token_created_at
+  }
+}
+
+{
+  "input": {
+	"email": "lafy@gmail.com",
+  "password": "supper-foo-pass"
   }
 }
 ```
