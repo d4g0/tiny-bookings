@@ -92,10 +92,10 @@ export async function createUserClient({
 }) {
 
     // validation
-    if (!isValidUserName(client_name)) {
+    if (!isValidClientName(client_name)) {
         throw new Error('Non valid client name')
     }
-    if (!isValidUserName(client_last_name)) {
+    if (!isValidClientName(client_last_name)) {
         throw new Error('Non valid client last name')
     }
     if (!isValidString(hash_password)) {
