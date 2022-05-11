@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { createUserClient } from "dao/users/ClientDao";
-import { isValidEmail, isValidPassword, isValidUserName } from "dao/utils";
+import { isValidClientName, isValidEmail, isValidPassword, isValidUserName } from "dao/utils";
 
 export async function singUp({
     client_name,
@@ -9,10 +9,10 @@ export async function singUp({
     email,
 }) {
     // validation
-    if (!isValidUserName(client_name)) {
+    if (!isValidClientName(client_name)) {
         throw new Error('Non valid client name')
     }
-    if (!isValidUserName(client_last_name)) {
+    if (!isValidClientName(client_last_name)) {
         throw new Error('Non valid client last name')
     }
     if (!isValidPassword(password)) {
