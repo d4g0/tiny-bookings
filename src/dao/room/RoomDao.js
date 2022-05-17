@@ -4,7 +4,7 @@
 
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { prisma } from 'db/PrismaClient.js';
-import { isValidDateInput, isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName, utcDate } from "dao/utils";
+import { isValidDateInput, isValidDateString, isValidId, isValidInteger, isValidPositiveInteger, isValidPrice, isValidRoomName, utcDate } from "dao/utils";
 import sql from "db/postgres";
 
 
@@ -464,28 +464,19 @@ export async function getRoomDataRaw(room_id) {
     }
 }
 
+// 
+
+
 /**
  * Returns the room_data
  * of all available rooms
  * in the searched dates range
  */
-export async function getRoomsAvailableIn({
+ export async function getRoomsAvailableIn({
     hotel_id,
     hotel_calendar_length,
-    start_date = {
-        year,
-        month,
-        day,
-        hour,
-        minute
-    },
-    end_date = {
-        year,
-        month,
-        day,
-        hour,
-        minute
-    }
+    start_date = '',
+    end_date = ''
 }){
 
     // validation
@@ -495,34 +486,20 @@ export async function getRoomsAvailableIn({
     if(!isValidPositiveInteger(hotel_calendar_length)){
         throw new Error('Non valid hotel_calendar_length');
     }
-    if(!isValidDateInput(start_date)){
+    if(!isValidDateString(start_date)){
         throw new Error('Non valid start_date');
     }
-    if(!isValidDateInput(end_date)){
+    if(!isValidDateString(end_date)){
         throw new Error('Non valid end_date');
     }
 
 
-    var utc_start_date = utcDate({
-        year: start_date.year,
-        month: start_date.month,
-        day: start_date.day,
-        hour: start_date.hour,
-        minute: start_date.minute
-    });
-
-    var utc_end_date = utcDate({
-        year: end_date.year,
-        month: end_date.month,
-        day: end_date.day,
-        hour: end_date.hour,
-        minute: end_date.minute
-    });
+    
 
 
     try {
 
-        const query_range = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
+        const query_range = `[${start_date}, ${end_date}]`;
         
         var roomsDataRes = await sql`
             select 
@@ -540,3 +517,87 @@ export async function getRoomsAvailableIn({
         throw error;
     }
 }
+
+
+
+// old aproach with dates as obj
+// bad for different time zone managment wire up with fronts
+// better parsing a utc string yoo that's the way js Date works
+
+
+/**
+//  * Returns the room_data
+//  * of all available rooms
+//  * in the searched dates range
+//  */
+// export async function getRoomsAvailableIn({
+//     hotel_id,
+//     hotel_calendar_length,
+//     start_date = {
+//         year,
+//         month,
+//         day,
+//         hour,
+//         minute
+//     },
+//     end_date = {
+//         year,
+//         month,
+//         day,
+//         hour,
+//         minute
+//     }
+// }){
+
+//     // validation
+//     if(!isValidId(hotel_id)){
+//         throw new Error('Non valid hotel_id')
+//     }
+//     if(!isValidPositiveInteger(hotel_calendar_length)){
+//         throw new Error('Non valid hotel_calendar_length');
+//     }
+//     if(!isValidDateInput(start_date)){
+//         throw new Error('Non valid start_date');
+//     }
+//     if(!isValidDateInput(end_date)){
+//         throw new Error('Non valid end_date');
+//     }
+
+
+//     var utc_start_date = utcDate({
+//         year: start_date.year,
+//         month: start_date.month,
+//         day: start_date.day,
+//         hour: start_date.hour,
+//         minute: start_date.minute
+//     });
+
+//     var utc_end_date = utcDate({
+//         year: end_date.year,
+//         month: end_date.month,
+//         day: end_date.day,
+//         hour: end_date.hour,
+//         minute: end_date.minute
+//     });
+
+
+//     try {
+
+//         const query_range = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
+        
+//         var roomsDataRes = await sql`
+//             select 
+//                 * 
+//             from get_rooms_available_in(
+//                 ${hotel_id}, 
+//                 ${hotel_calendar_length}, 
+//                 ${query_range}
+//             );
+//         `;
+
+//         var rooms = roomsDataRes.map(rd => mapRawRoomDataToRoom(rd));
+//         return rooms;
+//     } catch (error) {
+//         throw error;
+//     }
+// }

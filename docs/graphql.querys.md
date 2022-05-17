@@ -614,20 +614,8 @@ query getRoomsAvailableIn($input:getRoomsAvailableInput!){
 {
   "input": {
     "hotel_id": 1,
-    "start_date": {
-      "year": 2022,
-      "month": 4,
-      "day": 10,
-      "hour": 10,
-      "minute": 0
-    },
-    "end_date": {
-      "year": 2022,
-      "month": 4,
-      "day": 12,
-      "hour": 10,
-      "minute": 0
-    }
+    "start_date": "2022-05-10T10:00:00.000Z",
+    "end_date": "2022-07-12T10:10:00.000Z"
   }
 }
 ```

@@ -367,6 +367,14 @@ export function isValidDateObject(date) {
 }
 
 
+export function isValidDateString(str) {
+    if(typeof str != 'string'){
+        return false;
+    }
+
+    return new Date(str).toString() != 'Invalid Date';
+}
+
 export function isValidDateInput(dInput = { year, month, day, hour, minute }) {
     var yearSchema = Joi.number().integer().min(2000).max(3000);
     var monthSchema = Joi.number().integer().min(0).max(11);

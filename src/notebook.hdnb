@@ -1,0 +1,19 @@
+```js
+const { DateTime, Settings } = require('luxon');
+Settings.defaultZone = 'utc'
+
+const sample_obj = {
+    "year": 2022,
+    "month": 5,
+    "day": 10,
+    "hour": 10,
+    "minute": 0
+}
+
+function isoFromObj(obj) {
+    return DateTime.fromObject(obj).toISO()
+}
+
+const a1 = isoFromObj(sample_obj);
+console.log(a1)
+```

@@ -435,8 +435,8 @@ export const typeDefinitions = gql`
   # Availability
   input getRoomsAvailableInput {
     hotel_id:               Int!
-    start_date:             DateObject!
-    end_date:               DateObject!
+    start_date:             String!
+    end_date:               String!
   }
 
 
@@ -479,6 +479,7 @@ export const typeDefinitions = gql`
     # get clients
     getClients(input:PaginationInput!): ClientResult!
     # availability
+    # getRoomsAvailable(input: getRoomsAvailableInput!): [Room]!
     getRoomsAvailable(input: getRoomsAvailableInput!): [Room]!
   }
 
