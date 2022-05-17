@@ -479,7 +479,6 @@ export const typeDefinitions = gql`
     # get clients
     getClients(input:PaginationInput!): ClientResult!
     # availability
-    # getRoomsAvailable(input: getRoomsAvailableInput!): [Room]!
     getRoomsAvailable(input: getRoomsAvailableInput!): [Room]!
   }
 
