@@ -224,11 +224,11 @@
    - (dao) create client  done 2:16
    - (service) done 2:43
    - (graphql) done 4:50
--  [] get booking offers start 20:31
-   -  get available rooms in date range
+-  [x] get booking offers start 20:31
+   -  [x] get available rooms in date range
       - getAvailability 
         - sql table, function, dao, test, graphql [done] april 27 19:47
-        - [] refactor to use date strings for instead obj in args start 17 may 15:57
+        - [x] refactor to use date strings for instead obj in args start 17 may 15:57 - 16:20
 
 
 Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation
