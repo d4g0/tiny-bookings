@@ -1,6 +1,5 @@
 # GraphQL API Querys
 - [GraphQL API Querys](#graphql-api-querys)
-  - [Login](#login)
   - [Admins](#admins)
     - [Login as Admin](#login-as-admin)
     - [Get Admins](#get-admins)
@@ -59,42 +58,6 @@
 
 
 
-
-## Login
-
-```graphql
-query login($input: loginInput! ){
-  login(input:$input){  
-     user{
-        __typename
-        ... on Admin{
-        	id
-        	admin_name,
-        	admin_description,
-          user_role
-        	created_at
-        }
-        ... on Client{
-          id
-          user_role
-          client_name
-					client_last_name
-          created_at	
-        }
-        
-      },
-      token
-      token_created_at
-  }
-}
-
-variables:{
-  "input": {
-	"email": "dago@gmail.com",
-  "password": "supper-foo-pass"
-  }
-}
-```
 
 ## Admins
 
@@ -209,10 +172,15 @@ mutation createHotel($input:HotelInput!){
 
 ### Get a Hotel
 ```graphql
-{
-  hotel(id: 56){
+query Hotel{
+  hotel(id:1){
     id
     hotel_name
+    maximun_free_calendar_days
+    check_in_hour_time
+    check_out_hour_time
+    minimal_prev_days_to_cancel
+    iana_time_zone
   }
 }
 ```

@@ -110,14 +110,15 @@ auth: {
 
 ## Hotel
 ```js
-  hotel: {
-    
-        id: 35,
-        hotel_name: 'Test Hotel',
-        maximun_free_calendar_days: 30,
-        check_in_hour_time: 1970-01-01T13:30:00.000Z,
-        check_out_hour_time: 1970-01-01T12:00:00.000Z,
-        minimal_prev_days_to_cancel: 5
+  "hotel": {
+      "id": 1,
+      "hotel_name": "Sloppy Joes Grand Hotel",
+      "maximun_free_calendar_days": 30,
+      "check_in_hour_time": "13:30:00",
+      "check_out_hour_time": "12:00:00",
+      "minimal_prev_days_to_cancel": 5,
+      "iana_time_zone": "America/Lima"
+    }
   }
 
 ```

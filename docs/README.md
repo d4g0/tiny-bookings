@@ -11,6 +11,7 @@
         - [`client`](#client)
   - [Notes](#notes)
     - [Availability](#availability)
+  - [Useful Links](#useful-links)
   - [NEW Features ideas](#new-features-ideas)
 
 ## Requirement Map
@@ -93,8 +94,8 @@
 
 ##### `full-admin`
 
-[✅]
--   create admin users
+
+-   [x] create admin users
     -   basic
     -   create new `basic-admin` with
         -   name
@@ -105,14 +106,9 @@
         -   name
         -   email
         -   password
-[✅]
--   list admins
-
-[✅]
--   delete admin
-
-[✅]
--	create and edit a hotel 
+-   [x] list admins
+-   [x] delete admin
+-	[x] create and edit a hotel 
     -   start (3-april-11:38)
         -   Dao
             -   create done at 22:34
@@ -126,9 +122,7 @@
             -   update
                 -   done at 15:04
                 -   extended (timezone) done at 15:43
-
-[✅]
--	rooms
+-	[x] rooms
     -   start 4 april 21:37
     -   room types 
         -   (dao)  -done at 22:00
@@ -150,9 +144,7 @@
         -   done 9 april 22:36
     -   list rooms 
         -   graphql done 26 april 18:40 (refactor)
-
-[✅]
--   room_locks
+-   [x] room_locks
     -   (dao) done 16 april 1:55
         -   create
         -   delete
@@ -163,9 +155,7 @@
     -   get room locks [done 18 april at 00:40]
         -   (dao)   
         -   (graphql)   
-
-[✅]
--   bookings
+-   [x] bookings
     -   define booking states done
     -  (dao)  done 16 april 1:55
        -  rooms_bookings records of the many to many
@@ -211,38 +201,34 @@
     
     -   list bookings of a client
         -   done 22 april 2:46
-        
-- [✅]
-- clients
-- get client by id 
-  - (dao) start 24 april 14:30 done :38
-  - (graphql) start :42 done :49
-- list clients
-  - dao + graphql done at 15:15
-  - 
-- [✅]
-  - login (admin specific) completed 11 may 19:20
+- [x] clients
+  - [x] get client by id 
+    - (dao) start 24 april 14:30 done :38
+    - (graphql) start :42 done :49
+  - [x] list clients
+    - dao + graphql done at 15:15
+  - [x] login (admin specific) completed 11 may 19:20
 
 
 ##### `client`
-- []
-- clients
-  -   login 
+- [] clients
+  -  [x] login 
       -   dao 
           -   getClientByEmail done (+admin resolvers refactor) 22 april 1:21
       - graphql (big refactor plus admin) done ~ 2:30
       - iteration (client specific) [done] 19:30
-  -   list bookings of a client
+  -  [x] list bookings of a client
       -   (dao) all ready done
       -   (graphql) all ready done
- - sign up
+ - [x] sign up
    - (dao) create client  done 2:16
    - (service) done 2:43
    - (graphql) done 4:50
--  get booking offers start 20:31
+-  [] get booking offers start 20:31
    -  get available rooms in date range
       - getAvailability 
         - sql table, function, dao, test, graphql [done] april 27 19:47
+        - [] refactor to use date strings for instead obj in args start 17 may 15:57
 
 
 Note the booking service should create a booking on behalf of a client, if for some reason the client has pay but was unable to book, let's say, a room was booked just before he completed his booked, then a client payment with no booking reference must be made in order to hotel administration handle the situation
@@ -400,21 +386,14 @@ Acotar busquedas de availability por intervalos maximos  del dias libres en el c
 
 
 
-Useful Links
-Dates Managment
-Time
-https://time.is/PET
-Time Zones
-https://nodatime.org/TimeZones
+## Useful Links
+- Managment
+  -   [Time](https://time.is/PET)
+  -   [Time Zones](https://nodatime.org/TimeZones)
 
-Date Convertions and stuff
-`date-fns`
-[`momentjs`]
-https://momentjs.com/timezone/
-[luxon]
-https://moment.github.io/luxon/#/tour
-[day.js]
-https://day.js.org/
+
+- Date Convertions and stuff
+  -   [luxon](https://moment.github.io/luxon/#/tour)
 
 
 
