@@ -18,8 +18,10 @@ if (process.env.NODE_ENV == 'production') {
 }
 app.use(Express.json());
 // quick logger
-// TODO Remove for production
-app.use(quickLogger)
+if(process.env.NODE_ENV != 'production'){
+    app.use(quickLogger)
+}
+
 
 // api routes
 app.use('/api/', router);
