@@ -11,6 +11,7 @@
     - [Get Hotels](#get-hotels)
     - [Update Hotel Check in](#update-hotel-check-in)
     - [Update Hotel Check out](#update-hotel-check-out)
+    - [Dell Hotel](#dell-hotel)
     - [Pending craft other dao fn respective querys](#pending-craft-other-dao-fn-respective-querys)
   - [Rooms Types](#rooms-types)
     - [CreateRoomType](#createroomtype)
@@ -235,6 +236,18 @@ mutation updateHotelCheckOut($input: UpdateHotelCheckOut!){
     }
   }
 }
+```
+
+
+### Dell Hotel
+```graphql
+mutation DellHotel {
+  delHotel(id: 16){
+    id
+    hotel_name
+  }
+}
+
 ```
 
 ### Pending craft other dao fn respective querys

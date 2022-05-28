@@ -16,7 +16,8 @@ import {
     updateHotelCheckInTime,
     updateHotelCheckOutTime,
     updateHotelTimeZone,
-    getHotels
+    getHotels,
+    deleteHotelById
 } from "services/hotel";
 import {
     createRoom,
@@ -711,6 +712,18 @@ export const resolvers = {
                         throw error;
                     }
 
+                }
+            )
+        ),
+
+
+        delHotel: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx) => {
+                    var id = args.id;
+                    var hotel = await deleteHotelById(id);
+                    return hotel;
                 }
             )
         ),

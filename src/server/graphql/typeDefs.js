@@ -497,6 +497,7 @@ export const typeDefinitions = gql`
     updateHotelCheckIn(input: UpdateHotelCheckIn!): Hotel!
     updateHotelCheckOut(input: UpdateHotelCheckOut!): Hotel!
     updateHotelTimeZone(input: UpdateHotelTimeZone!): Hotel!
+    delHotel(id: Int!): Hotel
     ##
     # rooms
     ##
