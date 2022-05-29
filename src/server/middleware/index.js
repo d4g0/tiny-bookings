@@ -86,6 +86,7 @@ export function quickLogger(req, res, next) {
     // console.log(req.url)
     // console.log(req.get('Origin'))
     // console.log(req.get('X-Captcha'))
+    console.log(req.get('Authorization'))
     console.log(req.method)
     console.log(req.body);
     console.log('-------------------');

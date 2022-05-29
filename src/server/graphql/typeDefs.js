@@ -440,6 +440,12 @@ export const typeDefinitions = gql`
   }
 
 
+  # User Role
+  type UserRole{
+    id:                   Int!
+    user_role:            String!
+  }
+
   ##
   # Query
   ##
@@ -480,6 +486,9 @@ export const typeDefinitions = gql`
     getClients(input:PaginationInput!): ClientResult!
     # availability
     getRoomsAvailable(input: getRoomsAvailableInput!): [Room]!
+    # user roles
+    getUserRoles: [UserRole]!
+
   }
 
   ##

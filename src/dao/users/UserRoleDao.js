@@ -1,6 +1,7 @@
 import { prisma } from "db/PrismaClient";
 import { isValidUserRoleKey } from "dao/utils";
 import { setUserRoleId, USER_ROLES } from "dao/DBConstans";
+import sql from "db/postgres";
 
 /**
  * Create a `user_role` record in the db 
@@ -121,5 +122,19 @@ export async function initUserRoles() {
 
     } catch (error) {
         throw error
+    }
+}
+
+/**
+ * Fetch an returns the user roles from db
+ */
+export async function getUserRoles(){
+    try {
+        const user_roles = await sql`
+            select * from user_roles;
+        `
+        return user_roles;
+    } catch (error) {
+        throw error;
     }
 }

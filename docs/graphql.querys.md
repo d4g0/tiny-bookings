@@ -1,5 +1,7 @@
 # GraphQL API Querys
 - [GraphQL API Querys](#graphql-api-querys)
+  - [User Roles](#user-roles)
+    - [Get User Roles](#get-user-roles)
   - [Admins](#admins)
     - [Login as Admin](#login-as-admin)
     - [Get Admins](#get-admins)
@@ -57,7 +59,17 @@
     - [SingUp](#singup)
 
 
+## User Roles
 
+### Get User Roles
+```graphql
+query gUR{
+  getUserRoles{
+    id
+    user_role
+  }
+}
+```
 
 
 ## Admins
@@ -91,17 +103,20 @@ query loginAsAdmin($input: loginInput! ){
 ```
 ### Get Admins
 ```graphql
-query admins{
+{
   admins{
     id
     user_role
+    email
     admin_name
+    admin_description
+    created_at
   }
 }
 ```
 ### Create Admin
 ```graphql
-mutation createAdmin($input:createAdminInput!){
+mutation createAdmin($input:CreateAdminInput!){
   createAdmin(input:$input){
 		id
     user_role

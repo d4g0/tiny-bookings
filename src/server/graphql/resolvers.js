@@ -53,6 +53,7 @@ import { getClientByEmailPassword, singUp as singUpClient } from "services/users
 import { AuthenticationError } from "apollo-server-core";
 import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
 import { getRoomsAvailableIn } from "dao/room/RoomDao";
+import { getUserRoles } from "dao/users/UserRoleDao";
 
 export const resolvers = {
 
@@ -138,6 +139,19 @@ export const resolvers = {
                         return adminsMinusCurrentAdmin;
                     }
                     return null
+                }
+            )
+        ),
+
+        // ---------------
+        // User Roles 
+        // ---------------
+        getUserRoles: authenticated(
+            authorized(
+                USER_ROLES.FULL_ADMIN.user_role,
+                async (root, args, ctx, info) => {
+                    var userRoles = await getUserRoles();
+                    return userRoles;
                 }
             )
         ),
@@ -1221,5 +1235,5 @@ export const resolvers = {
         }
 
     },
-    
+
 };
