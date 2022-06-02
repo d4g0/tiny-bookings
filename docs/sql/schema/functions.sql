@@ -132,3 +132,44 @@ RETURN;
 END;
 $$
 LANGUAGE plpgsql;
+
+
+
+
+-- 
+-- update a room is amenties
+-- 
+-- https://www.postgresql.org/docs/current/plpgsql-control-structures.html#PLPGSQL-CONTROL-STRUCTURES-LOOPS
+
+create function update_a_room_is_amenities(
+	room_id_filter integer, 
+	amenities_ids integer[] 
+) returns setof room_data as 
+$$
+
+DECLARE
+-- temp records
+temp_amenity_id integer;
+
+BEGIN
+
+-- delete current room amenities
+delete from rooms_amenities ra where ra.room_id = room_id_filter;
+
+-- create new amenities
+foreach temp_amenity_id in ARRAY amenities_ids loop
+	insert into rooms_amenities (
+		room_id,
+		amenity_id
+	) values (
+		room_id_filter,
+		temp_amenity_id
+	);
+end loop;
+
+RETURN QUERY select * from get_room_data(room_id_filter);
+
+
+END;
+$$
+LANGUAGE plpgsql;
