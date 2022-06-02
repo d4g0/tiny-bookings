@@ -1,6 +1,10 @@
+import { ValidationError } from "~/errors.js";
 import { DB_UNIQUE_CONSTRAINT_ERROR, FORGEIN_KEY_ERROR, NOT_FOUND_RECORD_ERROR } from "dao/Errors";
 import { areValidAmenitiesIds, isValidId, isValidRoomAmenity } from "dao/utils";
 import { prisma } from 'db/PrismaClient.js';
+import { valid } from "joi";
+import sql from "db/postgres";
+import { mapRawRoomDataToRoom } from "./RoomDao";
 
 
 
@@ -312,5 +316,28 @@ export async function deleteARoomIsAmenity(room_id, amenity_id) {
         return delRes;
     } catch (error) {
         throw error
+    }
+}
+
+export async function updateARoomIsAmenities(room_id, amenities_ids = []) {
+
+    // validate
+    if (!isValidId(room_id)) {
+        throw new ValidationError('Non valid id', 'room_id');
+    }
+
+    if (!areValidAmenitiesIds(amenities_ids)) {
+        throw new ValidationError('Non valid ids', 'amenities_ids');
+    }
+
+
+    try {
+        const roomRes = await sql`
+            select * from update_a_room_is_amenities(${room_id}, ${amenities_ids});
+        `;
+        const room = roomRes.length ? mapRawRoomDataToRoom(roomRes[0]) : null;
+        return room;
+    } catch (error) {
+        throw error;
     }
 }

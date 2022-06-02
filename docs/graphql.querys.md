@@ -37,6 +37,7 @@
     - [UpdateNightPrice](#updatenightprice)
     - [updateRoomCapacity](#updateroomcapacity)
     - [updateNumberOfBeds](#updatenumberofbeds)
+    - [updateARoomIsAmenities](#updatearoomisamenities)
   - [Room Availability](#room-availability)
   - [Room is Amenities](#room-is-amenities)
     - [CreateARoomIsAmenity](#createaroomisamenity)
@@ -515,7 +516,7 @@ mutation deleteARoom($input: DeleteRoomInput!){
 }
 {
   "input": {
-			"id": 526
+			"room_id": 526
   }
 }
 ```
@@ -540,18 +541,25 @@ mutation updateRoomName($input: UpdateRoomNameInput!){
 ### UpdateARoomIsType
 ```graphql
 mutation updateARoomIsType($input: UpdateRoomIsTypeInput!){
-	updateARoomIsType(input:$input){
+  updateARoomIsType(input:$input){
     id
     hotel_id
     room_name
     night_price
     capacity
     number_of_beds
-    room_type
-    room_types{
-      id
-      room_type
+   created_at
+    room_type_id
+    room_type_key
+    room_pictures{
+      room_picture_id
+      filename
     }
+    room_amenities{
+      amenity_id
+      amenity
+    }
+    
   }
 }
 
@@ -614,6 +622,40 @@ mutation updateNumberOfBeds($input:UpdateRoomNumberOfBedsInput!){
 		"new_number_of_beds": 15
   }
 }
+```
+
+### updateARoomIsAmenities
+```graphql
+mutation updateARoomIsAmenities ($input: UpdateARoomIsAmenitiesInput!){
+  updateARoomIsAmenities(input:$input){
+    id
+    hotel_id
+    room_name
+    night_price
+    capacity
+    number_of_beds
+    created_at
+    room_type_id
+    room_type_key
+    room_pictures{
+      room_picture_id
+      filename
+    }
+    room_amenities{
+      amenity_id
+      amenity
+    }
+  }
+}
+
+
+{
+  "input": {
+    "room_id": 9,
+    "amenities_ids": [1,2]
+  }
+}
+
 ```
 
 ## Room Availability

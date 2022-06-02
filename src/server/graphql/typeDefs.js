@@ -446,6 +446,13 @@ export const typeDefinitions = gql`
     user_role:            String!
   }
 
+
+  # UpdateARoomIsAmenitiesInput
+  input UpdateARoomIsAmenitiesInput{
+    room_id:              Int!
+    amenities_ids:        [Int]!
+  }
+
   ##
   # Query
   ##
@@ -528,6 +535,7 @@ export const typeDefinitions = gql`
     updateRoomNightPrice(input: UpdateRoomNightPriceInput!): Room!
     updateRoomCapacity(input: UpdateRoomCapacityInput!): Room!
     updateRoomNumberOfBeds(input: UpdateRoomNumberOfBedsInput!): Room!
+    updateARoomIsAmenities(input: UpdateARoomIsAmenitiesInput!): Room
     # room lock period
     createARoomLockPeriod(input: createRoomLockInput!): RoomLockPeriod!
     # bookings

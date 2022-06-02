@@ -252,7 +252,7 @@ export function isValidRoomAmenity(amenity) {
 
 
 export function isValidRoomName(room_name) {
-    var roomNameSchema = Joi.string().trim().min(4).max(20);
+    var roomNameSchema = Joi.string().trim().min(2).max(20);
     var { error, value } = roomNameSchema.validate(
         room_name,
         { presence: 'required', convert: false }

@@ -54,6 +54,7 @@ import { AuthenticationError } from "apollo-server-core";
 import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
 import { getRoomsAvailableIn } from "dao/room/RoomDao";
 import { getUserRoles } from "dao/users/UserRoleDao";
+import { updateARoomIsAmenities } from "dao/room/RoomAmenitiesDao";
 
 export const resolvers = {
 
@@ -1059,6 +1060,29 @@ export const resolvers = {
                 }
             )
         ),
+
+
+        // updateARoomIsAmenities
+        updateARoomIsAmenities: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_id,
+                        amenities_ids
+                    } = args.input;
+                    try {
+                        var room = await updateARoomIsAmenities(room_id, amenities_ids);
+                        return room;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+
         // room lock period
         createARoomLockPeriod: authenticated(
             authorized(

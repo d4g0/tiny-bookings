@@ -398,7 +398,7 @@ export async function getRoomData(room_id) {
     }
 }
 
-function mapRawRoomDataToRoom({
+export function mapRawRoomDataToRoom({
     id,
     hotel_id,
     room_name,
