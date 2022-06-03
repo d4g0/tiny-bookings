@@ -1,4 +1,7 @@
 import Express from 'express';
+import { roomPictureUploadHandler } from 'server/controlers/room_pictures';
+import fileUpload from 'express-fileupload';
+
 /**
  * The api router
  */
@@ -8,8 +11,11 @@ router.route('/').get(foo);
 
 
 
+router.use(fileUpload());
 
 
+// pictures
+router.route('/room_pictures/').post(roomPictureUploadHandler);
 
 
 

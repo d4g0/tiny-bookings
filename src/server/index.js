@@ -8,6 +8,7 @@ import graphqlServer from '~/server/graphql'
 import expressPlayground from 'graphql-playground-middleware-express';
 import cors from 'cors';
 import { mapLineToArray } from 'utils';
+// import bodyParser from 'body-parser';
 
 // app settings 
 // behind proxy setting
@@ -18,16 +19,22 @@ if (process.env.NODE_ENV == 'production') {
 }
 app.use(Express.json());
 // quick logger
-if(process.env.NODE_ENV != 'production'){
+if (process.env.NODE_ENV != 'production') {
     app.use(quickLogger)
 }
 
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-// api routes
-app.use('/api/', router);
+
+
 
 // cors
 var allowedOrigins = mapLineToArray(process.env.API_ALLOWED_DOMAINS, ',');
+
+
+// api routes
+app.use('/api/', cors({ origin: allowedOrigins }), router);
+
 // preflight /graphql
 app.options('/graphql', cors({ origin: allowedOrigins }));
 // general
