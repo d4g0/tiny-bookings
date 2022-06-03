@@ -1,7 +1,12 @@
 import Express from 'express';
 import { roomPictureUploadHandler } from 'server/controlers/room_pictures';
 import fileUpload from 'express-fileupload';
-
+import {
+    authenticate,
+    authenticated,
+    authorized
+} from '~/server/middleware/index'
+import { USER_ROLES } from 'dao/DBConstans';
 /**
  * The api router
  */
@@ -15,7 +20,12 @@ router.use(fileUpload());
 
 
 // pictures
-router.route('/room_pictures/').post(roomPictureUploadHandler);
+router.route('/room_pictures/').post(
+    authenticate,
+    authenticated,
+    authorized([USER_ROLES.BASIC_ADMIN.key, USER_ROLES.FULL_ADMIN.key]),
+    roomPictureUploadHandler
+);
 
 
 

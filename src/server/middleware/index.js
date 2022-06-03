@@ -1,5 +1,8 @@
+import { AuthenticationError, ForbiddenError } from 'apollo-server-core';
 import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
+const SECRET = process.env.API_SECRET_KEY || '';
+
 /**
  * The limiter middleware
  */
@@ -77,7 +80,7 @@ export function auth(req, res, next) {
 
 export function quickLogger(req, res, next) {
     // operationName: 'IntrospectionQuery'
-    if(req.body['operationName'] =='IntrospectionQuery' ){
+    if (req.body['operationName'] == 'IntrospectionQuery') {
         return next();
     }
     var now = new Date().toISOString().slice(0, -5);
@@ -86,9 +89,107 @@ export function quickLogger(req, res, next) {
     // console.log(req.url)
     // console.log(req.get('Origin'))
     // console.log(req.get('X-Captcha'))
-    console.log(req.get('Authorization'))
-    console.log(req.method)
-    console.log(req.body);
+    // console.log(req.get('Authorization'))
+    console.log('method: ', req.method)
+    console.log('query: ', req.query);
+    console.log('body: ', req.body);
+    console.log('user: ', req.user);
     console.log('-------------------');
     next();
+}
+
+
+
+export function getTokenFromReqQuery(req) {
+    // validate and verify
+
+
+    // verify
+    const token = req.query.token;
+
+
+
+    // case not token found
+    if (!token || token == '') {
+        return null;
+    }
+
+    return token;
+
+}
+
+
+export function getUserFromToken(token) {
+
+    
+
+    if (!token) {
+        return null
+    }
+    try {
+
+        const user = jwt.verify(token, SECRET, { algorithms: ["HS256"] });
+
+
+        return user;
+
+    } catch (e) {
+
+        // console.log({ error: e });
+
+        return null
+    }
+
+}
+
+export const authenticate = (req, res, next) => {
+
+    const token = getTokenFromReqQuery(req);
+
+    if (!token) {
+        return next();
+    }
+    const user = getUserFromToken(token);
+
+    // console.log({ user });
+
+
+    if (!user) {
+        return next();
+    }
+
+    req.user = user;
+    return next();
+}
+
+export const authenticated = (req, res, next) => {
+
+    if (!req.user) {
+        return res.status(403).json({ error: new AuthenticationError('must authenticate') });
+    }
+
+    return next();
+}
+
+
+export const authorized = (role_s) => (req, res, next) => {
+
+    // if not valid role to check stop chain
+    if (!(typeof role_s == 'string' || Array.isArray(role_s))) {
+        throw new Error('Dont mess around with non covered roles dude');
+    }
+    // case a simple role to check
+    if (typeof role_s == 'string') {
+        if (req.user.user_role !== role_s) {
+            return res.status(403).json({ error: new ForbiddenError(`Forbidden`) });
+        }
+    }
+    // case is a set of roles to check (array)
+    if (Array.isArray(role_s)) {
+        if (!role_s.includes(req.user.user_role)) {
+            return res.status(403).json({ error: new ForbiddenError(`Forbidden`) });
+        }
+    }
+
+    return next();
 }
