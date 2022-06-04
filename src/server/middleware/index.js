@@ -85,12 +85,13 @@ export function quickLogger(req, res, next) {
     }
     var now = new Date().toISOString().slice(0, -5);
     console.log('-------------------');
-    console.log(now)
+    console.log(now);
     // console.log(req.url)
     // console.log(req.get('Origin'))
     // console.log(req.get('X-Captcha'))
-    // console.log(req.get('Authorization'))
-    console.log('method: ', req.method)
+    console.log('Bearer: ', req.get('Authorization'));
+    console.log('method: ', req.method);
+    console.log('headers/content-type: ', req.get('content-type'));
     console.log('query: ', req.query);
     console.log('body: ', req.body);
     console.log('user: ', req.user);

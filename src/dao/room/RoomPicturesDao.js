@@ -33,18 +33,6 @@ export async function createARoomPicture(room_id, filename) {
 
         return room_picture;
 
-
-
-        // create the room picture
-        // var roomPicture = await prisma.room_pictures.create({
-        //     data: {
-        //         room_id,
-        //         filename
-        //     }
-        // })
-
-        // return roomPicture;
-
     } catch (error) {
         throw error
     }
@@ -57,16 +45,15 @@ export async function deleteARoomPicture(room_picture_id) {
     }
 
 
-
-
-
     try {
-        // create the room picture
-        var roomPicture = await prisma.room_pictures.delete({
-            where: {
-                id: room_picture_id
-            }
-        })
+
+        const dRes = await sql`
+            delete from room_pictures where id = ${room_picture_id} returning *;
+        `;
+
+        var roomPicture = dRes[0] || null;
+        
+        // console.log({roomPicture})
 
         return roomPicture;
 

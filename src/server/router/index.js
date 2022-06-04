@@ -24,7 +24,12 @@ router.route('/room_pictures/').post(
     authenticate,
     authenticated,
     authorized([USER_ROLES.BASIC_ADMIN.key, USER_ROLES.FULL_ADMIN.key]),
-    roomPictureUploadHandler
+    // (req, res, next) => {
+    //     console.log({ user: req.user });
+    //     next();
+    // },
+    roomPictureUploadHandler,
+
 );
 
 

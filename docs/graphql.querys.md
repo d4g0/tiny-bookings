@@ -658,6 +658,24 @@ mutation updateARoomIsAmenities ($input: UpdateARoomIsAmenitiesInput!){
 
 ```
 
+### DeleteRoomPicture
+```graphql
+mutation deleteRoomPicture($input: DeleteRoomPictureInput!){
+  deleteRoomPicture(input: $input){
+    id
+    room_id
+    filename
+  }
+}
+
+
+{
+  "input": {
+    "room_picture_id":  6
+  }
+}
+```
+
 ## Room Availability
 ```graphql
 query getRoomsAvailableIn($input:getRoomsAvailableInput!){

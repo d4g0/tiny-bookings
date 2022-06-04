@@ -55,6 +55,10 @@ import { getClientById, getClients as getClientsService } from "dao/users/Client
 import { getRoomsAvailableIn } from "dao/room/RoomDao";
 import { getUserRoles } from "dao/users/UserRoleDao";
 import { updateARoomIsAmenities } from "dao/room/RoomAmenitiesDao";
+import { deleteARoomPicture } from "dao/room/RoomPicturesDao.js";
+
+
+
 
 export const resolvers = {
 
@@ -865,6 +869,28 @@ export const resolvers = {
                     try {
                         var roomAmenity = await deleteRoomAmenity(amenity);
                         return roomAmenity;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+
+        deleteRoomPicture: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        room_picture_id,
+                    } = args.input;
+                    
+                    var s_room_picture_id = xss(room_picture_id);
+                    s_room_picture_id = parseInt(s_room_picture_id);
+
+                    try {
+                        var roomPicture = await deleteARoomPicture(s_room_picture_id);
+                        return roomPicture;
                     } catch (error) {
                         throw error;
                     }

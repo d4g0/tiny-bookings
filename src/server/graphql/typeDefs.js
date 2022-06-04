@@ -278,6 +278,10 @@ export const typeDefinitions = gql`
     new_number_of_beds:     Int!
   }
 
+  input DeleteRoomPictureInput {
+    room_picture_id:        Int!
+  }
+
   # Room Lock Period
   type RoomLockPeriod {
     id:                   Int!
@@ -527,6 +531,8 @@ export const typeDefinitions = gql`
     deleteRoomAmenity(input: RoomAmenityInput!): RoomAmenity!
     createARoomIsAmenity(input: CreateARoomIsAmenityInput!): RoomIsAmenity!
     deleteARoomIsAmenity(input: DeleteARoomIsAmenityInput!): DelRoomIsAmenityRes!
+    # room piutre
+    deleteRoomPicture(input: DeleteRoomPictureInput!) : RoomPicture
     # room
     createRoom(input: CreateRoomInput!): Room!
     deleteRoom(input: DeleteRoomInput!): DelRes!
