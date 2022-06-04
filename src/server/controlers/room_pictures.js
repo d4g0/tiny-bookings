@@ -16,6 +16,7 @@ import xss from 'xss';
 const PICTURES_FILE_STORAGE = process.env.PICTURES_FILE_STORAGE || '';
 import { v4 as uuid } from 'uuid';
 import { unlink } from 'fs/promises';
+import path from 'path';
 
 
 
@@ -59,7 +60,9 @@ export async function roomPictureUploadHandler(req, res, next) {
         const s_name = xss(nrp.name);
         const newPicName = generateUniqueName(s_name);
         // move to location
-        await nrp.mv(PICTURES_FILE_STORAGE + newPicName)
+        const destination = path.join(PICTURES_FILE_STORAGE, newPicName);
+        console.log({ destination });
+        await nrp.mv(destination)
         var updated_room_picture;
 
         // update  or create room is room_picture filename
