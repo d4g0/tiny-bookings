@@ -100,9 +100,9 @@ export async function roomPictureUploadHandler(req, res, next) {
 
 async function deletePictureFromFileStorage(filename) {
     try {
+        const destination = path.join(PICTURES_FILE_STORAGE, filename);
         // console.log('deleting: ' + filename);
-
-        await unlink(PICTURES_FILE_STORAGE + filename);
+        await unlink(destination);
 
     } catch (error) {
         console.error(error);
