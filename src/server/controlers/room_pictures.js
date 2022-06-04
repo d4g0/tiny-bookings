@@ -61,7 +61,7 @@ export async function roomPictureUploadHandler(req, res, next) {
         const newPicName = generateUniqueName(s_name);
         // move to location
         const destination = path.join(PICTURES_FILE_STORAGE, newPicName);
-        console.log({ destination });
+        // console.log({ destination });
         await nrp.mv(destination)
         var updated_room_picture;
 
