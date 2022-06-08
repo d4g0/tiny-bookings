@@ -5,7 +5,6 @@ import router from '~/server/router';
 import { apiRateLimiter, quickLogger } from '~/server/middleware/index.js';
 import helmet from 'helmet';
 import graphqlServer from '~/server/graphql'
-import expressPlayground from 'graphql-playground-middleware-express';
 import cors from 'cors';
 import { mapLineToArray } from 'utils';
 
@@ -48,10 +47,6 @@ var server;
 export function spinUpServer() {
     setupGraphQl();
 
-    // set up graphql playground
-    if (process.env.NODE_ENV != 'production') {
-        app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
-    }
     server = app.listen(API_PORT, () => { console.log('app listening at port:' + API_PORT) })
 }
 
