@@ -10,7 +10,6 @@ import {
     isCaptchaClear,
 } from '~/server/graphql/auth';
 
-console.log({ __dirname });
 const typeDefinitions = readFileSync(path.join(__dirname, '/schema.graphql'), 'utf8');
 
 const executableSchema = makeExecutableSchema({
@@ -24,6 +23,7 @@ const server = new ApolloServer({
         const user = getUserFromToken(token);
         return { user, createUserToken, req, isCaptchaClear };
     },
+    playground: false,
     // formatError(error) {
     //   return error;
     // }

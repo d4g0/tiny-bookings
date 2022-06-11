@@ -28,7 +28,7 @@ var allowedOrigins = mapLineToArray(process.env.API_ALLOWED_DOMAINS, ',');
 app.use('/api/', cors({ origin: allowedOrigins }), router);
 
 // preflight /graphql
-app.options('/graphql', cors({ origin: allowedOrigins }));
+app.use('/graphql', cors({ origin: allowedOrigins }));
 // general
 // app.use(cors({ origin: allowedOrigins }));
 
@@ -45,7 +45,9 @@ export function spinUpServer() {
     setupGraphQl();
 
     server = app.listen(API_PORT, () => {
-        console.log('app listening at port:' + API_PORT);
+        console.log('App runing');
+        console.log(`• http://localhost:${API_PORT}/api\t`);
+        console.log(`• http://localhost:${API_PORT}${graphqlServer.graphqlPath}\t`);
     });
 }
 

@@ -38,6 +38,7 @@
     - [updateRoomCapacity](#updateroomcapacity)
     - [updateNumberOfBeds](#updatenumberofbeds)
     - [updateARoomIsAmenities](#updatearoomisamenities)
+    - [DeleteRoomPicture](#deleteroompicture)
   - [Room Availability](#room-availability)
   - [Room is Amenities](#room-is-amenities)
     - [CreateARoomIsAmenity](#createaroomisamenity)
@@ -916,6 +917,10 @@ mutation createABookingAsAdmin($input: createBookingAsAdmin!){
   }
   
 }
+```
+
+Variables
+```json
 {
   "input": {
     "start_date": {

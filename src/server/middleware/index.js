@@ -84,7 +84,7 @@ export function quickLogger(req, res, next) {
         return next();
     }
     var now = new Date().toISOString().slice(0, -5);
-    console.log('-------------------');
+    console.log('\n\r' , '-------------------');
     console.log(now);
     // console.log(req.url)
     // console.log(req.get('Origin'))

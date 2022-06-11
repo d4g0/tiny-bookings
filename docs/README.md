@@ -198,7 +198,6 @@
     -   List Bookings 
         -   dao start 21:30 done 22:11
         -   graphql done 23:48
-    
     -   list bookings of a client
         -   done 22 april 2:46
 - [x] clients
@@ -208,6 +207,13 @@
   - [x] list clients
     - dao + graphql done at 15:15
   - [x] login (admin specific) completed 11 may 19:20
+
+- [ ] Bookings
+  - [ ] Create a Booking
+  - [ ] List Bookings
+  - [ ] Cancel a Booking
+
+- [ ] Calendar
 
 
 ##### `client`
