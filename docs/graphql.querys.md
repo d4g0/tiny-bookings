@@ -766,27 +766,18 @@ query getRoomLocks($input: GetRoomLocksInput!){
   }
 }
 
+```
+
+Input
+```json
 {
   "input": {
     "page": 1,
     "hotel_id":1,
-    "start_date_filter": {
-      "year": 2022,
-      "month": 3,
-      "day": 28,
-      "hour": 10,
-      "minute": 0
-    },
-    "end_date_filter": {
-      "year": 2022,
-      "month": 3,
-      "day": 30,
-      "hour": 10,
-      "minute": 0
-    }
+    "start_date_filter": "2022-06-11 00:00:00",
+    "end_date_filter": "2022-06-13 00:00:00"
   }
 }
-
 ```
 
 

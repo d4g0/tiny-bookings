@@ -302,8 +302,8 @@ input DateObject {
 }
 
 input GetRoomLocksInput {
-    start_date_filter: DateObject!
-    end_date_filter: DateObject!
+    start_date_filter: String!
+    end_date_filter: String!
     page: Int!
     hotel_id: Int!
 }

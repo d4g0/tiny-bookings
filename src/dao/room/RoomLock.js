@@ -360,6 +360,81 @@ export async function getRoomLocks({
     }
 }
 
+
+export async function getRoomLocks_date_str({
+    start_date_filter = new Date().toISOString(),
+    end_date_filter = new Date().toISOString(),
+    page = 1, // 1 start based count
+    hotel_id,
+}) {
+    // validation
+    if (!isValidDateString(start_date_filter)) {
+        throw new ValidationError('Non valid date str', 'start_date_filter');
+    }
+    if (!isValidDateString(end_date_filter)) {
+        
+        throw new ValidationError('Non valid date str', 'end_date_filter');
+
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected');
+    }
+
+    if (!isValidId(hotel_id)) {
+        throw new Error('Non valid hotel id');
+    }
+
+    const LIMIT = 50;
+    const OFFSET = (page - 1) * LIMIT;
+
+    try {
+        var room_locks_res = await sql`
+        select 
+            rlp.* 
+        from 
+            room_lock_period rlp
+        join room rm 
+        on rlp.room_id = rm.id
+        join hotel ht
+        on rm.hotel_id = ht.id 
+        where 
+            rlp.start_date >= ${start_date_filter}
+        and
+            rlp.start_date <= ${end_date_filter}
+        and ht.id = ${hotel_id}
+        ORDER BY rlp.start_date desc
+        LIMIT ${LIMIT} OFFSET ${OFFSET} ;
+        `;
+
+        var countRes = await sql`
+        select 
+            count(*) 
+        from 
+            room_lock_period rlp
+        join room rm 
+        on rlp.room_id = rm.id
+        join hotel ht
+        on rm.hotel_id = ht.id 
+        where 
+            rlp.start_date >= ${start_date_filter}
+        and
+            rlp.start_date <= ${end_date_filter}
+        and ht.id = ${hotel_id}
+        `;
+
+        var results = room_locks_res;
+        var count = +countRes[0].count;
+
+        return {
+            results,
+            count,
+        };
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 export async function getARoomIsLocks({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },

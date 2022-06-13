@@ -56,6 +56,7 @@ import { getRoomsAvailableIn } from "dao/room/RoomDao";
 import { getUserRoles } from "dao/users/UserRoleDao";
 import { updateARoomIsAmenities } from "dao/room/RoomAmenitiesDao";
 import { deleteARoomPicture } from "dao/room/RoomPicturesDao.js";
+import { getRoomLocks_date_str } from "dao/room/RoomLock";
 
 
 
@@ -268,7 +269,7 @@ export const resolvers = {
 
 
 
-                        var result = await getRoomLocks({
+                        var result = await getRoomLocks_date_str({
                             start_date_filter,
                             end_date_filter,
                             page,
