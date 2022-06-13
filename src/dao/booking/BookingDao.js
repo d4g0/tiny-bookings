@@ -1,4 +1,7 @@
+import { getRoomData } from 'dao/room/RoomDao';
+import { getRoomLocksByBookingId } from 'dao/room/RoomLock';
 import {
+    asyncForEach,
     isValidDateInput,
     isValidDateString,
     isValidId,
@@ -178,8 +181,6 @@ export async function getBookings({
     const LIMIT = 50;
     const OFFSET = (page - 1) * LIMIT;
 
-  
-
     try {
         var bookingsRes = await sql`
             select 
@@ -215,8 +216,25 @@ export async function getBookings({
             bookingsRes[i].total_price = +bookingsRes[i].total_price;
         }
 
+        // inject rooms
+        // (todo optimize this for v1 posibly by writing a plpsql function with no n^2 complexity)
+        await asyncForEach(bookingsRes, async (booking) => {
+            const bookingRooms = [];
+            const bookingRoomLocks = await getRoomLocksByBookingId(booking.id);
+
+            await asyncForEach(bookingRoomLocks, async (brl) => {
+                const room = await getRoomData(brl.room_id);
+                bookingRooms.push(room);
+            });
+
+            // inject
+            booking.rooms = bookingRooms;
+        });
+
         var results = bookingsRes;
         var count = +countRes[0].count;
+
+        console.log(bookingsRes[0]);
 
         return {
             results,

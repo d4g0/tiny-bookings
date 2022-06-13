@@ -700,6 +700,9 @@ query getRoomsAvailableIn($input:getRoomsAvailableInput!){
   }
 }
 
+```
+Input:
+```json
 {
   "input": {
     "hotel_id": 1,
@@ -983,29 +986,40 @@ query getBookings($input: GetBookingsInput!){
       number_of_guests
       is_cancel
       created_at
+      rooms{
+        id
+        room_name
+        night_price
+        capacity
+        number_of_beds
+        created_at
+        room_type_id
+        room_type_key
+        room_pictures{
+          room_picture_id
+          filename
+        }
+        room_amenities{
+          amenity_id
+          amenity
+        }
+      }
     }
     count
   }
 }
 
+
+```
+
+Input
+```json
 {
   "input": {
     "hotel_id": 1,
-    "start_date_filter": {
-      "year": 2022,
-      "month": 1,
-      "day": 18,
-      "hour": 0,
-      "minute": 0
-    },
-    "end_date_filter":  {
-      "year": 2022,
-      "month": 5,
-      "day": 25,
-      "hour": 0,
-      "minute": 0
-    },
-    "page": 1
+    "page": 1,
+    "start_date_filter": "2022-06-11T00:00:00.000Z",
+    "end_date_filter":  "2022-06-13T00:00:00.000Z"
   }
 }
 ```

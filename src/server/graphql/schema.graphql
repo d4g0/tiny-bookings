@@ -369,6 +369,7 @@ type Booking {
     number_of_guests: Int!
     is_cancel: Boolean!
     created_at: String!
+    rooms:      [Room]!
 }
 
 # input
