@@ -370,6 +370,7 @@ type Booking {
     is_cancel: Boolean!
     created_at: String!
     rooms:      [Room]!
+    client:     Client
 }
 
 # input

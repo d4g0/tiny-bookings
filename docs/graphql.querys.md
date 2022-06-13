@@ -986,6 +986,12 @@ query getBookings($input: GetBookingsInput!){
       number_of_guests
       is_cancel
       created_at
+      client {
+      	id
+        client_name
+        client_last_name
+        email
+      }
       rooms{
         id
         room_name
