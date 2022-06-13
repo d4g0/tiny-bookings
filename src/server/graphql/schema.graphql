@@ -373,8 +373,8 @@ type Booking {
 
 # input
 input createBookingAsAdmin {
-    start_date: DateObject!
-    end_date: DateObject!
+    start_date: String!
+    end_date: String!
     rooms_ids: [Int]!
     hotel_id: Int!
     client_name: String!
@@ -386,8 +386,8 @@ input createBookingAsAdmin {
 }
 
 input GetBookingsInput {
-    start_date_filter: DateObject!
-    end_date_filter: DateObject!
+    start_date_filter: String!
+    end_date_filter: String!
     page: Int!
     hotel_id: Int!
 }

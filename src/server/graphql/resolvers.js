@@ -1180,6 +1180,7 @@ export const resolvers = {
                             end_date,
                             rooms_ids,
                             hotel_id,
+                            hotel_calendar_length: MAXIMUN_HOTEL_CALENDAR_LENGHT,
                             client_name: s_client_name,
                             client_last_name: s_client_last_name,
                             total_price,

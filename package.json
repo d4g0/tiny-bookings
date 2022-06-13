@@ -9,7 +9,7 @@
   "scripts": {
     "build": "babel ./src/ -d dist",
     "dev": "nodemon -r dotenv/config   index.js",
-    "start": "NODE_ENV=production  node -r dotenv/config  dist/index.js",
+    "start": "cp -p ./src/server/graphql/schema.graphql ./dist/server/graphql/ && NODE_ENV=production  node -r dotenv/config  dist/index.js",
     "test": "jest --silent=true",
     "test:logs": "jest"
   },

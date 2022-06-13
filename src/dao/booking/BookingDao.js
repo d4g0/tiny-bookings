@@ -1,8 +1,16 @@
-import { isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice, utcDate } from 'dao/utils';
+import {
+    isValidDateInput,
+    isValidDateString,
+    isValidId,
+    isValidPositiveInteger,
+    isValidPrice,
+    utcDate,
+} from 'dao/utils';
 import sql from 'db/postgres';
+import { ValidationError } from 'errors';
 
 /**
- * TODO Implement a service that handle 
+ * TODO Implement a service that handle
  * all dependencies creations availability verification a so fort
  */
 export async function createBooking({
@@ -10,59 +18,45 @@ export async function createBooking({
     hotel_id,
     booking_state_id,
     total_price,
-    start_date = { year, month, day, hour, minute },
-    end_date = { year, month, day, hour, minute },
-    number_of_guests
+    start_date = new Date().toISOString(),
+    end_date = new Date().toISOString(),
+    number_of_guests,
 }) {
     try {
-
         function validate() {
             if (!isValidId(client_id)) {
-                throw new Error('Non valid client_id')
+                throw new Error('Non valid client_id');
             }
             if (!isValidId(hotel_id)) {
-                throw new Error('Non valid hotel_id')
+                throw new Error('Non valid hotel_id');
             }
             if (!isValidId(booking_state_id)) {
-                throw new Error('Non valid booking_state_id')
+                throw new Error('Non valid booking_state_id');
             }
 
             if (!isValidPrice(total_price)) {
-                throw new Error('Non valid total_price')
+                throw new Error('Non valid total_price');
             }
-            if (!isValidDateInput(start_date)) {
-                throw new Error('Non valid start_date')
+            if (!isValidDateString(start_date)) {
+                throw new ValidationError('Non valid date str', 'start_date');
             }
-            if (!isValidDateInput(end_date)) {
-                throw new Error('Non valid end_date')
+            if (!isValidDateString(end_date)) {
+                throw new ValidationError('Non valid date str', 'end_date');
             }
             if (!isValidPositiveInteger(number_of_guests)) {
-                throw new Error('Non valid number_of_guests')
+                throw new Error('Non valid number_of_guests');
             }
-
         }
         validate();
 
-        var utc_start_date = utcDate({
-            year: start_date.year,
-            month: start_date.month,
-            day: start_date.day,
-            hour: start_date.hour,
-            minute: start_date.minute
-        });
-        var utc_end_date = utcDate({
-            year: end_date.year,
-            month: end_date.month,
-            day: end_date.day,
-            hour: end_date.hour,
-            minute: end_date.minute
-        });
+        // check positive time interval
 
-
-        if (utc_start_date > utc_end_date) {
-            throw new Error('The end date has to be greater then the start date');
+        if (new Date(start_date).valueOf > new Date(end_date).valueOf) {
+            throw new ValidationError(
+                'The end date has to be greater then the start date',
+                '{start,end}_date'
+            );
         }
-
 
         var bookingRes = await sql`
             insert into
@@ -81,11 +75,11 @@ export async function createBooking({
                     ${hotel_id},
                     ${booking_state_id},
                     ${total_price},
-                    ${utc_start_date.toISOString()},
-                    ${utc_end_date.toISOString()},
+                    ${start_date},
+                    ${end_date},
                     ${number_of_guests}
                 ) RETURNING *;
-        `
+        `;
         // numeric postgres type to js number mapping
         var booking = bookingRes[0];
         booking.total_price = +booking.total_price;
@@ -95,28 +89,27 @@ export async function createBooking({
     }
 }
 
-
 export async function deleteBooking(booking_id) {
     if (!isValidId(booking_id)) {
-        throw new Error('Non valid booking_id')
+        throw new Error('Non valid booking_id');
     }
     try {
         var delRes = await sql`
             delete from booking b where b.id = ${booking_id} returning *;
-        `
+        `;
         return delRes[0];
     } catch (error) {
-        throw error
+        throw error;
     }
 }
 
 export async function updateBookingState(booking_id, new_booking_state) {
     if (!isValidId(booking_id)) {
-        throw new Error('Non valid booking_id')
+        throw new Error('Non valid booking_id');
     }
 
     if (!isValidId(new_booking_state)) {
-        throw new Error('Non valid new_booking_state')
+        throw new Error('Non valid new_booking_state');
     }
 
     try {
@@ -126,7 +119,7 @@ export async function updateBookingState(booking_id, new_booking_state) {
         set booking_state = ${new_booking_state} 
         where id = ${booking_id} 
         returning *
-        `
+        `;
         var updatedBooking = updateRes[0];
         updatedBooking.total_price = +updatedBooking.total_price;
         return updatedBooking;
@@ -137,11 +130,11 @@ export async function updateBookingState(booking_id, new_booking_state) {
 
 export async function updateBookingAsCancel(booking_id, cancel_state_id) {
     if (!isValidId(booking_id)) {
-        throw new Error('Non valid booking_id')
+        throw new Error('Non valid booking_id');
     }
 
     if (!isValidId(cancel_state_id)) {
-        throw new Error('Non valid cancel_state_id')
+        throw new Error('Non valid cancel_state_id');
     }
 
     try {
@@ -151,7 +144,7 @@ export async function updateBookingAsCancel(booking_id, cancel_state_id) {
         set booking_state = ${cancel_state_id}, is_cancel = true 
         where id = ${booking_id} 
         returning *
-        `
+        `;
         var updatedBooking = updateRes[0];
         updatedBooking.total_price = +updatedBooking.total_price;
         return updatedBooking;
@@ -161,43 +154,31 @@ export async function updateBookingAsCancel(booking_id, cancel_state_id) {
 }
 
 export async function getBookings({
-    start_date_filter = { year, month, day, hour, minute },
-    end_date_filter = { year, month, day, hour, minute },
+    start_date_filter = new Date().toISOString(),
+    end_date_filter = new Date().toISOString(),
     page = 1, // 1 start based count
     hotel_id,
 }) {
     // validation
-    if (!isValidDateInput(start_date_filter)) {
-        throw new Error('Non valid start_date_filter')
-    }
-    if (!isValidDateInput(end_date_filter)) {
-        throw new Error('Non valid end_date_filter')
-    }
-    if (!isValidPositiveInteger(page)) {
-        throw new Error('Non valid page, positive integer expected')
+    if (!isValidDateString(start_date_filter)) {
+        throw new ValidationError('Non valid date str', 'start_date_filter');
     }
 
-    if(!isValidId(hotel_id)){
+    if (!isValidDateString(end_date_filter)) {
+        throw new ValidationError('Non valid date str', 'end_date_filter');
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected');
+    }
+
+    if (!isValidId(hotel_id)) {
         throw new Error('Non valid hotel id');
     }
 
     const LIMIT = 50;
     const OFFSET = (page - 1) * LIMIT;
 
-    var utc_start_date_filter = utcDate({
-        year: start_date_filter.year,
-        month: start_date_filter.month,
-        day: start_date_filter.day,
-        hour: start_date_filter.hour,
-        minute: start_date_filter.minute
-    });
-    var utc_end_date_filter = utcDate({
-        year: end_date_filter.year,
-        month: end_date_filter.month,
-        day: end_date_filter.day,
-        hour: end_date_filter.hour,
-        minute: end_date_filter.minute
-    });
+  
 
     try {
         var bookingsRes = await sql`
@@ -206,9 +187,9 @@ export async function getBookings({
             from 
                 booking b
             where 
-                b.start_date >= ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${start_date_filter}
             and
-                b.start_date <= ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${end_date_filter}
             and b.hotel_id = ${hotel_id}
             ORDER BY b.start_date desc
             LIMIT ${LIMIT} OFFSET ${OFFSET};
@@ -220,18 +201,18 @@ export async function getBookings({
             from 
                 booking b
             where 
-                b.start_date >= ${utc_start_date_filter.toISOString()}
+                b.start_date >= ${start_date_filter}
             and
-                b.start_date <= ${utc_end_date_filter.toISOString()}
+                b.start_date <= ${end_date_filter}
             and b.hotel_id = ${hotel_id}
         `;
 
         // map numeric goted string to number
         // db total_price scale constrain sould make sure
-        // incoming numeric strings fit into the 
+        // incoming numeric strings fit into the
         // javascript Number class
         for (let i = 0; i < bookingsRes.length; i++) {
-            bookingsRes[i].total_price = +bookingsRes[i].total_price
+            bookingsRes[i].total_price = +bookingsRes[i].total_price;
         }
 
         var results = bookingsRes;
@@ -239,13 +220,12 @@ export async function getBookings({
 
         return {
             results,
-            count
-        }
+            count,
+        };
     } catch (error) {
-        throw error
+        throw error;
     }
 }
-
 
 export async function getBookingsByClient({
     client_id,
@@ -255,16 +235,16 @@ export async function getBookingsByClient({
 }) {
     // validation
     if (!isValidId(client_id)) {
-        throw new Error('Non valid client_id')
+        throw new Error('Non valid client_id');
     }
     if (!isValidDateInput(start_date_filter)) {
-        throw new Error('Non valid start_date_filter')
+        throw new Error('Non valid start_date_filter');
     }
     if (!isValidDateInput(end_date_filter)) {
-        throw new Error('Non valid end_date_filter')
+        throw new Error('Non valid end_date_filter');
     }
     if (!isValidPositiveInteger(page)) {
-        throw new Error('Non valid page, positive integer expected')
+        throw new Error('Non valid page, positive integer expected');
     }
 
     const LIMIT = 50;
@@ -275,14 +255,14 @@ export async function getBookingsByClient({
         month: start_date_filter.month,
         day: start_date_filter.day,
         hour: start_date_filter.hour,
-        minute: start_date_filter.minute
+        minute: start_date_filter.minute,
     });
     var utc_end_date_filter = utcDate({
         year: end_date_filter.year,
         month: end_date_filter.month,
         day: end_date_filter.day,
         hour: end_date_filter.hour,
-        minute: end_date_filter.minute
+        minute: end_date_filter.minute,
     });
 
     try {
@@ -316,10 +296,10 @@ export async function getBookingsByClient({
 
         // map numeric goted string to number
         // db total_price scale constrain sould make sure
-        // incoming numeric strings fit into the 
+        // incoming numeric strings fit into the
         // javascript Number class
         for (let i = 0; i < bookingsRes.length; i++) {
-            bookingsRes[i].total_price = +bookingsRes[i].total_price
+            bookingsRes[i].total_price = +bookingsRes[i].total_price;
         }
 
         var results = bookingsRes;
@@ -327,10 +307,9 @@ export async function getBookingsByClient({
 
         return {
             results,
-            count
-        }
+            count,
+        };
     } catch (error) {
-        throw error
+        throw error;
     }
 }
-

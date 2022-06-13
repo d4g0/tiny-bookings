@@ -500,6 +500,8 @@ export async function getRoomDataRaw(room_id) {
     try {
 
         const query_range = `[${start_date}, ${end_date}]`;
+
+        // console.log({query_range})
         
         var roomsDataRes = await sql`
             select 
@@ -511,7 +513,11 @@ export async function getRoomDataRaw(room_id) {
             );
         `;
 
+        
+
         var rooms = roomsDataRes.map(rd => mapRawRoomDataToRoom(rd));
+
+        // console.log({query_range , roomsDataRes, rooms})
         return rooms;
     } catch (error) {
         throw error;

@@ -1,39 +1,72 @@
 /**
- * 
+ *
  * Define
- * 
+ *
  * Create a booking
  *      for a non user client, on behalf of an admin
  *      client user
  * Cancel a booking
  * Get availability
- * 
- * 
+ *
+ *
  */
 
-import { createBooking, deleteBooking, updateBookingAsCancel, getBookings as getBookingsDao } from "dao/booking/BookingDao";
-import { getBookingStateByKey } from "dao/booking/BookingStateDao";
-import { createARoomBooking, deleteARoomBooking, deleteRoomBookingsByBookingId } from "dao/booking/RoomsBookingsDao";
-import { BOOKING_STATES, MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from "dao/DBConstans";
-import { createAPaymentWithBooking, deleteAPayment, deletePaymentByBookingId } from "dao/payments/PaymentsDao";
-import { createARoomLockPeriod, deleteRoomLockPeriod, deleteRoomLocksByBookingId, isRoomAvailableIn } from "dao/room/RoomLock";
-import { createNonUserClient, deleteClient } from "dao/users/ClientDao";
-import { getUserRoleByKey } from "dao/users/UserRoleDao";
-import { isValidClientName, isValidDateInput, isValidId, isValidPositiveInteger, isValidPrice } from "dao/utils";
+import { ValidationError } from 'apollo-server-core';
+import {
+    createBooking,
+    deleteBooking,
+    updateBookingAsCancel,
+    getBookings as getBookingsDao,
+} from 'dao/booking/BookingDao';
+import { getBookingStateByKey } from 'dao/booking/BookingStateDao';
+import {
+    createARoomBooking,
+    deleteARoomBooking,
+    deleteRoomBookingsByBookingId,
+} from 'dao/booking/RoomsBookingsDao';
+import {
+    BOOKING_STATES,
+    MAXIMUN_HOTEL_CALENDAR_LENGHT,
+    USER_ROLES,
+} from 'dao/DBConstans';
+import {
+    createAPaymentWithBooking,
+    deleteAPayment,
+    deletePaymentByBookingId,
+} from 'dao/payments/PaymentsDao';
+import { getRoomsAvailableIn } from 'dao/room/RoomDao';
+import {
+    createARoomLockPeriod,
+    deleteRoomLockPeriod,
+    deleteRoomLocksByBookingId,
+    isRoomAvailableIn,
+    isRoomAvailableIn_date_str,
+} from 'dao/room/RoomLock';
+import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
+import { getUserRoleByKey } from 'dao/users/UserRoleDao';
+import {
+    isValidClientName,
+    isValidDateInput,
+    isValidDateString,
+    isValidId,
+    isValidPositiveInteger,
+    isValidPrice,
+} from 'dao/utils';
+import { AvailabilityError } from 'errors';
 
 export async function createABookingAsAdmin({
-    start_date = { year, month, day, hour, minute },
-    end_date = { year, month, day, hour, minute },
-    rooms_ids = [],
     hotel_id,
+    hotel_calendar_length,
+    start_date = new Date().toISOString(),
+    end_date = new Date().toISOString(),
+    rooms_ids = [],
     client_name,
     client_last_name,
     total_price,
     payment_type_id,
     currency_id,
-    number_of_guests
+    number_of_guests,
 }) {
-
     // scoped oulets for error recovery
     var validationSucced = false;
     var client = null;
@@ -50,26 +83,24 @@ export async function createABookingAsAdmin({
     var results = {};
 
     try {
-
-
         // validate
         function validate() {
             // dates
-            if (!isValidDateInput(start_date)) {
-                throw new Error('Non valid start_date')
+            if (!isValidDateString(start_date)) {
+                throw new ValidationError('Non valid date string', 'start_date');
             }
-            if (!isValidDateInput(end_date)) {
-                throw new Error('Non valid end_date')
+            if (!isValidDateString(end_date)) {
+                throw new ValidationError('Non valid date string', 'end_date');
             }
 
             // hotel id
             if (!isValidId(hotel_id)) {
-                throw new Error('Non valid hotel id')
+                throw new Error('Non valid hotel id');
             }
 
             // room ids
             if (!Array.isArray(rooms_ids)) {
-                throw new Error('Non valid rooms_ids')
+                throw new Error('Non valid rooms_ids');
             }
 
             var roomIdsAreValid = true;
@@ -81,7 +112,7 @@ export async function createABookingAsAdmin({
             }
 
             if (!roomIdsAreValid) {
-                throw new Error('A room id was not valid')
+                throw new Error('A room id was not valid');
             }
 
             // client data
@@ -94,58 +125,54 @@ export async function createABookingAsAdmin({
             }
 
             if (!isValidPrice(total_price)) {
-                throw new Error('Non valid total_price')
+                throw new Error('Non valid total_price');
             }
 
             if (!isValidId(payment_type_id)) {
-                throw new Error('Non valid payment type id')
+                throw new Error('Non valid payment type id');
             }
 
             if (!isValidId(currency_id)) {
-                throw new Error('Non valid currency id')
+                throw new Error('Non valid currency id');
             }
 
             if (!isValidPositiveInteger(number_of_guests)) {
-                throw new Error('Non valid number_of_guests')
+                throw new Error('Non valid number_of_guests');
             }
 
-
+            if (!isValidPositiveInteger(hotel_calendar_length)) {
+                throw new ValidationError(
+                    'Non valid hotel_calendar_length',
+                    'hotel_calendar_length'
+                );
+            }
         }
 
         validate();
         validationSucced = true;
 
         // check rooms availability
-        var roomsAreAvailable = true;
 
-        for (let i = 0; i < rooms_ids.length; i++) {
+        const roomsAvaiables = await getRoomsAvailableIn({
+            hotel_id,
+            hotel_calendar_length,
+            start_date,
+            end_date,
+        });
 
-            var isAvailable = await isRoomAvailableIn({
-                delta_search_days: MAXIMUN_HOTEL_CALENDAR_LENGHT,
-                room_id: rooms_ids[i],
-                start_date,
-                end_date
-            })
 
-            if (!isAvailable) {
-                roomsAreAvailable = false;
-                break;
-            }
-
-        }
+        var roomsAreAvailable = checkIfRoomsAreAvailable(roomsAvaiables, rooms_ids);
 
         if (!roomsAreAvailable) {
-            throw new Error('A room was not available');
+            throw new AvailabilityError('A room was not available');
         }
-
-
 
         // create a client
         var clientRole = await getUserRoleByKey(USER_ROLES.CLIENT.user_role);
         client = await createNonUserClient({
             user_role: clientRole.id,
             client_name,
-            client_last_name
+            client_last_name,
         });
         clientWasCreated = true;
         results.client = client;
@@ -160,10 +187,9 @@ export async function createABookingAsAdmin({
             number_of_guests,
             start_date,
             end_date,
-        })
+        });
         bookingWasCreated = true;
         results.booking = booking;
-
 
         // create client payment
         clientPayment = await createAPaymentWithBooking({
@@ -171,14 +197,13 @@ export async function createABookingAsAdmin({
             amount: total_price,
             currency: currency_id,
             booking_id: booking.id,
-            payment_type: payment_type_id
-        })
+            payment_type: payment_type_id,
+        });
         clientPaymentWasCreated = true;
         results.clientPayment = clientPayment;
         // rooms_locks
         // create rooms_bookings
         for (let i = 0; i < rooms_ids.length; i++) {
-
             var lock = await createARoomLockPeriod({
                 room_id: rooms_ids[i],
                 start_date,
@@ -186,10 +211,10 @@ export async function createABookingAsAdmin({
                 reason: 'Booked',
                 is_a_booking: true,
                 booking_id: booking.id,
-            })
+            });
             roomLocks.push(lock);
 
-            var roomBooking = await createARoomBooking(rooms_ids[i], booking.id)
+            var roomBooking = await createARoomBooking(rooms_ids[i], booking.id);
             roomBookings.push(roomBooking);
         }
         results.roomLocks = roomLocks;
@@ -198,21 +223,18 @@ export async function createABookingAsAdmin({
         completed = true;
         var error = null;
         return { completed, error, results };
-
-
     } catch (error) {
-
         // handle error recovery
         // in case somthing other then validation was wrong
         // the service should clean relation-broken saved entities if any
         try {
             // validation error
             if (!validationSucced) {
-                throw error
+                throw error;
             }
 
             // recovery secuence
-            // from the bottom up for 
+            // from the bottom up for
             // the dependencies chain
 
             if (roomBookings.length) {
@@ -220,54 +242,51 @@ export async function createABookingAsAdmin({
                     await deleteARoomBooking(
                         roomBooking[i].room_id,
                         roomBooking[i].booking_id
-                    )
-                    results.roomBookings.shift()
+                    );
+                    results.roomBookings.shift();
                 }
             }
 
             if (roomLocks.length) {
                 for (let i = 0; i < roomLocks.length; i++) {
-                    await deleteRoomLockPeriod(roomLocks[i].id)
-                    results.roomLocks.shift()
+                    await deleteRoomLockPeriod(roomLocks[i].id);
+                    results.roomLocks.shift();
                 }
             }
 
             if (clientPaymentWasCreated) {
-                await deleteAPayment(clientPayment.id)
+                await deleteAPayment(clientPayment.id);
                 results.clientPayment = null;
             }
 
             if (bookingWasCreated) {
-                await deleteBooking(booking.id)
+                await deleteBooking(booking.id);
                 results.booking = null;
             }
 
             if (clientWasCreated) {
-                await deleteClient(client.id)
-                results.client = null
+                await deleteClient(client.id);
+                results.client = null;
             }
 
             return {
                 completed,
                 error,
-                results
-            }
-
+                results,
+            };
         } catch (error) {
             return {
                 completed,
                 error,
-                results
-            }
+                results,
+            };
         }
     }
-
 }
 
 export async function cancelBookingAsAdmin(booking_id) {
-
     if (!isValidId(booking_id)) {
-        throw new Error('Non valid Booking Id')
+        throw new Error('Non valid Booking Id');
     }
 
     // end result
@@ -292,20 +311,19 @@ export async function cancelBookingAsAdmin(booking_id) {
         // updateBooking
         var canceledState = await getBookingStateByKey(BOOKING_STATES.CANCEL.key);
         var updatedBooking = await updateBookingAsCancel(booking_id, canceledState.id);
-        results.booking = updatedBooking
+        results.booking = updatedBooking;
         completed = true;
         return {
             completed,
             results,
             error: null,
-        }
-
+        };
     } catch (error) {
         return {
             completed,
             results,
             error,
-        }
+        };
     }
 }
 
@@ -313,12 +331,28 @@ export async function getBookings({
     start_date_filter = { year, month, day, hour, minute },
     end_date_filter = { year, month, day, hour, minute },
     page = 1, // 1 start based count
-    hotel_id
-}){
+    hotel_id,
+}) {
     return getBookingsDao({
         start_date_filter,
         end_date_filter,
         page,
-        hotel_id
-    })
+        hotel_id,
+    });
+}
+
+function checkIfRoomsAreAvailable(rooms = [{ id: 0 }], rooms_ids = []) {
+    var areAvailable = true;
+
+    rooms_ids.forEach((id) => {
+        const found = rooms.find((room) => room?.id === id);
+
+        // console.log({ id, found: found?.id || 'not found' });
+
+        if (!found) {
+            areAvailable = false;
+        }
+    });
+
+    return areAvailable;
 }
