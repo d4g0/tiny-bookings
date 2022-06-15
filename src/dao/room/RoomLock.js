@@ -194,8 +194,6 @@ export async function deleteRoomLockPeriod(room_lock_period_id) {
     }
 }
 
-
-
 export async function isRoomAvailableIn_date_str({
     room_id,
     delta_search_days,
@@ -312,7 +310,6 @@ export async function getRoomLocks({
     }
 }
 
-
 export async function getRoomLocks_date_str({
     start_date_filter = new Date().toISOString(),
     end_date_filter = new Date().toISOString(),
@@ -324,9 +321,7 @@ export async function getRoomLocks_date_str({
         throw new ValidationError('Non valid date str', 'start_date_filter');
     }
     if (!isValidDateString(end_date_filter)) {
-        
         throw new ValidationError('Non valid date str', 'end_date_filter');
-
     }
     if (!isValidPositiveInteger(page)) {
         throw new Error('Non valid page, positive integer expected');
@@ -385,7 +380,6 @@ export async function getRoomLocks_date_str({
         throw error;
     }
 }
-
 
 export async function getARoomIsLocks({
     start_date_filter = { year, month, day, hour, minute },
@@ -498,6 +492,21 @@ export async function deleteRoomLocksByBookingId(booking_id) {
     }
 }
 
+export async function getRoomLockById(room_lock_id) {
+    if (!isValidId(room_lock_id)) {
+        throw new ValidationError('Non valid id: ', 'room_lock_id');
+    }
+
+    try {
+        const rlRes = await sql`
+            select * from room_lock_period rlp where rlp.id = ${room_lock_id};
+        `;
+        const roomLock = rlRes.length ? rlRes[0] : null;
+        return roomLock;
+    } catch (error) {
+        throw error;
+    }
+}
 
 // deprecated
 export async function isRoomAvailableIn({

@@ -56,7 +56,7 @@ import { getRoomsAvailableIn } from "dao/room/RoomDao";
 import { getUserRoles } from "dao/users/UserRoleDao";
 import { updateARoomIsAmenities } from "dao/room/RoomAmenitiesDao";
 import { deleteARoomPicture } from "dao/room/RoomPicturesDao.js";
-import { getRoomLocks_date_str } from "dao/room/RoomLock";
+import { getRoomLockById, getRoomLocks_date_str } from "dao/room/RoomLock";
 
 
 
@@ -255,6 +255,28 @@ export const resolvers = {
         },
 
         // room locks
+        roomLock: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var {
+                        id,
+                    } = args;
+                    try {
+
+                        
+
+                        var roomLock = await getRoomLockById(id);
+
+                        return roomLock;
+                    } catch (error) {
+                        throw error;
+                    }
+
+                }
+            )
+        ),
+        
         getRoomLocks: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
@@ -1108,6 +1130,8 @@ export const resolvers = {
                 }
             )
         ),
+
+        
 
 
         // room lock period

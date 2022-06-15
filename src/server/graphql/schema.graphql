@@ -458,6 +458,7 @@ type Query {
     room(room_id: Int!): Room
     rooms(hotel_id_filter: Int!): [Room]!
     # room locks
+    roomLock(id: Int!): RoomLockPeriod
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
     getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!
     # payment types
@@ -522,6 +523,7 @@ type Mutation {
     updateARoomIsAmenities(input: UpdateARoomIsAmenitiesInput!): Room
     # room lock period
     createARoomLockPeriod(input: createRoomLockInput!): RoomLockPeriod!
+    deleteARoomLockPeriod(id: Int!) : DelRes!
     # bookings
     createBookingAsAdmin(input: createBookingAsAdmin!): Booking!
     cancelBooking(bookingId: Int!): Booking!
