@@ -62,7 +62,7 @@ import { getRoomsAvailableIn } from 'dao/room/RoomDao';
 import { getUserRoles } from 'dao/users/UserRoleDao';
 import { updateARoomIsAmenities } from 'dao/room/RoomAmenitiesDao';
 import { deleteARoomPicture } from 'dao/room/RoomPicturesDao.js';
-import { getRoomLockById, getRoomLocks_date_str } from 'dao/room/RoomLock';
+import { getRoomLockById } from 'dao/room/RoomLock';
 
 export const resolvers = {
     Query: {
@@ -261,7 +261,7 @@ export const resolvers = {
                     var { start_date_filter, end_date_filter, page, hotel_id } =
                         args.input;
                     try {
-                        var result = await getRoomLocks_date_str({
+                        var result = await getRoomLocks({
                             start_date_filter,
                             end_date_filter,
                             page,

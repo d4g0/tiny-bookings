@@ -109,7 +109,7 @@ export async function createARoomLockPeriod({
         }
 
         // check if is availability for the locking
-        var isAvailable = await isRoomAvailableIn({
+        var isAvailable = await isRoomAvailableIn_date_str({
             room_id,
             delta_search_days: MAXIMUN_HOTEL_CALENDAR_LENGHT,
             start_date,
@@ -225,92 +225,6 @@ export async function isRoomAvailableIn_date_str({
 }
 
 export async function getRoomLocks({
-    start_date_filter = { year, month, day, hour, minute },
-    end_date_filter = { year, month, day, hour, minute },
-    page = 1, // 1 start based count
-    hotel_id,
-}) {
-    // validation
-    if (!isValidDateInput(start_date_filter)) {
-        throw new Error('Non valid start_date_filter');
-    }
-    if (!isValidDateInput(end_date_filter)) {
-        throw new Error('Non valid end_date_filter');
-    }
-    if (!isValidPositiveInteger(page)) {
-        throw new Error('Non valid page, positive integer expected');
-    }
-
-    if (!isValidId(hotel_id)) {
-        throw new Error('Non valid hotel id');
-    }
-
-    const LIMIT = 50;
-    const OFFSET = (page - 1) * LIMIT;
-
-    var utc_start_date_filter = utcDate({
-        year: start_date_filter.year,
-        month: start_date_filter.month,
-        day: start_date_filter.day,
-        hour: start_date_filter.hour,
-        minute: start_date_filter.minute,
-    });
-    var utc_end_date_filter = utcDate({
-        year: end_date_filter.year,
-        month: end_date_filter.month,
-        day: end_date_filter.day,
-        hour: end_date_filter.hour,
-        minute: end_date_filter.minute,
-    });
-
-    try {
-        var room_locks_res = await sql`
-        select 
-            rlp.* 
-        from 
-            room_lock_period rlp
-        join room rm 
-        on rlp.room_id = rm.id
-        join hotel ht
-        on rm.hotel_id = ht.id 
-        where 
-            rlp.start_date >= ${utc_start_date_filter.toISOString()}
-        and
-            rlp.start_date <= ${utc_end_date_filter.toISOString()}
-        and ht.id = ${hotel_id}
-        ORDER BY rlp.start_date desc
-        LIMIT ${LIMIT} OFFSET ${OFFSET} ;
-        `;
-
-        var countRes = await sql`
-        select 
-            count(*) 
-        from 
-            room_lock_period rlp
-        join room rm 
-        on rlp.room_id = rm.id
-        join hotel ht
-        on rm.hotel_id = ht.id 
-        where 
-            rlp.start_date >= ${utc_start_date_filter.toISOString()}
-        and
-            rlp.start_date <= ${utc_end_date_filter.toISOString()}
-        and ht.id = ${hotel_id}
-        `;
-
-        var results = room_locks_res;
-        var count = +countRes[0].count;
-
-        return {
-            results,
-            count,
-        };
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function getRoomLocks_date_str({
     start_date_filter = new Date().toISOString(),
     end_date_filter = new Date().toISOString(),
     page = 1, // 1 start based count
@@ -334,39 +248,48 @@ export async function getRoomLocks_date_str({
     const LIMIT = 50;
     const OFFSET = (page - 1) * LIMIT;
 
+    const search_range = `[${start_date_filter}, ${end_date_filter}]`;
+
     try {
         var room_locks_res = await sql`
-        select 
-            rlp.* 
-        from 
-            room_lock_period rlp
-        join room rm 
-        on rlp.room_id = rm.id
-        join hotel ht
-        on rm.hotel_id = ht.id 
-        where 
-            rlp.start_date >= ${start_date_filter}
-        and
-            rlp.start_date <= ${end_date_filter}
-        and ht.id = ${hotel_id}
-        ORDER BY rlp.start_date desc
-        LIMIT ${LIMIT} OFFSET ${OFFSET} ;
+            with 
+                temp_data as (
+                    select  
+                        ${search_range}::tsrange as search_range,
+                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                ) 
+            select 
+                rlp.* 
+                from room_lock_period rlp 
+                cross join temp_data
+                join room rm 
+                    on rlp.room_id = rm.id
+                join hotel ht
+                    on rm.hotel_id = ht.id 
+                where rlp.start_date > temp_data.from_date_to_search
+                and ht.id = ${hotel_id}
+                and tsrange(rlp.start_date, rlp.end_date, '[]') && temp_data.search_range
+            LIMIT ${LIMIT} OFFSET ${OFFSET} ;
         `;
 
         var countRes = await sql`
-        select 
-            count(*) 
-        from 
-            room_lock_period rlp
-        join room rm 
-        on rlp.room_id = rm.id
-        join hotel ht
-        on rm.hotel_id = ht.id 
-        where 
-            rlp.start_date >= ${start_date_filter}
-        and
-            rlp.start_date <= ${end_date_filter}
-        and ht.id = ${hotel_id}
+            with 
+                temp_data as (
+                    select  
+                        ${search_range}::tsrange as search_range,
+                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                ) 
+            select 
+                count(*)
+                from room_lock_period rlp 
+                cross join temp_data
+                join room rm 
+                    on rlp.room_id = rm.id
+                join hotel ht
+                    on rm.hotel_id = ht.id 
+                where rlp.start_date > temp_data.from_date_to_search
+                and ht.id = ${hotel_id}
+                and tsrange(rlp.start_date, rlp.end_date, '[]') && temp_data.search_range
         `;
 
         var results = room_locks_res;
@@ -377,6 +300,57 @@ export async function getRoomLocks_date_str({
             count,
         };
     } catch (error) {
+        // console.log(error)
+        throw error;
+    }
+}
+
+export async function getAllRoomLocksIn({
+    start_date_filter = new Date().toISOString(),
+    end_date_filter = new Date().toISOString(),
+    hotel_id,
+}) {
+    // validation
+    if (!isValidDateString(start_date_filter)) {
+        throw new ValidationError('Non valid date str', 'start_date_filter');
+    }
+    if (!isValidDateString(end_date_filter)) {
+        throw new ValidationError('Non valid date str', 'end_date_filter');
+    }
+    if (!isValidPositiveInteger(page)) {
+        throw new Error('Non valid page, positive integer expected');
+    }
+
+    if (!isValidId(hotel_id)) {
+        throw new Error('Non valid hotel id');
+    }
+
+    const search_range = `[${start_date_filter}, ${end_date_filter}]`;
+
+    try {
+        var room_locks_res = await sql`
+            with 
+                temp_data as (
+                    select  
+                        ${search_range}::tsrange as search_range,
+                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                ) 
+            select 
+                rlp.* 
+                from room_lock_period rlp 
+                cross join temp_data
+                join room rm 
+                    on rlp.room_id = rm.id
+                join hotel ht
+                    on rm.hotel_id = ht.id 
+                where rlp.start_date > temp_data.from_date_to_search
+                and ht.id = ${hotel_id}
+                and tsrange(rlp.start_date, rlp.end_date, '[]') && temp_data.search_range
+        `;
+
+        return room_locks_res;
+    } catch (error) {
+        // console.log(error)
         throw error;
     }
 }
@@ -508,7 +482,11 @@ export async function getRoomLockById(room_lock_id) {
     }
 }
 
-// deprecated
+/**
+ * @deprecated
+ * @param {*} param0
+ * @returns
+ */
 export async function isRoomAvailableIn({
     room_id,
     delta_search_days,

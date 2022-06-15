@@ -39,7 +39,6 @@ import {
     createARoomLockPeriod,
     deleteRoomLockPeriod,
     deleteRoomLocksByBookingId,
-    isRoomAvailableIn,
     isRoomAvailableIn_date_str,
 } from 'dao/room/RoomLock';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';

@@ -248,6 +248,17 @@ Note the booking service should create a booking on behalf of a client, if for s
 
 
 **Hot Sopt Tasks:**
+
+- Currently in fix getRoomsQuery with new sql query using tsrange checks
+
+- Check createRoomLock checks of availability
+
+
+
+
+
+
+
 Investigate and set up a correct rate limit
 
 
