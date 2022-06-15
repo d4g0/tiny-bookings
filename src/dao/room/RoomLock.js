@@ -194,55 +194,7 @@ export async function deleteRoomLockPeriod(room_lock_period_id) {
     }
 }
 
-export async function isRoomAvailableIn({
-    room_id,
-    delta_search_days,
-    start_date = {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-    },
-    end_date = {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-    },
-}) {
-    var utc_start_date = utcDate({
-        year: start_date.year,
-        month: start_date.month,
-        day: start_date.day,
-        hour: start_date.hour,
-        minute: start_date.minute,
-    });
 
-    var utc_end_date = utcDate({
-        year: end_date.year,
-        month: end_date.month,
-        day: end_date.day,
-        hour: end_date.hour,
-        minute: end_date.minute,
-    });
-
-    try {
-        var during = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
-        var result = await sql`
-            select is_available from is_room_available_in (
-                ${room_id}, 
-                ${delta_search_days},
-                ${during}
-            );
-        `;
-
-        return result;
-    } catch (error) {
-        throw error;
-    }
-}
 
 export async function isRoomAvailableIn_date_str({
     room_id,
@@ -541,6 +493,58 @@ export async function deleteRoomLocksByBookingId(booking_id) {
         `;
 
         return roomLocks;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// deprecated
+export async function isRoomAvailableIn({
+    room_id,
+    delta_search_days,
+    start_date = {
+        year,
+        month,
+        day,
+        hour,
+        minute,
+    },
+    end_date = {
+        year,
+        month,
+        day,
+        hour,
+        minute,
+    },
+}) {
+    var utc_start_date = utcDate({
+        year: start_date.year,
+        month: start_date.month,
+        day: start_date.day,
+        hour: start_date.hour,
+        minute: start_date.minute,
+    });
+
+    var utc_end_date = utcDate({
+        year: end_date.year,
+        month: end_date.month,
+        day: end_date.day,
+        hour: end_date.hour,
+        minute: end_date.minute,
+    });
+
+    try {
+        var during = `[${utc_start_date.toISOString()}, ${utc_end_date.toISOString()}]`;
+        var result = await sql`
+            select is_available from is_room_available_in (
+                ${room_id}, 
+                ${delta_search_days},
+                ${during}
+            );
+        `;
+
+        return result;
     } catch (error) {
         throw error;
     }

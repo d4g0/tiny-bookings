@@ -268,13 +268,15 @@ input DeleteRoomPictureInput {
 type RoomLockPeriod {
     id: Int!
     room_id: Int!
+    room:   Room!
     start_date: String!
     end_date: String!
     reason: String!
     created_at: String!
-    is_a_booking: Boolean!
     during: String!
+    is_a_booking: Boolean!
     booking_id: Int
+    booking: Booking
 }
 
 type RoomLocksResult {
@@ -286,11 +288,8 @@ type RoomLocksResult {
 input createRoomLockInput {
     room_id: Int!
     reason: String
-    start_date: DateObject!
-    end_date: DateObject!
-    hotel_calendar_length: Int!
-    is_a_booking: Boolean!
-    booking_id: Int
+    start_date: String!
+    end_date: String!
 }
 
 input DateObject {

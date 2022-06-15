@@ -42,7 +42,7 @@ import {
     createARoomIsAmenity,
     deleteARoomIsAmenity
 } from "services/room";
-import { createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
+import { createANoBookingRoomLock, createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
 import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
 import { getBookingStates } from "dao/booking/BookingStateDao";
 import { getCurrencies } from "dao/currencies/CurrencyDao";
@@ -1120,9 +1120,6 @@ export const resolvers = {
                         reason,
                         start_date,
                         end_date,
-                        hotel_calendar_length,
-                        is_a_booking,
-                        booking_id,
                     } = args.input;
                     try {
 
@@ -1131,14 +1128,11 @@ export const resolvers = {
                             s_reason = xss(s_reason);
                         }
 
-                        var roomLock = await createARoomLockPeriod({
+                        var roomLock = await createANoBookingRoomLock({
                             room_id,
                             reason,
                             start_date,
                             end_date,
-                            hotel_calendar_length,
-                            is_a_booking,
-                            booking_id,
                         });
 
                         return roomLock;

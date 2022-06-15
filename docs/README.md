@@ -208,12 +208,16 @@
     - dao + graphql done at 15:15
   - [x] login (admin specific) completed 11 may 19:20
 
-- [ ] Bookings
-  - [ ] Create a Booking
-  - [ ] List Bookings
-  - [ ] Cancel a Booking
+- [x] Bookings [- 12 Jun 2022 11:55:00 PM CDT]
+  - [x] Create a Booking
+  - [x] List Bookings
+  - [x] Cancel a Booking
 
 - [ ] Calendar
+  - [ ] Create a Room Lock
+  - [ ] List Room Locks
+  - [ ] Delete a room lock
+      - [ ] Cancel a booking if is a booking
 
 
 ##### `client`
