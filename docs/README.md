@@ -213,11 +213,10 @@
   - [x] List Bookings
   - [x] Cancel a Booking
 
-- [ ] Calendar
-  - [ ] Create a Room Lock
-  - [ ] List Room Locks
-  - [ ] Delete a room lock
-      - [ ] Cancel a booking if is a booking
+- [x] Room Lock [ - 14 apr  23:40]
+  - [x] Create a Room Lock
+  - [x] List Room Locks
+  - [x] Delete a room lock
 
 
 ##### `client`

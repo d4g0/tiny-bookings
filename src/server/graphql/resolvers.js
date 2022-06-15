@@ -54,7 +54,7 @@ import { getBookingStates } from 'dao/booking/BookingStateDao';
 import { getCurrencies } from 'dao/currencies/CurrencyDao';
 import { getPayments } from 'dao/payments/PaymentsDao';
 import { cancelBookingAsAdmin, createABookingAsAdmin } from 'services/bookings';
-import { getBookings, getBookingsByClient } from 'dao/booking/BookingDao';
+import { getBookingById, getBookings, getBookingsByClient } from 'dao/booking/BookingDao';
 import { getClientByEmailPassword, singUp as singUpClient } from 'services/users/clients';
 import { AuthenticationError } from 'apollo-server-core';
 import { getClientById, getClients as getClientsService } from 'dao/users/ClientDao';
@@ -354,6 +354,21 @@ export const resolvers = {
         ),
 
         // get bookings
+        getBooking: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var { id } = args;
+                    try {
+                        var booking = getBookingById(id);
+                        return booking;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            )
+        ),
+
         getBookings: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],

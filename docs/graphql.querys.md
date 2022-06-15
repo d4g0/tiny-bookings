@@ -52,10 +52,12 @@
   - [Booking State](#booking-state)
   - [Currency](#currency)
   - [Get Client Payments](#get-client-payments)
-  - [Create a Booking as Admin](#create-a-booking-as-admin)
-  - [cancelABooking](#cancelabooking)
-  - [Get Bookings](#get-bookings)
-  - [Get Bookings As Client](#get-bookings-as-client)
+  - [Booking](#booking)
+    - [Get A Booking](#get-a-booking)
+    - [Create a Booking as Admin](#create-a-booking-as-admin)
+    - [cancelABooking](#cancelabooking)
+    - [Get Bookings](#get-bookings)
+    - [Get Bookings As Client](#get-bookings-as-client)
   - [Get Client for admin](#get-client-for-admin)
   - [Get Clients](#get-clients)
   - [Clients](#clients)
@@ -930,7 +932,28 @@ query getClientPayments($input: GetClientPaymentsInput!){
 
 ```
 
-## Create a Booking as Admin
+## Booking
+### Get A Booking 
+```graphql
+{
+  getBooking(id:18){
+    id
+    total_price
+    start_date
+    end_date
+    rooms{
+      id
+      room_name
+    }
+    client{
+      client_name
+      client_last_name
+    }
+  }
+}
+```
+
+### Create a Booking as Admin
 ```graphql
 mutation createABookingAsAdmin($input: createBookingAsAdmin!){
   	
@@ -980,7 +1003,7 @@ Variables
 }
 ```
 
-## cancelABooking
+### cancelABooking
 
 ```graphql
 mutation cancelABooking{
@@ -999,7 +1022,7 @@ mutation cancelABooking{
 }
 ```
 
-## Get Bookings
+### Get Bookings
 ```graphql
 query getBookings($input: GetBookingsInput!){
   getBookings(input: $input){
@@ -1058,7 +1081,7 @@ Input
 }
 ```
 
-## Get Bookings As Client
+### Get Bookings As Client
 Requires a client to be logued in 
 ```graphql
 query getClientBookings($input: GetBookingsInput!){

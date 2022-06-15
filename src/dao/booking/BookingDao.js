@@ -247,6 +247,40 @@ export async function getBookings({
     }
 }
 
+export async function getBookingById(booking_id) {
+    if (!isValidId(booking_id)) {
+        throw new ValidationError('Non valid id', 'booking_id');
+    }
+
+    try {
+        const bRes = await sql`
+            select * from booking where id = ${booking_id};
+        `;
+
+        const booking = bRes.length ? bRes[0] : null;
+
+        if (!booking) {
+            return booking;
+        }
+
+        const bookingRooms = [];
+        const bookingRoomLocks = await getRoomLocksByBookingId(booking.id);
+        await asyncForEach(bookingRoomLocks, async (brl) => {
+            const room = await getRoomData(brl.room_id);
+            bookingRooms.push(room);
+        });
+
+        // inject rooms
+        booking.rooms = bookingRooms;
+        // inject client
+        const client = await getClientById(booking.client_id);
+        booking.client = client;
+
+        return booking;
+    } catch (error) {
+        throw error;
+    }
+}
 export async function getBookingsByClient({
     client_id,
     start_date_filter = { year, month, day, hour, minute },

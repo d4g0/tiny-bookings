@@ -470,6 +470,7 @@ type Query {
     # client payments
     getClientPayments(input: GetClientPaymentsInput!): ClientPaymentsResult!
     # bookings
+    getBooking(id: Int!): Booking
     getBookings(input: GetBookingsInput!): BookingsResult!
     getClientBookingsAsClient(input: GetBookingsInput!): BookingsResult!
     getClientForAdmin(id: Int!): Client
