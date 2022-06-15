@@ -38,8 +38,7 @@ import { getRoomsAvailableIn } from 'dao/room/RoomDao';
 import {
     createARoomLockPeriod,
     deleteRoomLockPeriod,
-    deleteRoomLocksByBookingId,
-    isRoomAvailableIn_date_str,
+    deleteRoomLocksByBookingId
 } from 'dao/room/RoomLock';
 import { createNonUserClient, deleteClient } from 'dao/users/ClientDao';
 import { getUserRoleByKey } from 'dao/users/UserRoleDao';
