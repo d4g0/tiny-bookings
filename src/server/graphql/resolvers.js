@@ -1,12 +1,12 @@
-import { MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from "dao/DBConstans";
+import { MAXIMUN_HOTEL_CALENDAR_LENGHT, USER_ROLES } from 'dao/DBConstans';
 import {
     createAdminService,
     getAdminsService,
     deleteAdminById,
-    getAdminByEmailPassword
-} from "services/users/admin";
-import xss from "xss";
-import { authenticated, authorized } from "./auth";
+    getAdminByEmailPassword,
+} from 'services/users/admin';
+import xss from 'xss';
+import { authenticated, authorized } from './auth';
 import {
     getHotelById,
     createHotel,
@@ -17,8 +17,8 @@ import {
     updateHotelCheckOutTime,
     updateHotelTimeZone,
     getHotels,
-    deleteHotelById
-} from "services/hotel";
+    deleteHotelById,
+} from 'services/hotel';
 import {
     createRoom,
     createRoomAmenity,
@@ -40,45 +40,41 @@ import {
     getRoomById,
     getRooms,
     createARoomIsAmenity,
-    deleteARoomIsAmenity
-} from "services/room";
-import { createANoBookingRoomLock, createARoomLockPeriod, getARoomIsLocks, getRoomLocks } from "services/room_locks";
-import { getPaymentTypes } from "dao/payments/PaymentTypeDao";
-import { getBookingStates } from "dao/booking/BookingStateDao";
-import { getCurrencies } from "dao/currencies/CurrencyDao";
-import { getPayments } from "dao/payments/PaymentsDao";
-import { cancelBookingAsAdmin, createABookingAsAdmin } from "services/bookings";
-import { getBookings, getBookingsByClient } from "dao/booking/BookingDao";
-import { getClientByEmailPassword, singUp as singUpClient } from "services/users/clients";
-import { AuthenticationError } from "apollo-server-core";
-import { getClientById, getClients as getClientsService } from "dao/users/ClientDao";
-import { getRoomsAvailableIn } from "dao/room/RoomDao";
-import { getUserRoles } from "dao/users/UserRoleDao";
-import { updateARoomIsAmenities } from "dao/room/RoomAmenitiesDao";
-import { deleteARoomPicture } from "dao/room/RoomPicturesDao.js";
-import { getRoomLockById, getRoomLocks_date_str } from "dao/room/RoomLock";
-
-
-
+    deleteARoomIsAmenity,
+} from 'services/room';
+import {
+    createANoBookingRoomLock,
+    createARoomLockPeriod,
+    deleteANoBookingRoomLock,
+    getARoomIsLocks,
+    getRoomLocks,
+} from 'services/room_locks';
+import { getPaymentTypes } from 'dao/payments/PaymentTypeDao';
+import { getBookingStates } from 'dao/booking/BookingStateDao';
+import { getCurrencies } from 'dao/currencies/CurrencyDao';
+import { getPayments } from 'dao/payments/PaymentsDao';
+import { cancelBookingAsAdmin, createABookingAsAdmin } from 'services/bookings';
+import { getBookings, getBookingsByClient } from 'dao/booking/BookingDao';
+import { getClientByEmailPassword, singUp as singUpClient } from 'services/users/clients';
+import { AuthenticationError } from 'apollo-server-core';
+import { getClientById, getClients as getClientsService } from 'dao/users/ClientDao';
+import { getRoomsAvailableIn } from 'dao/room/RoomDao';
+import { getUserRoles } from 'dao/users/UserRoleDao';
+import { updateARoomIsAmenities } from 'dao/room/RoomAmenitiesDao';
+import { deleteARoomPicture } from 'dao/room/RoomPicturesDao.js';
+import { getRoomLockById, getRoomLocks_date_str } from 'dao/room/RoomLock';
 
 export const resolvers = {
-
-
     Query: {
-
         async loginAsAdmin(root, args, ctx) {
-
             var Auth = {
                 admin: null,
                 token: null,
                 token_created_at: null,
-            }
-
+            };
 
             var { email, password } = args.input;
             try {
-
-
                 var admin = await getAdminByEmailPassword(email, password);
                 // if we are here we have a user
 
@@ -86,7 +82,7 @@ export const resolvers = {
 
                 var token = ctx.createUserToken({
                     id: admin.id,
-                    user_role: admin.user_role
+                    user_role: admin.user_role,
                 });
 
                 Auth.token = token;
@@ -94,23 +90,19 @@ export const resolvers = {
 
                 return Auth;
             } catch (error) {
-                throw error
+                throw error;
             }
         },
 
         async loginAsClient(root, args, ctx) {
-
             var Auth = {
                 client: null,
                 token: null,
                 token_created_at: null,
-            }
-
+            };
 
             var { email, password } = args.input;
             try {
-
-
                 var client = await getClientByEmailPassword(email, password);
                 // if we are here we have a user
 
@@ -118,7 +110,7 @@ export const resolvers = {
 
                 var token = ctx.createUserToken({
                     id: client.id,
-                    user_role: client.user_role
+                    user_role: client.user_role,
                 });
 
                 Auth.token = token;
@@ -126,44 +118,39 @@ export const resolvers = {
 
                 return Auth;
             } catch (error) {
-                throw error
+                throw error;
             }
         },
 
         // ---------------
-        // Admin 
+        // Admin
         // ---------------
         admins: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx, info) => {
-                    var admins = await getAdminsService();
-                    if (admins) {
-
-                        // filter current admin from results
-                        var adminsMinusCurrentAdmin = admins.filter(admin => admin.id != ctx.user.id);
-                        return adminsMinusCurrentAdmin;
-                    }
-                    return null
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx, info) => {
+                var admins = await getAdminsService();
+                if (admins) {
+                    // filter current admin from results
+                    var adminsMinusCurrentAdmin = admins.filter(
+                        (admin) => admin.id != ctx.user.id
+                    );
+                    return adminsMinusCurrentAdmin;
                 }
-            )
+                return null;
+            })
         ),
 
         // ---------------
-        // User Roles 
+        // User Roles
         // ---------------
         getUserRoles: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx, info) => {
-                    var userRoles = await getUserRoles();
-                    return userRoles;
-                }
-            )
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx, info) => {
+                var userRoles = await getUserRoles();
+                return userRoles;
+            })
         ),
 
         // ---------------
-        // Hotel 
+        // Hotel
         // ---------------
         hotel: async (root, args, ctx, info) => {
             // hotel
@@ -174,7 +161,7 @@ export const resolvers = {
                 return hotel;
             } catch (error) {
                 // console.log(error)
-                throw error
+                throw error;
             }
         },
 
@@ -184,18 +171,16 @@ export const resolvers = {
                 return hotels;
             } catch (error) {
                 // console.log(error)
-                throw error
+                throw error;
             }
         },
 
         // ---------------
-        // Room 
+        // Room
         // ---------------
         // roomType
         getRoomType: async (root, args, ctx) => {
-            var {
-                room_type,
-            } = args.input;
+            var { room_type } = args.input;
             try {
                 var roomType = await getRoomType(room_type);
                 return roomType;
@@ -214,9 +199,7 @@ export const resolvers = {
 
         // roomAmenity
         getRoomAmenity: async (root, args, ctx) => {
-            var {
-                amenity,
-            } = args.input;
+            var { amenity } = args.input;
             try {
                 var roomAmenity = await getRoomAmenity(amenity);
                 return roomAmenity;
@@ -259,38 +242,25 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        id,
-                    } = args;
+                    var { id } = args;
                     try {
-
-                        
-
                         var roomLock = await getRoomLockById(id);
 
                         return roomLock;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-        
+
         getRoomLocks: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        start_date_filter,
-                        end_date_filter,
-                        page,
-                        hotel_id
-                    } = args.input;
+                    var { start_date_filter, end_date_filter, page, hotel_id } =
+                        args.input;
                     try {
-
-
-
                         var result = await getRoomLocks_date_str({
                             start_date_filter,
                             end_date_filter,
@@ -299,11 +269,9 @@ export const resolvers = {
                         });
 
                         return result;
-
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -312,36 +280,26 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        start_date_filter,
-                        end_date_filter,
-                        page,
-                        room_id_filter
-                    } = args.input;
+                    var { start_date_filter, end_date_filter, page, room_id_filter } =
+                        args.input;
                     try {
-
-
-
                         var result = await getARoomIsLocks({
                             start_date_filter,
                             end_date_filter,
                             page,
-                            room_id_filter
+                            room_id_filter,
                         });
 
                         return result;
-
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
 
-
         // ---------------
-        // Payment Types 
+        // Payment Types
         // ---------------
 
         getPaymentTypes: async (root, args, ctx) => {
@@ -349,7 +307,7 @@ export const resolvers = {
                 var pts = await getPaymentTypes();
                 return pts;
             } catch (error) {
-                throw error
+                throw error;
             }
         },
 
@@ -358,7 +316,7 @@ export const resolvers = {
                 var bs = await getBookingStates();
                 return bs;
             } catch (error) {
-                throw error
+                throw error;
             }
         },
 
@@ -367,7 +325,7 @@ export const resolvers = {
                 var currencies = await getCurrencies();
                 return currencies;
             } catch (error) {
-                throw error
+                throw error;
             }
         },
 
@@ -375,26 +333,20 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        start_date_filter,
-                        end_date_filter,
-                        page,
-                        hotel_id,
-                    } = args.input;
+                    var { start_date_filter, end_date_filter, page, hotel_id } =
+                        args.input;
 
                     try {
-
                         var result = await getPayments({
                             start_date_filter,
                             end_date_filter,
                             page,
-                            hotel_id
+                            hotel_id,
                         });
                         return result;
                     } catch (error) {
-                        throw error
+                        throw error;
                     }
-
 
                     return createdAdmin;
                 }
@@ -406,80 +358,59 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        start_date_filter,
-                        end_date_filter,
-                        page,
-                        hotel_id
-                    } = args.input;
+                    var { start_date_filter, end_date_filter, page, hotel_id } =
+                        args.input;
                     try {
-
                         var { results, count } = await getBookings({
                             start_date_filter,
                             end_date_filter,
                             page,
-                            hotel_id
+                            hotel_id,
                         });
 
                         return {
                             results,
-                            count
-                        }
-
+                            count,
+                        };
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
 
         getClientBookingsAsClient: authenticated(
-            authorized(
-                [USER_ROLES.CLIENT.user_role],
-                async (root, args, ctx) => {
-                    var {
+            authorized([USER_ROLES.CLIENT.user_role], async (root, args, ctx) => {
+                var { start_date_filter, end_date_filter, page } = args.input;
+                try {
+                    var { results, count } = await getBookingsByClient({
                         start_date_filter,
                         end_date_filter,
                         page,
-                    } = args.input;
-                    try {
-                        var { results, count } = await getBookingsByClient({
-                            start_date_filter,
-                            end_date_filter,
-                            page,
-                            client_id: ctx.user.id
-                        });
+                        client_id: ctx.user.id,
+                    });
 
-                        return {
-                            results,
-                            count
-                        }
-
-                    } catch (error) {
-                        throw error;
-                    }
-
+                    return {
+                        results,
+                        count,
+                    };
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         getClientForAdmin: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        id
-                    } = args;
+                    var { id } = args;
                     try {
-
                         var client = await getClientById(id);
                         return client;
-
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -488,37 +419,25 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        start_date_filter,
-                        end_date_filter,
-                        page,
-                    } = args.input;
+                    var { start_date_filter, end_date_filter, page } = args.input;
                     try {
-
                         var result = await getClientsService({
                             start_date_filter,
                             end_date_filter,
-                            page
+                            page,
                         });
                         return result;
-
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
 
         // get rooms available
         getRoomsAvailable: async (root, args, ctx) => {
-            var {
-                hotel_id,
-                start_date,
-                end_date,
-            } = args.input;
+            var { hotel_id, start_date, end_date } = args.input;
             try {
-
                 var result = await getRoomsAvailableIn({
                     hotel_id,
                     hotel_calendar_length: MAXIMUN_HOTEL_CALENDAR_LENGHT,
@@ -526,273 +445,207 @@ export const resolvers = {
                     end_date,
                 });
                 return result;
-
             } catch (error) {
                 throw error;
             }
-
-        }
-
+        },
     },
 
     Mutation: {
-
-
         // ---------------
-        // Admin 
+        // Admin
         // ---------------
         createAdmin: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    const {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                const { user_role_id, email, admin_name, admin_description, password } =
+                    args.input;
+
+                // sanitation non covered values will be
+                // extrictly validated in down procesing layers
+                var s_email = xss(email).trim();
+                var s_admin_name = xss(admin_name.toLocaleLowerCase().trim());
+                var s_admin_description = xss(admin_description).trim();
+
+                var createdAdmin;
+
+                try {
+                    createdAdmin = await createAdminService({
+                        creator_admin_id: ctx.user.id,
                         user_role_id,
-                        email,
-                        admin_name,
-                        admin_description,
+                        email: s_email,
+                        admin_name: s_admin_name,
+                        admin_description: s_admin_description,
                         password,
-                    } = args.input;
-
-                    // sanitation non covered values will be
-                    // extrictly validated in down procesing layers
-                    var s_email = xss(email).trim();
-                    var s_admin_name = xss(admin_name.toLocaleLowerCase().trim());
-                    var s_admin_description = xss(admin_description).trim();
-
-                    var createdAdmin;
-
-                    try {
-                        createdAdmin = await createAdminService({
-                            creator_admin_id: ctx.user.id,
-                            user_role_id,
-                            email: s_email,
-                            admin_name: s_admin_name,
-                            admin_description: s_admin_description,
-                            password,
-                        })
-
-                    } catch (error) {
-                        throw error
-                    }
-
-
-                    return createdAdmin;
+                    });
+                } catch (error) {
+                    throw error;
                 }
-            )
+
+                return createdAdmin;
+            })
         ),
 
         deleteAdmin: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var id = args.id;
-                    var { completed, count } = await deleteAdminById(id);
-                    return { completed, count };
-                }
-            )
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var id = args.id;
+                var { completed, count } = await deleteAdminById(id);
+                return { completed, count };
+            })
         ),
 
-
-
         // ---------------
-        // Hotel 
+        // Hotel
         // ---------------
         createHotel: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
-                        hotel_name,
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var {
+                    hotel_name,
+                    maximun_free_calendar_days,
+                    check_in_hour_time,
+                    check_out_hour_time,
+                    minimal_prev_days_to_cancel,
+                    iana_time_zone,
+                } = args.input;
+
+                // sanitation
+                var s_hotel_name = xss(hotel_name);
+
+                try {
+                    var hotelData = {
+                        hotel_name: s_hotel_name,
                         maximun_free_calendar_days,
-                        check_in_hour_time,
-                        check_out_hour_time,
+                        check_in_hour_time: check_in_hour_time,
+                        check_out_hour_time: check_out_hour_time,
                         minimal_prev_days_to_cancel,
-                        iana_time_zone
-                    } = args.input;
+                        iana_time_zone,
+                    };
 
-                    // sanitation
-                    var s_hotel_name = xss(hotel_name);
+                    var hotel = await createHotel({
+                        admin_id: ctx.user.id,
+                        ...hotelData,
+                    });
+                    // console.log({ admin_id: ctx.user.id, hotelData, hotel })
 
-                    try {
-                        var hotelData = {
-                            hotel_name: s_hotel_name,
-                            maximun_free_calendar_days,
-                            check_in_hour_time: check_in_hour_time,
-                            check_out_hour_time: check_out_hour_time,
-                            minimal_prev_days_to_cancel,
-                            iana_time_zone
-                        }
-
-                        var hotel = await createHotel({
-                            admin_id: ctx.user.id,
-                            ...hotelData
-                        });
-                        // console.log({ admin_id: ctx.user.id, hotelData, hotel })
-
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelName: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
-                        hotel_id,
-                        hotel_name,
-                    } = args.input;
-                    console.log({ args })
-                    try {
-                        // sanitation
-                        var s_hotel_name = xss(hotel_name);
-                        var hotel = await updateHotelName(hotel_id, s_hotel_name);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, hotel_name } = args.input;
+                console.log({ args });
+                try {
+                    // sanitation
+                    var s_hotel_name = xss(hotel_name);
+                    var hotel = await updateHotelName(hotel_id, s_hotel_name);
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelFreeCalendarDays: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, maximun_free_calendar_days } = args.input;
+                try {
+                    // sanitation
+                    var hotel = await updateHotelFreeCalendarDays(
                         hotel_id,
-                        maximun_free_calendar_days,
-                    } = args.input;
-                    try {
-                        // sanitation
-                        var hotel = await updateHotelFreeCalendarDays(hotel_id, maximun_free_calendar_days);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                        maximun_free_calendar_days
+                    );
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelDaysToCancel: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, minimal_prev_days_to_cancel } = args.input;
+                try {
+                    var hotel = await updateHotelDaysToCancel(
                         hotel_id,
-                        minimal_prev_days_to_cancel,
-                    } = args.input;
-                    try {
-                        var hotel = await updateHotelDaysToCancel(hotel_id, minimal_prev_days_to_cancel);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                        minimal_prev_days_to_cancel
+                    );
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelCheckIn: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, check_in_hour_time } = args.input;
+                try {
+                    var hotel = await updateHotelCheckInTime(
                         hotel_id,
-                        check_in_hour_time,
-                    } = args.input;
-                    try {
-
-                        var hotel = await updateHotelCheckInTime(hotel_id, check_in_hour_time);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                        check_in_hour_time
+                    );
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelCheckOut: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, check_out_hour_time } = args.input;
+                try {
+                    var hotel = await updateHotelCheckOutTime(
                         hotel_id,
-                        check_out_hour_time,
-                    } = args.input;
-                    try {
-                        var hotel = await updateHotelCheckOutTime(hotel_id, check_out_hour_time);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                        check_out_hour_time
+                    );
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateHotelTimeZone: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
-                        hotel_id,
-                        iana_time_zone,
-                    } = args.input;
-                    try {
-
-                        var hotel = await updateHotelTimeZone(hotel_id, iana_time_zone);
-                        return hotel;
-                    } catch (error) {
-                        throw error;
-                    }
-
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, iana_time_zone } = args.input;
+                try {
+                    var hotel = await updateHotelTimeZone(hotel_id, iana_time_zone);
+                    return hotel;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
-
 
         delHotel: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var id = args.id;
-                    var hotel = await deleteHotelById(id);
-                    return hotel;
-                }
-            )
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var id = args.id;
+                var hotel = await deleteHotelById(id);
+                return hotel;
+            })
         ),
 
-
-
-
         // ---------------
-        // Room 
+        // Room
         // ---------------
         // roomType
         createRoomType: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_type,
-                    } = args.input;
+                    var { room_type } = args.input;
                     // sanitation
-                    var s_room_type = xss(room_type)
+                    var s_room_type = xss(room_type);
                     try {
                         var roomType = await createRoomType(s_room_type);
                         return roomType;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -801,9 +654,7 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_type,
-                    } = args.input;
+                    var { room_type } = args.input;
 
                     try {
                         var roomType = await deleteRoomType(room_type);
@@ -811,20 +662,15 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-
 
         updateRoomType: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_type,
-                        new_room_type
-                    } = args.input;
+                    var { room_type, new_room_type } = args.input;
                     // sanitation (room_type was sanitaced in createRoomType())
                     var new_room_type = xss(new_room_type);
                     try {
@@ -833,21 +679,17 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-
 
         // roomAmenity
         createRoomAmenity: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        amenity
-                    } = args.input;
-                    // sanitation 
+                    var { amenity } = args.input;
+                    // sanitation
                     var s_amenity = xss(amenity);
                     try {
                         var roomAmenity = await createRoomAmenity(s_amenity);
@@ -855,7 +697,6 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -864,10 +705,7 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        amenity,
-                        new_amenity
-                    } = args.input;
+                    var { amenity, new_amenity } = args.input;
                     // sanitation (amenity was sanitaced in createRoomAmenity())
                     var s_new_amenity = xss(new_amenity);
                     try {
@@ -876,7 +714,6 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -885,9 +722,7 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        amenity,
-                    } = args.input;
+                    var { amenity } = args.input;
                     // sanitation (amenity was sanitaced in createRoomAmenity())
                     try {
                         var roomAmenity = await deleteRoomAmenity(amenity);
@@ -895,7 +730,6 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -904,10 +738,8 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_picture_id,
-                    } = args.input;
-                    
+                    var { room_picture_id } = args.input;
+
                     var s_room_picture_id = xss(room_picture_id);
                     s_room_picture_id = parseInt(s_room_picture_id);
 
@@ -917,70 +749,50 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-
 
         // room
         createRoom: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { hotel_id, room_name, night_price, capacity, number_of_beds } =
+                    args.input;
+                // sanitation
+                var s_room_name = xss(room_name);
+                try {
+                    var room = await createRoom({
                         hotel_id,
-                        room_name,
+                        room_name: s_room_name,
                         night_price,
                         capacity,
                         number_of_beds,
-                    } = args.input;
-                    // sanitation 
-                    var s_room_name = xss(room_name);
-                    try {
-                        var room = await createRoom({
-                            hotel_id,
-                            room_name: s_room_name,
-                            night_price,
-                            capacity,
-                            number_of_beds
-                        });
-                        return room;
-                    } catch (error) {
-                        throw error;
-                    }
-
+                    });
+                    return room;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         deleteRoom: authenticated(
-            authorized(
-                USER_ROLES.FULL_ADMIN.user_role,
-                async (root, args, ctx) => {
-                    var {
-                        room_id,
-                    } = args.input;
-                    // sanitation 
-                    try {
-                        var delResult = await deleteRoom(room_id);
-                        return delResult;
-                    } catch (error) {
-                        throw error;
-                    }
-
+            authorized(USER_ROLES.FULL_ADMIN.user_role, async (root, args, ctx) => {
+                var { room_id } = args.input;
+                // sanitation
+                try {
+                    var delResult = await deleteRoom(room_id);
+                    return delResult;
+                } catch (error) {
+                    throw error;
                 }
-            )
+            })
         ),
 
         updateRoomName: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        room_name
-                    } = args.input;
+                    var { room_id, room_name } = args.input;
                     // sanitation (amenity was sanitaced in createRoomAmenity())
                     var s_room_name = xss(room_name);
                     try {
@@ -989,7 +801,6 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -998,17 +809,13 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        room_type_id
-                    } = args.input;
+                    var { room_id, room_type_id } = args.input;
                     try {
                         var room = await updateARoomIsType(room_id, room_type_id);
                         return room;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1017,17 +824,13 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        new_night_price
-                    } = args.input;
+                    var { room_id, new_night_price } = args.input;
                     try {
                         var room = await updateRoomNightPrice(room_id, new_night_price);
                         return room;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1036,17 +839,13 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        new_capacity
-                    } = args.input;
+                    var { room_id, new_capacity } = args.input;
                     try {
                         var room = await updateRoomCapacity(room_id, new_capacity);
                         return room;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1055,17 +854,16 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        new_number_of_beds
-                    } = args.input;
+                    var { room_id, new_number_of_beds } = args.input;
                     try {
-                        var room = await updateRoomNumberOfBeds(room_id, new_number_of_beds);
+                        var room = await updateRoomNumberOfBeds(
+                            room_id,
+                            new_number_of_beds
+                        );
                         return room;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1076,17 +874,16 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        amenity_id
-                    } = args.input;
+                    var { room_id, amenity_id } = args.input;
                     try {
-                        var roomIsAmenity = await createARoomIsAmenity(room_id, amenity_id);
+                        var roomIsAmenity = await createARoomIsAmenity(
+                            room_id,
+                            amenity_id
+                        );
                         return roomIsAmenity;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1095,58 +892,40 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        amenity_id
-                    } = args.input;
+                    var { room_id, amenity_id } = args.input;
                     try {
                         var delCount = await deleteARoomIsAmenity(room_id, amenity_id);
                         return delCount;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-
 
         // updateARoomIsAmenities
         updateARoomIsAmenities: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        amenities_ids
-                    } = args.input;
+                    var { room_id, amenities_ids } = args.input;
                     try {
                         var room = await updateARoomIsAmenities(room_id, amenities_ids);
                         return room;
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
-
-        
-
 
         // room lock period
         createARoomLockPeriod: authenticated(
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        room_id,
-                        reason,
-                        start_date,
-                        end_date,
-                    } = args.input;
+                    var { room_id, reason, start_date, end_date } = args.input;
                     try {
-
                         var s_reason = null;
                         if (reason) {
                             s_reason = xss(s_reason);
@@ -1163,13 +942,27 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
+                }
+            )
+        ),
 
+        deleteARoomLockPeriod: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var { id } = args;
+                    try {
+                        var res = await deleteANoBookingRoomLock(id);
+                        return res;
+                    } catch (error) {
+                        throw error;
+                    }
                 }
             )
         ),
 
         // ---------------
-        // Bookings 
+        // Bookings
         // ---------------
         // create booking as admin
         createBookingAsAdmin: authenticated(
@@ -1186,10 +979,9 @@ export const resolvers = {
                         total_price,
                         payment_type_id,
                         currency_id,
-                        number_of_guests
+                        number_of_guests,
                     } = args.input;
                     try {
-
                         // sanitation
                         var s_client_name = xss(client_name);
                         var s_client_last_name = xss(client_last_name);
@@ -1205,7 +997,7 @@ export const resolvers = {
                             total_price,
                             payment_type_id,
                             currency_id,
-                            number_of_guests
+                            number_of_guests,
                         });
 
                         if (!completed) {
@@ -1218,7 +1010,6 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
@@ -1227,12 +1018,11 @@ export const resolvers = {
             authorized(
                 [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
                 async (root, args, ctx) => {
-                    var {
-                        bookingId
-                    } = args;
+                    var { bookingId } = args;
                     try {
-
-                        var { completed, results, error } = await cancelBookingAsAdmin(bookingId);
+                        var { completed, results, error } = await cancelBookingAsAdmin(
+                            bookingId
+                        );
                         if (!completed) {
                             throw error;
                         }
@@ -1242,52 +1032,39 @@ export const resolvers = {
                     } catch (error) {
                         throw error;
                     }
-
                 }
             )
         ),
         // singUp
         singUp: async (root, args, ctx) => {
-
-
-
             var Auth = {
                 client: null,
                 token: null,
                 token_created_at: null,
-            }
+            };
 
-            var {
-                client_name,
-                client_last_name,
-                password,
-                email,
-            } = args.input;
+            var { client_name, client_last_name, password, email } = args.input;
 
             var s_client_name = xss(client_name);
             var s_client_last_name = xss(client_last_name);
             var s_email = xss(email);
 
-
             try {
-
                 var isCaptchaClear = await ctx.isCaptchaClear(ctx.req);
 
                 if (!isCaptchaClear) {
-                    throw new AuthenticationError('Should provide a valid captcha')
+                    throw new AuthenticationError('Should provide a valid captcha');
                 }
                 var client = await singUpClient({
                     client_name: s_client_name,
                     client_last_name: s_client_last_name,
                     email: s_email,
-                    password
+                    password,
                 });
-
-
 
                 var token = ctx.createUserToken({
                     id: client.id,
-                    user_role: client.user_role
+                    user_role: client.user_role,
                 });
 
                 var now = new Date().toISOString();
@@ -1297,14 +1074,9 @@ export const resolvers = {
                 Auth.token_created_at = now;
 
                 return Auth;
-
             } catch (error) {
                 throw error;
             }
-
-        }
-
+        },
     },
-
-
 };

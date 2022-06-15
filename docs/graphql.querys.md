@@ -45,6 +45,7 @@
     - [DeleteARoomIsAmenity](#deletearoomisamenity)
   - [Room Locks](#room-locks)
     - [Create A Room Lock](#create-a-room-lock)
+    - [Delete A Room Lock (non booking)](#delete-a-room-lock-non-booking)
     - [GetRoomLocks](#getroomlocks)
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
@@ -775,6 +776,15 @@ Input:
 }
 ```
 
+### Delete A Room Lock (non booking)
+```graphql
+mutation deleteARoomLockPeriod {
+  deleteARoomLockPeriod(id: 69){
+    completed
+    count
+  }
+}
+```
 ### GetRoomLocks
 ```graphql
 query getRoomLocks($input: GetRoomLocksInput!){

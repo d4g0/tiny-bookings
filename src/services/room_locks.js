@@ -15,6 +15,8 @@ import {
     deleteRoomLockPeriod as deleteRoomLockPeriodDao,
     getRoomLocks as getRoomLocksDao,
     getARoomIsLocks as getARoomIsLocksDao,
+    getRoomLockById,
+    deleteARoomLock,
 } from '~/dao/room/RoomLock';
 
 export async function createARoomLockPeriod({
@@ -91,6 +93,25 @@ export async function createANoBookingRoomLock({
         // roomLock.room = room;
 
         return roomLock;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteANoBookingRoomLock(room_lock_id){
+    try {
+        const roomLock = await getRoomLockById(room_lock_id);
+        if(!roomLock){
+            throw new Error('Room Lock Not Found');
+        }
+        if(roomLock.is_a_booking){
+            throw new Error(`This locks is from a booking, can't be eliminated`);
+        }
+
+        const res = await deleteARoomLock(room_lock_id);
+
+        return res;
+        
     } catch (error) {
         throw error;
     }

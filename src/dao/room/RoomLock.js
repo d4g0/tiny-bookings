@@ -558,3 +558,21 @@ export async function isRoomAvailableIn({
         throw error;
     }
 }
+
+export async function deleteARoomLock(room_lock_id) {
+    if (!isValidId(room_lock_id)) {
+        throw new ValidationError('Non valid id', 'room_lock_id');
+    }
+    try {
+        const delRes = await sql`
+        delete from room_lock_period where id = ${room_lock_id} returning *;
+        `;
+        const res = delRes.length
+            ? { completed: true, count: 1 }
+            : { completed: true, count: 0 };
+
+        return res;
+    } catch (error) {
+        throw error;
+    }
+}
