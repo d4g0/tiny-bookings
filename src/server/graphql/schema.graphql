@@ -268,7 +268,7 @@ input DeleteRoomPictureInput {
 type RoomLockPeriod {
     id: Int!
     room_id: Int!
-    room:   Room!
+    # room:   Room!
     start_date: String!
     end_date: String!
     reason: String!

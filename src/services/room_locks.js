@@ -86,9 +86,9 @@ export async function createANoBookingRoomLock({
             booking_id: null,
         });
 
-        const room = await getRoomData(room_id);
+        // const room = await getRoomData(room_id);
 
-        roomLock.room = room;
+        // roomLock.room = room;
 
         return roomLock;
     } catch (error) {

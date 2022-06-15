@@ -160,6 +160,7 @@ customElements.define('markdown-style', MarkdownStyle);</script><markdown-style 
           </li>
           <li><a href="#room-locks">Room Locks</a>
             <ul>
+              <li><a href="#create-a-room-lock">Create A Room Lock</a></li>
               <li><a href="#getroomlocks">GetRoomLocks</a></li>
               <li><a href="#getaroomislocks">GetARoomIsLocks</a></li>
             </ul>
@@ -1312,6 +1313,46 @@ mutation CreateARoom($input: CreateRoomInput!){
 }
 " class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <h2 id="room-locks"><a class="anchor" aria-hidden="true" tabindex="-1" href="#room-locks"><span class="octicon octicon-link"></span></a>Room Locks</h2>
+    <h3 id="create-a-room-lock"><a class="anchor" aria-hidden="true" tabindex="-1" href="#create-a-room-lock"><span class="octicon octicon-link"></span></a>Create A Room Lock</h3>
+    <pre class="language-graphql"><code class="language-graphql code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">mutation</span> <span class="token definition-mutation function">createARoomLock</span><span class="token punctuation">(</span><span class="token variable variable-input">$input</span><span class="token punctuation">:</span> <span class="token property">createRoomLockInput</span><span class="token operator">!</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="2">  <span class="token property-query property-mutation">createARoomLockPeriod</span><span class="token punctuation">(</span><span class="token attr-name">input</span><span class="token punctuation">:</span> <span class="token variable variable-input">$input</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="3">    <span class="token property">id</span>
+</span><span class="code-line line-number" line="4">    <span class="token property">room_id</span>
+</span><span class="code-line line-number" line="5">    <span class="token property">start_date</span>
+</span><span class="code-line line-number" line="6">    <span class="token property">end_date</span>
+</span><span class="code-line line-number" line="7">    <span class="token property">reason</span>
+</span><span class="code-line line-number" line="8">    <span class="token property">created_at</span>
+</span><span class="code-line line-number" line="9">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="10"><span class="token punctuation">}</span>
+</span></code><div onclick="copied(this)" data-code="mutation createARoomLock($input: createRoomLockInput!) {
+  createARoomLockPeriod(input: $input) {
+    id
+    room_id
+    start_date
+    end_date
+    reason
+    created_at
+  }
+}
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <p>Input:</p>
+    <pre class="language-json"><code class="language-json code-highlight"><span class="code-line line-number" line="1"><span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="2">  <span class="token property">"input"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="3">    <span class="token property">"room_id"</span><span class="token operator">:</span> <span class="token number">14</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="4">    <span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"Repair Air Conditioner"</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="5">    <span class="token property">"start_date"</span><span class="token operator">:</span> <span class="token string">"2022-05-10T05:00:00.000Z"</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="6">    <span class="token property">"end_date"</span><span class="token operator">:</span> <span class="token string">"2022-05-11T05:00:00.000Z"</span>
+</span><span class="code-line line-number" line="7">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="8"><span class="token punctuation">}</span>
+</span></code><div onclick="copied(this)" data-code="{
+  &#x22;input&#x22;: {
+    &#x22;room_id&#x22;: 14,
+    &#x22;reason&#x22;: &#x22;Repair Air Conditioner&#x22;,
+    &#x22;start_date&#x22;: &#x22;2022-05-10T05:00:00.000Z&#x22;,
+    &#x22;end_date&#x22;: &#x22;2022-05-11T05:00:00.000Z&#x22;
+  }
+}
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <h3 id="getroomlocks"><a class="anchor" aria-hidden="true" tabindex="-1" href="#getroomlocks"><span class="octicon octicon-link"></span></a>GetRoomLocks</h3>
     <pre class="language-graphql"><code class="language-graphql code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">query</span> <span class="token definition-query function">getRoomLocks</span><span class="token punctuation">(</span><span class="token variable">$input</span><span class="token punctuation">:</span> <span class="token atom-input class-name">GetRoomLocksInput</span><span class="token operator">!</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
 </span><span class="code-line line-number" line="2">  <span class="token property-query">getRoomLocks</span><span class="token punctuation">(</span><span class="token attr-name">input</span><span class="token punctuation">:</span><span class="token variable">$input</span><span class="token punctuation">)</span><span class="token punctuation">{</span>

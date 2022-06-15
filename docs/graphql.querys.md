@@ -44,6 +44,7 @@
     - [CreateARoomIsAmenity](#createaroomisamenity)
     - [DeleteARoomIsAmenity](#deletearoomisamenity)
   - [Room Locks](#room-locks)
+    - [Create A Room Lock](#create-a-room-lock)
     - [GetRoomLocks](#getroomlocks)
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
@@ -747,6 +748,32 @@ mutation DeleteARoomIsAmenity ($input: DeleteARoomIsAmenityInput!){
 ```
 
 ## Room Locks
+
+### Create A Room Lock
+```graphql
+mutation createARoomLock($input: createRoomLockInput!) {
+  createARoomLockPeriod(input: $input) {
+    id
+    room_id
+    start_date
+    end_date
+    reason
+    created_at
+  }
+}
+```
+
+Input:
+```json
+{
+  "input": {
+    "room_id": 14,
+    "reason": "Repair Air Conditioner",
+    "start_date": "2022-05-10T05:00:00.000Z",
+    "end_date": "2022-05-11T05:00:00.000Z"
+  }
+}
+```
 
 ### GetRoomLocks
 ```graphql
