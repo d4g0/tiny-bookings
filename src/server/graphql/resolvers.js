@@ -62,7 +62,7 @@ import { getRoomsAvailableIn } from 'dao/room/RoomDao';
 import { getUserRoles } from 'dao/users/UserRoleDao';
 import { updateARoomIsAmenities } from 'dao/room/RoomAmenitiesDao';
 import { deleteARoomPicture } from 'dao/room/RoomPicturesDao.js';
-import { getRoomLockById } from 'dao/room/RoomLock';
+import { getAllRoomLocksIn, getRoomLockById } from 'dao/room/RoomLock';
 
 export const resolvers = {
     Query: {
@@ -265,6 +265,26 @@ export const resolvers = {
                             start_date_filter,
                             end_date_filter,
                             page,
+                            hotel_id,
+                        });
+
+                        return result;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            )
+        ),
+
+        getAllRoomLocks: authenticated(
+            authorized(
+                [USER_ROLES.FULL_ADMIN.user_role, USER_ROLES.BASIC_ADMIN.user_role],
+                async (root, args, ctx) => {
+                    var { start_date_filter, end_date_filter, hotel_id } = args.input;
+                    try {
+                        var result = await getAllRoomLocksIn({
+                            start_date_filter,
+                            end_date_filter,
                             hotel_id,
                         });
 

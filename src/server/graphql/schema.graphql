@@ -307,6 +307,12 @@ input GetRoomLocksInput {
     hotel_id: Int!
 }
 
+input GetAllRoomLocksInput {
+    start_date_filter: String!
+    end_date_filter: String!
+    hotel_id: Int!
+}
+
 input GetARoomIsLocksInput {
     start_date_filter: DateObject!
     end_date_filter: DateObject!
@@ -460,6 +466,7 @@ type Query {
     # room locks
     roomLock(id: Int!): RoomLockPeriod
     getRoomLocks(input: GetRoomLocksInput!): RoomLocksResult!
+    getAllRoomLocks(input: GetAllRoomLocksInput!): [RoomLockPeriod]!
     getARoomIsLocks(input: GetARoomIsLocksInput!): RoomLocksResult!
     # payment types
     getPaymentTypes: [PaymentType]!

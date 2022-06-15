@@ -47,6 +47,7 @@
     - [Create A Room Lock](#create-a-room-lock)
     - [Delete A Room Lock (non booking)](#delete-a-room-lock-non-booking)
     - [GetRoomLocks](#getroomlocks)
+    - [Get All Rooms Locks in a interval](#get-all-rooms-locks-in-a-interval)
     - [GetARoomIsLocks](#getaroomislocks)
   - [Get Payment Types](#get-payment-types)
   - [Booking State](#booking-state)
@@ -815,6 +816,34 @@ Input
     "hotel_id":1,
     "start_date_filter": "2022-06-11 00:00:00",
     "end_date_filter": "2022-06-13 00:00:00"
+  }
+}
+```
+
+### Get All Rooms Locks in a interval
+```graphql
+query getAllRoomLocks($input: GetAllRoomLocksInput!) {
+  getAllRoomLocks(input: $input) {
+    id
+    room_id
+    start_date
+    end_date
+    reason
+    is_a_booking
+    booking_id
+    created_at
+  }
+}
+
+```
+
+Input:
+```json
+{
+  "input": {
+    "hotel_id":1,
+    "start_date_filter": "2022-05-14 00:00:00",
+    "end_date_filter": "2022-05-17 00:00:00"
   }
 }
 ```

@@ -256,7 +256,7 @@ export async function getRoomLocks({
                 temp_data as (
                     select  
                         ${search_range}::tsrange as search_range,
-                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                        ${start_date_filter}::timestamptz::date - 90 - 1 as from_date_to_search
                 ) 
             select 
                 rlp.* 
@@ -277,7 +277,7 @@ export async function getRoomLocks({
                 temp_data as (
                     select  
                         ${search_range}::tsrange as search_range,
-                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                        ${start_date_filter}::timestamptz::date - 90 - 1 as from_date_to_search
                 ) 
             select 
                 count(*)
@@ -317,9 +317,6 @@ export async function getAllRoomLocksIn({
     if (!isValidDateString(end_date_filter)) {
         throw new ValidationError('Non valid date str', 'end_date_filter');
     }
-    if (!isValidPositiveInteger(page)) {
-        throw new Error('Non valid page, positive integer expected');
-    }
 
     if (!isValidId(hotel_id)) {
         throw new Error('Non valid hotel id');
@@ -333,7 +330,7 @@ export async function getAllRoomLocksIn({
                 temp_data as (
                     select  
                         ${search_range}::tsrange as search_range,
-                        ${start_date_filter}::timestamptz::date - 90 as from_date_to_search
+                        ${start_date_filter}::timestamptz::date - 90 - 1  as from_date_to_search
                 ) 
             select 
                 rlp.* 
@@ -481,8 +478,6 @@ export async function getRoomLockById(room_lock_id) {
         throw error;
     }
 }
-
-
 
 export async function deleteARoomLock(room_lock_id) {
     if (!isValidId(room_lock_id)) {
